@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PixelVision8.Player
 {
-    public static class NewGameScene
+    public static class TitleScene
     {
         public static JrpgRoslynChip parentRef;
 

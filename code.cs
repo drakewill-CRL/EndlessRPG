@@ -19,32 +19,55 @@ using System.Linq;
 
 namespace PixelVision8.Player
 {
-	public class JrpgRoslynChip : GameChip
-	{
-		public override void Init()
-		{
+    public class JrpgRoslynChip : GameChip
+    {
 
-			var message = "EMPTY C# GAME\n\n\nThis is an empty game template.\n\n\nVisit 'www.pixelvision8.com' to learn more about creating games from scratch.";
-			var display = Display();
-			var wrap = WordWrap(message, (display.X / 8) - 2);
-			var lines = SplitLines(wrap);
-			var total = lines.Length;
-			var startY = ((display.Y / 8) - 1) - total;
+        List<Role> roles = new List<Role>() {
+        	new Role() {name = "Generic"}
+    	};
+        public override void Init()
+        {
 
-			// We want to render the text from the bottom of the screen so we offset
-			// it and loop backwards.
-			for (var i = total - 1; i >= 0; i--)
-				DrawText(lines[i], 1, startY + (i - 1), DrawMode.Tile, "large", 15);
+            var message = "EMPTY C# GAME\n\n\nThis is an empty game template.\n\n\nVisit 'www.pixelvision8.com' to learn more about creating games from scratch.";
+            var display = Display();
+            var wrap = WordWrap(message, (display.X / 8) - 2);
+            var lines = SplitLines(wrap);
+            var total = lines.Length;
+            var startY = ((display.Y / 8) - 1) - total;
+
+            // We want to render the text from the bottom of the screen so we offset
+            // it and loop backwards.
+            for (var i = total - 1; i >= 0; i--)
+                DrawText(lines[i], 1, startY + (i - 1), DrawMode.Tile, "large", 15);
+        }
+
+        public override void Draw()
+        {
+
+        }
+
+        public override void Update(int timeDelta)
+        {
+            RedrawDisplay();
+        }
+
+		public void SaveGameData(){
+			//The best thing to do here would be to loop over gameState and just save each property by name and value, if reflection is available.
+			//Save high scores
+
+			//save current run data
+
+			//save unlockable flags
+
 		}
+		public void LoadGameData() {
+			//The best thing to do here would be to loop over gameState and just save each property by name and value if reflection is available.
+			//load high scores
 
-		public override void Draw()
-		{
+			//load current run data
+
+			//load unlockable flags
 
 		}
-
-		public override void Update(int timeDelta)
-		{
-			RedrawDisplay();
-		}
-	}
+    }
 }

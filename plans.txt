@@ -12,10 +12,23 @@ Every 4 fights they live through, your characters gain a level
 Each role has X abilities and gains a fixed stat array per level.
 A level up may be traded for an equipment roll
 (the item will be on-level for your party, and roughly biased towards the character it's rolling for, but the slot and stats or any special abilities will be random.)
+Every X fights (12? 20?) is a boss fight
+Boss fights are a separate encounter list (or a fixed list for a plot?) with significantly higher stats.
+
+GRAPHICS
+i think I want 5 colors per sprite? (4 + transparent) to do the Bloodstained-style NES+ graphics? Or closer to 16 for the SNES?
+Stick to the PV8 Palette? Or expand it?
+THeme: cyberpunk? urban fantasy? plain sci-fi? Eclipse Phase (octopus pc!)?
+frames: 7-11 total?
+1 Idle
+2-4 attack
+2-4 use ability
+1 dead
+1 on-recieve-hit
 
 NEWGAME
 Pick your character's roles, and possible sprite set
-(I have to draw at least 4 characters, and can expand on more. Maybe these will become meta-sprite sets for simplicity.)
+(I have to draw at least 4 characters, and can expand on more. Maybe these will become meta-sprite sets for simplicity. I also might stick roles and sprites together.)
 (i also need to get a drawing template to edit on to make this faster.)
 Possibly see the best records for previous runs for roles or info preview
 Name characters as well.
@@ -30,7 +43,25 @@ starting stats and stat gain is determined by role.
 
 Fight
 The core game screen.
+Very FF1-6 style fight screen, PCs on right, monsters on left.
+Simple stat system from existing docs. tweaking may occur in practice.
+Enemies have base stats per level, actual fights are randomized (may have fixed fights for a plot progression deal eventually)
 
 Improve
 When a character lives through 4 fights, the improve screen opens up for them (multiple levels queue the screen up multiple times)
-You can choose to gain extra stat points OR boost up an ability
+You can choose to gain extra stat points, boost up an ability of theirs, or roll for an equipment drop. (equipment will offer good stat boosts, but slot and distribution is random)
+
+UNLOCKS
+Make sufficient progress and you can unlock new options
+EX: get White Mage and Fighter to a certain level each, unlock a Monk that has a combo of both melee and healing powers.
+These could be roles or sprite options, possibly equipment power. Maybe other things for progressing faster (like keeping an item between games or starting at a higher level?)
+
+DEVELOPMENT PLANS
+use metasprites where possible
+write up core system pieces - 1 to make sure stuff compiles
+Get baseline fight scene in place
+get baseline improve scene in place.
+do spritework for baseline char and enemy
+prove system runs.
+Add baseline content ()
+implement additional content into systems (enemies, characters, roles, etc)
