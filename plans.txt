@@ -1,0 +1,36 @@
+PLANS
+
+Endless-JRPG
+Fight your way through until you lose.
+Stats and math will roughly be based on my TTRPG math plans.
+
+GENERAL IDEAS
+You have 4 characters that each have a role
+(Roles may be selected at game start)
+Every 4 fights they live through, your characters gain a level
+(improve the character selected.)
+Each role has X abilities and gains a fixed stat array per level.
+A level up may be traded for an equipment roll
+(the item will be on-level for your party, and roughly biased towards the character it's rolling for, but the slot and stats or any special abilities will be random.)
+
+NEWGAME
+Pick your character's roles, and possible sprite set
+(I have to draw at least 4 characters, and can expand on more. Maybe these will become meta-sprite sets for simplicity.)
+(i also need to get a drawing template to edit on to make this faster.)
+Possibly see the best records for previous runs for roles or info preview
+Name characters as well.
+
+Roles
+There are X roles in the game.
+Each role should have some flavor/fluff attached (ex: preferred weapon names, core stats per level)
+And X abilities (4? 8?) that can be used instead of a straight attack
+(roles should have a set of abilities based towards their purpose, but can branch out)
+EX: White Mage might have Heal, Resurrect, UnPoison, and TurnUndead
+starting stats and stat gain is determined by role.
+
+Fight
+The core game screen.
+
+Improve
+When a character lives through 4 fights, the improve screen opens up for them (multiple levels queue the screen up multiple times)
+You can choose to gain extra stat points OR boost up an ability
