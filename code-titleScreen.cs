@@ -9,6 +9,7 @@ namespace PixelVision8.Player
     public static class TitleScene
     {
         public static JrpgRoslynChip parentRef;
+        //Probably need to set up a title screen meta-sprite
 
         public static void Init()
         {

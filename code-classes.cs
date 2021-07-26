@@ -40,6 +40,7 @@ namespace PixelVision8.Player
     {
         public string name;
         public int level;
+        public string creatureType; //Human, undead, others tbd. for weapon and spell banes?
         public Stats startingStats;
         public Stats StatsPerLevel;
     }

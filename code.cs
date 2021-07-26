@@ -23,10 +23,18 @@ namespace PixelVision8.Player
     {
 
         List<Role> roles = new List<Role>() {
-        	new Role() {name = "Generic"}
-    	};
+            new Role() {name = "Generic"}
+        };
         public override void Init()
         {
+            FightScene.parentRef = this;
+            TitleScene.parentRef = this;
+            NewGameScene.parentRef = this;
+            ImproveScene.parentRef = this;
+
+            LoadGameData();
+            //Any post-startup resets of values would go here.
+			gameState.mode = 1;
 
             var message = "EMPTY C# GAME\n\n\nThis is an empty game template.\n\n\nVisit 'www.pixelvision8.com' to learn more about creating games from scratch.";
             var display = Display();
@@ -43,31 +51,62 @@ namespace PixelVision8.Player
 
         public override void Draw()
         {
-
+            switch (gameState.mode)
+            {
+                case 0:
+                    //DrawTitleScreen();
+                    break;
+                case 1:
+                    FightScene.Draw();
+                    break;
+                //case 2:
+                    //DrawBlackJack();
+                    //break;
+                //case 3:
+                    //Roulette.Draw();
+                    //break;
+            }
         }
 
         public override void Update(int timeDelta)
         {
             RedrawDisplay();
+            switch (gameState.mode)
+            {
+                case 0:
+                    //DrawTitleScreen();
+                    break;
+                case 1:
+                    FightScene.Update(timeDelta);
+                    break;
+                //case 2:
+                    ///DrawBlackJack();
+                    //break;
+                //case 3:
+                    //Roulette.Draw();
+                    //break;
+            }
         }
 
-		public void SaveGameData(){
-			//The best thing to do here would be to loop over gameState and just save each property by name and value, if reflection is available.
-			//Save high scores
+        public void SaveGameData()
+        {
+            //The best thing to do here would be to loop over gameState and just save each property by name and value, if reflection is available.
+            //Save high scores
 
-			//save current run data
+            //save current run data
 
-			//save unlockable flags
+            //save unlockable flags
 
-		}
-		public void LoadGameData() {
-			//The best thing to do here would be to loop over gameState and just save each property by name and value if reflection is available.
-			//load high scores
+        }
+        public void LoadGameData()
+        {
+            //The best thing to do here would be to loop over gameState and just save each property by name and value if reflection is available.
+            //load high scores
 
-			//load current run data
+            //load current run data
 
-			//load unlockable flags
+            //load unlockable flags
 
-		}
+        }
     }
 }
