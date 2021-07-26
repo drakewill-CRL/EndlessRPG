@@ -43,13 +43,26 @@ namespace PixelVision8.Player
         public string creatureType; //Human, undead, others tbd. for weapon and spell banes?
         public Stats startingStats;
         public Stats StatsPerLevel;
+        public int posX;
+        public int posY;
+        public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
     }
 
 
     public class Character : Fightable
     {
         public Role role;
-        public string spriteSet;
+        public int XP; //1 XP at the end of a fight if they're alive, 4XP is a level-up
+        
+        public string drawState = "Idle"; //holds the state to display on screen.   
+        string spriteIdle = "Idle";
+        string spriteAbilty = "Ability";
+        int abilityFrames =2; //files end in 1 and 2.
+        string spriteAttack = "Attack";
+        int attackFrames =2; //files end in 1 and 2.
+        string spriteHit = "Hit";
+        string spriteDead = "Dead";
+
 
     }
 

@@ -32,6 +32,8 @@ namespace PixelVision8.Player
             NewGameScene.parentRef = this;
             ImproveScene.parentRef = this;
 
+            FightScene.Init();
+
             LoadGameData();
             //Any post-startup resets of values would go here.
 			gameState.mode = 1;
