@@ -38,17 +38,17 @@ namespace PixelVision8.Player
             //Any post-startup resets of values would go here.
 			gameState.mode = 1;
 
-            var message = "EMPTY C# GAME\n\n\nThis is an empty game template.\n\n\nVisit 'www.pixelvision8.com' to learn more about creating games from scratch.";
-            var display = Display();
-            var wrap = WordWrap(message, (display.X / 8) - 2);
-            var lines = SplitLines(wrap);
-            var total = lines.Length;
-            var startY = ((display.Y / 8) - 1) - total;
+            // var message = "EMPTY C# GAME\n\n\nThis is an empty game template.\n\n\nVisit 'www.pixelvision8.com' to learn more about creating games from scratch.";
+            // var display = Display();
+            // var wrap = WordWrap(message, (display.X / 8) - 2);
+            // var lines = SplitLines(wrap);
+            // var total = lines.Length;
+            // var startY = ((display.Y / 8) - 1) - total;
 
-            // We want to render the text from the bottom of the screen so we offset
-            // it and loop backwards.
-            for (var i = total - 1; i >= 0; i--)
-                DrawText(lines[i], 1, startY + (i - 1), DrawMode.Tile, "large", 15);
+            // // We want to render the text from the bottom of the screen so we offset
+            // // it and loop backwards.
+            // for (var i = total - 1; i >= 0; i--)
+            //     DrawText(lines[i], 1, startY + (i - 1), DrawMode.Tile, "large", 15);
         }
 
         public override void Draw()
@@ -94,6 +94,7 @@ namespace PixelVision8.Player
         {
             //The best thing to do here would be to loop over gameState and just save each property by name and value, if reflection is available.
             //Save high scores
+            //WriteSaveData("key", "value";)
 
             //save current run data
 
@@ -104,6 +105,7 @@ namespace PixelVision8.Player
         {
             //The best thing to do here would be to loop over gameState and just save each property by name and value if reflection is available.
             //load high scores
+            //var x = ReadSaveData("key", "default");
 
             //load current run data
 

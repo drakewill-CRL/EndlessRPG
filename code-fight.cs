@@ -10,8 +10,29 @@ namespace PixelVision8.Player{
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
         public static List<Enemy> enemies = new List<Enemy>();
+
+        public static List<Tuple<int,int>> ArrowPoints = new List<Tuple<int, int>>()
+        {
+            new Tuple<int, int>(3 * 8, 20 * 8), //fight
+            new Tuple<int, int>(3 * 8, 22 * 8), //ability
+            new Tuple<int, int>(3 * 8, 24 * 8), //defend
+            new Tuple<int, int>(3 * 8, 26 * 8), //run
+            new Tuple<int, int>(3 * 8, 28 * 8), //auto
+        };
+
+        static List<AttackResults> resultsToParse = new List<AttackResults>();
+
+        public static int arrowPosIndex = 0; //default to fight
+        public static int phase = 0; // 0 = select attacks, 1 = watch round play out.
+
+        public static int currentAnimationID = 0; //future setup
+        public static int currentAnimationFramesLeft = 0; //future setup
+
+        public static string HelpText = "Some helpful stuff goes here and oh look its on multiple lines now";
         //TODO: work out a setup for transition animations (EX: characters walking forward or back to their spot)
-        
+        //TODO: save list of places to put cursor for its positions (there's 4 for text selections, at least 4 for enemies.)
+        //TODO: help text
+        //TODO: chrome for frames and all that. Those might be big metasprites
 
         public static void Init()
         {
@@ -66,6 +87,9 @@ namespace PixelVision8.Player{
 
         public static void Update(int timeDelta)
         {
+            //check phase, advance animations or input requests.
+            //do any math required.
+
             Input();
         }
 
@@ -79,7 +103,7 @@ namespace PixelVision8.Player{
             //DrawRect ( x, y, width, height, color, drawMode )
             //parentRef.DrawRect(300,16, 16, 32 * 4, 2, DrawMode.Sprite); //Baseline PC sprite locations
             
-            parentRef.DrawRect(0, 150, 340, 8*11, 3, DrawMode.Sprite); //Possible text/command area.
+           // parentRef.DrawRect(0, 150, 340, 8*11, 3, DrawMode.Sprite); //Possible text/command area.
 
             //parentRef.DrawRect(8,16, 250, 32 * 4, 4, DrawMode.Sprite); //Possible enemy area
 
@@ -94,16 +118,40 @@ namespace PixelVision8.Player{
                 parentRef.DrawMetaSprite(e.spriteSet, e.posX, e.posY);
             }
 
+            DrawMenuList();
+            DrawHelpText();
+
+            parentRef.DrawMetaSprite("arrow", ArrowPoints[arrowPosIndex].Item1, ArrowPoints[arrowPosIndex].Item2);
+
         }
 
         public static void Input()
         {
+            //up and down move arrow, A advances to next command, B rolls back to previous
+            //tricky part, the arrow can be on the menu, a submenu, players, or enemies
+            //also, update help text when arrow moves to match whatever its on
         }
 
         public static void DrawMenuList()
         {
             //This is the default menu list of options and possibly some help text.
             //Fight, Ability, Defend, Run (% chance to re-roll the current fight, but you don't get XP for surviving.)
+
+            parentRef.DrawText("Fight", 4, 20, DrawMode.Tile, "large", 15); //spacing in tiles, not pixels.
+            parentRef.DrawText("Ability", 4, 22, DrawMode.Tile, "large", 15);
+            parentRef.DrawText("Defend", 4, 24, DrawMode.Tile, "large", 15); 
+            parentRef.DrawText("Run", 4, 26, DrawMode.Tile, "large", 15); 
+            parentRef.DrawText("Auto", 4, 28, DrawMode.Tile, "large", 15); 
+        }
+
+        public static void DrawHelpText()
+        {
+            //The text that shows up on the right side of the bottom panel to show you what the thing does.
+            //TODO: set up string to be drawn
+            var wrapped = parentRef.WordWrap(HelpText, 25);
+            var lines = parentRef.SplitLines(wrapped);
+            for(int i =0; i < lines.Count(); i++)
+                parentRef.DrawText(lines[i], 15, 20 + i, DrawMode.Tile, "large", 15); 
         }
 
     }

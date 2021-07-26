@@ -65,3 +65,24 @@ do spritework for baseline char and enemy
 prove system runs.
 Add baseline content ()
 implement additional content into systems (enemies, characters, roles, etc)
+Auto-fight option (simplest choice is auto-melee each round until it gets toggled off, later option should also use abilities)
+
+
+IMPLEMENTATION DETAILS
+Restoring MP: How? Give classes an ability that does this? Make it part of the Defend action? On level up?
+
+Leveling up:
+Gaining a level is generally the most efficient option, (and might restore HP/MP to full?)
+Items can be a huge stat boost, but they're based on your current level, and randomly rolled, so they arent always great
+Pumping a single stat can be important for specific builds or trying to make up for something, but you'll get more total stat points from leveling.
+
+BOSSES:
+Bosses get bigger scaling values and start over a party's level by a few levels
+
+STAT PURPOSES:
+STR - physical damage (FIGHT)
+DEF - counters STR
+MAGIC - ability damage
+MDEF: counters MAGIC
+SPD - determines initiative order
+LUK - determines crit chance (Attackers LUK - targets LUK = X. Roll dX to see if its over 20. Negative X means the defense can critical block/attack can botch on rolls under 0. LUK is not a dump stat! Probably.)

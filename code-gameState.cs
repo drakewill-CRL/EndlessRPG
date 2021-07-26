@@ -24,7 +24,8 @@ namespace PixelVision8.Player
         public static int BestRoleLevel = 0;
         
 
-        //Current game values. Copy this section once per charcter.
+        //Current game values. Copy this section once per charcter.\
+        public static Character char1; //Or just do this instead of tracking it multiple times?
         public static string Char1Name  = "";
         public static int Char1Level = 0;
         public static int Char1Role =0; //index of the role in the role list.
