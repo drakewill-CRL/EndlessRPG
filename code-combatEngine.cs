@@ -18,7 +18,7 @@ namespace PixelVision8.Player
             {
                 if (e.attacker.CanAct())
                 {
-                            
+                    
                 }
             }
 

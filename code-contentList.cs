@@ -28,5 +28,17 @@ namespace PixelVision8.Player
             }
 
         };
+
+        public static List<Ability> allAbilities = new List<Ability>() {
+            new Ability() {
+                name = "Sample",
+                description = "You do a sweet kickflip and hurt the enemy or something.",
+                mpCost = 1,
+                level = 1,
+                targetType = 0, //automatic targeting
+                //UseAbility = {} //uh oh, how is this going to work?
+                abilityKey = 0
+            }
+        };
     }
 }

@@ -53,6 +53,7 @@ namespace PixelVision8.Player
 
         public override void Draw()
         {
+            DrawText("FPS: " + ReadFPS(), 0, 0, DrawMode.Sprite, "large", 14); //This doesn't hit 60FPS
             switch (gameState.mode)
             {
                 case 0:

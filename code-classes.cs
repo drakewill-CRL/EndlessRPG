@@ -18,6 +18,11 @@ namespace PixelVision8.Player
         public int MDEF;
         public int SPD; //for initiative
         public int LUK; //For a few various things.
+        //You know, I had a write up for luck getting boosts from various things rolled randomly per character, like 
+        //favorite color or lucky number or zodiac sign or such. Maybe I can port that in here later.
+
+        //Stats might be where status effects get stored or set. Normal ones and special ones. Might need to figure out how to un-set them.
+        //Later feature. Not needed just yet.
 
         public void Add(Stats incoming)
         {
@@ -40,10 +45,22 @@ namespace PixelVision8.Player
         public string name;
         public string description; //help text that appears in combat. Might need to be a property to update with levels.
         public int mpCost;
-        public int level;
+        public int level; //Used to power up the effects of the ability.
+        public int targetType; //0: no target selection(self, random, all enemies, or all allies.). 2: target  1 enemy 3: target 1 ally.
 
-        public void UseAbility() { return; } //must be overridden
+        //public void UseAbility() { return; } //must be overridden? Might not be what I think
+        public int abilityKey;
 
+        public static void UseAbility(Fightable attacker, List<Fightable> targets, int key)
+        {
+            //All abilities' effects will just get handled in this one giant switch function for now.
+            //until i cna figure out how to in-line a function declaration in an initializer.
+            switch(key)
+            {
+                case 0: //Do a kickflip!
+                break;
+            }
+        }
     }
 
 
@@ -69,6 +86,7 @@ namespace PixelVision8.Player
         public int posX;
         public int posY;
         public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
+        public List<Ability> abilities;
 
 
         Item weapon;
@@ -121,13 +139,13 @@ namespace PixelVision8.Player
     public class Enemy : Fightable
     {
         public string sprite;
-        public List<Ability> abilities;
+        
     }
 
     public class Attack //these are queued up in the CombatEngine.
     {
         public Fightable attacker;
-        public Fightable target;
+        public List<Fightable> targets;
         public string thingToRoll;
         public Ability thingToDo; //Ability here would also mean that I need entries for the baseline commands.
     }
@@ -142,10 +160,10 @@ namespace PixelVision8.Player
     {
         //What happens after an attack.
         public Fightable attacker;
-        public Fightable target;
+        public List<Fightable> target;
         public Stats attackerChanges;
-        public Stats targetChanges;
-        public string printDesc;
+        public List<Stats> targetChanges; //Must line up index-wise with the targets.
+        public List<string> printDesc; //Multiple targets COULD mean multiple results to display. Might not.
 
     }
 
