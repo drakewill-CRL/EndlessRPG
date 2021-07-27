@@ -51,15 +51,31 @@ namespace PixelVision8.Player
         //public void UseAbility() { return; } //must be overridden? Might not be what I think
         public int abilityKey;
 
-        public static void UseAbility(Fightable attacker, List<Fightable> targets, int key)
+        public static AttackResults UseAbility(Fightable attacker, List<Fightable> targets, int key)
         {
             //All abilities' effects will just get handled in this one giant switch function for now.
             //until i cna figure out how to in-line a function declaration in an initializer.
+            AttackResults results = new AttackResults();
+            results.attacker = attacker;
+            foreach(var t in targets)
+            {
+                Stats ts = new Stats();
+                results.targetChanges.Add(ts);
+                results.printDesc.Add("attack results");
             switch(key)
             {
                 case 0: //Do a kickflip!
                 break;
+                case 1: //Fight
+                break;
+                case 2: //defend
+                break;
+                case 3: //Run
+                break;
             }
+            }
+
+            return results;
         }
     }
 
@@ -78,25 +94,25 @@ namespace PixelVision8.Player
         public string name;
         public int level;
         public string creatureType; //Human, undead, others tbd. for weapon and spell banes?
-        public Stats startingStats;
-        public Stats StatsPerLevel;
-        public Stats currentStats; //should be equal to getTotalStats most of the time.
-        public Stats statBoosts; //boosted stats from XP instead of a weapon or level.
-        public Stats tempChanges; //Effects from debuffs or situations etc.
+        public Stats startingStats = new Stats();
+        public Stats StatsPerLevel = new Stats();
+        public Stats currentStats = new Stats(); //should be equal to getTotalStats most of the time.
+        public Stats statBoosts = new Stats(); //boosted stats from XP instead of a weapon or level.
+        public Stats tempChanges = new Stats(); //Effects from debuffs or situations etc.
         public int posX;
         public int posY;
         public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
         public List<Ability> abilities;
+        public string desc = "";
 
-
-        Item weapon;
-        Item armor;
+        Item weapon =  new Item();
+        Item armor = new Item();
 
         public Stats getTotalStats() //TODO: do i want this to handle HP or keep that separate? I have to be care on where I set HP/MP if I do it here.
         {
             Stats final = new Stats();
             final.Add(startingStats);
-            for (int i = 0; i < level; i++)
+            for (int i = 1; i < level; i++) //Level 1 doesn't grant stats, it gives startingStats instead.
                 final.Add(StatsPerLevel);
             final.Add(statBoosts);
             final.Add(weapon.statBoost);
@@ -132,8 +148,6 @@ namespace PixelVision8.Player
         string weaponName = ""; //Fluff, used for item rolls to name weapons.
         string armorName = ""; //fluff, used for item rolls to name defensive items.
 
-
-
     }
 
     public class Enemy : Fightable
@@ -145,14 +159,14 @@ namespace PixelVision8.Player
     public class Attack //these are queued up in the CombatEngine.
     {
         public Fightable attacker;
-        public List<Fightable> targets;
+        public List<Fightable> targets = new List<Fightable>();
         public string thingToRoll;
         public Ability thingToDo; //Ability here would also mean that I need entries for the baseline commands.
     }
 
     public class Item
     {
-        public Stats statBoost;
+        public Stats statBoost = new Stats();
         public string name;
     }
 
@@ -160,10 +174,10 @@ namespace PixelVision8.Player
     {
         //What happens after an attack.
         public Fightable attacker;
-        public List<Fightable> target;
+        public List<Fightable> target = new List<Fightable>();
         public Stats attackerChanges;
-        public List<Stats> targetChanges; //Must line up index-wise with the targets.
-        public List<string> printDesc; //Multiple targets COULD mean multiple results to display. Might not.
+        public List<Stats> targetChanges = new List<Stats>(); //Must line up index-wise with the targets.
+        public List<string> printDesc = new List<string>(); //Multiple targets COULD mean multiple results to display. Might not.
 
     }
 

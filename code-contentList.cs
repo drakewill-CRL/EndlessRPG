@@ -38,7 +38,31 @@ namespace PixelVision8.Player
                 targetType = 0, //automatic targeting
                 //UseAbility = {} //uh oh, how is this going to work?
                 abilityKey = 0
-            }
+            },
+            new Ability() {
+                name = "Fight",
+                description = "Melee attack the selected target.",
+                mpCost = 0,
+                level = 1,
+                targetType = 2, //single enemy
+                abilityKey = 1
+            },
+            new Ability() {
+                name = "Defend",
+                description = "Take half damage for the next round",
+                mpCost = 0,
+                level = 1,
+                targetType = 0, //auto, self
+                abilityKey = 2
+            },
+            new Ability() {
+                name = "Run",
+                description = "Attempt to escape this fight and start a new encounter",
+                mpCost = 0,
+                level = 1,
+                targetType = 0, //auto, special case.
+                abilityKey = 3
+            },
         };
     }
 }
