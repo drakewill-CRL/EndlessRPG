@@ -12,10 +12,12 @@ namespace PixelVision8.Player
 
         public static List<Enemy> enemies = new List<Enemy>() {
         new Enemy() {
-            name = "Test" ,
+            name = "Test Target" ,
             level = 1,
             startingStats = baseStats,
-            StatsPerLevel = baseStats
+            StatsPerLevel = baseStats,
+            currentStats = baseStats,
+            spriteSet="enemy1"
             }
         };
 
@@ -63,6 +65,15 @@ namespace PixelVision8.Player
                 targetType = 0, //auto, special case.
                 abilityKey = 3
             },
+        };
+
+        public static List<List<Enemy>> PossibleEncounters = new List<List<Enemy>>()
+        { 
+            new List<Enemy>() 
+            { 
+                (Enemy)enemies[0].Clone(), 
+                (Enemy)enemies[0].Clone()
+            }
         };
     }
 }

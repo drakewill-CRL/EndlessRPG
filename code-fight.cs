@@ -68,6 +68,7 @@ namespace PixelVision8.Player
             char1.posX = 300;
             char1.posY = 16;
             char1.drawState = "Idle";
+            char1.name = "Larry";
             char1.abilities = new List<Ability>();
             char1.startingStats = ContentLists.baseStats;
             char1.StatsPerLevel = ContentLists.baseStats;
@@ -93,13 +94,19 @@ namespace PixelVision8.Player
             // char4.drawState = "Idle";
             // characters.Add(char4);
 
-            Enemy enemy1 = new Enemy();
-            enemy1.spriteSet = "enemy1";
-            enemy1.name = "Test Target";
-            enemy1.posX = 8;
-            enemy1.posY = 16;
-            enemy1.currentStats = ContentLists.baseStats;
-            enemies.Add(enemy1);
+            enemies = ContentLists.PossibleEncounters[0]; //doesnt work?
+            for(int i = 0; i < enemies.Count(); i++)
+            {
+                enemies[i].posX = 8 + ((i/2) * 64);
+                enemies[i].posY = 16 + ((i%2) * 64);
+            }
+            // Enemy enemy1 = new Enemy();
+            // enemy1.spriteSet = "enemy1";
+            // enemy1.name = "Test Target";
+            // enemy1.posX = 8;
+            // enemy1.posY = 16;
+            // enemy1.currentStats = ContentLists.baseStats;
+            // enemies.Add(enemy1);
             // Enemy enemy2 = new Enemy();
             // enemy2.spriteSet = "enemy1";
             // enemy2.posX = 8;
@@ -155,6 +162,16 @@ namespace PixelVision8.Player
                     {
                         //Get the next thing to display and process.
                         var process = resultsToParse[0];
+                        //process target stat changes
+                        for(int i =0; i < process.target.Count(); i++)
+                        {
+                            process.target[i].currentStats.Add(process.targetChanges[i]);
+                            if (process.target[i].currentStats.HP <= 0)
+                                {
+                                    process.target[i].spriteSet = "";
+                                }
+                        }
+
                         displayResultData = process.printDesc[0];
                         process.printDesc.Remove(displayResultData);
                         displayFrameCounter = displayTime;
@@ -181,7 +198,7 @@ namespace PixelVision8.Player
 
             //debug draws here:
             //parentRef.DrawText("debug", 12 * 8, 12, DrawMode.Sprite, "large", 12);
-            parentRef.DrawText("resultCounts:" + resultsToParse.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
+            parentRef.DrawText("enemy1HP:" + enemies[0].currentStats.HP, 12 * 8, 12, DrawMode.Sprite, "large", 12);
 
             //test sprites
             foreach (var c in characters)
@@ -212,7 +229,8 @@ namespace PixelVision8.Player
                     break;
                 case 1: //display results/actions
                     //parentRef.DrawText("combat started", 4 * 8, 15 * 8, DrawMode.Sprite, "large", 15);
-                    parentRef.DrawText(displayResultData, 4 * 8, 15 * 8, DrawMode.Sprite, "large", 15);
+                    //parentRef.DrawText(displayResultData, 4 * 8, 15 * 8, DrawMode.Sprite, "large", 15);
+                    DrawCombatLogText();
                     break;
             }
 
@@ -330,6 +348,9 @@ namespace PixelVision8.Player
                     if (pendingAttacks.Count() >= characters.Count(c => c.CanAct()))
                     {
                         phase = 1; //Switch to results mode.
+                        //and run enemy attacks, which TODO should go through some AI in the future.
+                        foreach(var e in enemies)
+                            pendingAttacks.Add(new Attack(){ attacker = e, targets = new List<Fightable>(){characters[0]}, thingToDo = ContentLists.allAbilities[0]});
                         //pass attacks to combat engine to determine results
                         displayFrameCounter = displayTime;
                         resultsToParse = CombatEngine.ProcessRound(pendingAttacks);
@@ -389,6 +410,8 @@ namespace PixelVision8.Player
             for (int i = 0; i < enemies.Count(); i++)
                 if (enemies[i].currentStats.HP > 0) //skip empty spaces for dead enemies.
                     parentRef.DrawText(enemies[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+
+                parentRef.DrawText("All", 4 * 8, 28 * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
         }
 
         public static void DrawPCList()
@@ -405,6 +428,14 @@ namespace PixelVision8.Player
             var lines = parentRef.SplitLines(wrapped);
             for (int i = 0; i < lines.Count(); i++)
                 parentRef.DrawText(lines[i], 15 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
+        }
+
+        public static void DrawCombatLogText()
+        {
+            var wrapped = parentRef.WordWrap(displayResultData, 25);
+            var lines = parentRef.SplitLines(wrapped);
+            for (int i = 0; i < lines.Count(); i++)
+                parentRef.DrawText(lines[i], 6 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
         }
 
     }

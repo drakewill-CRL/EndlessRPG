@@ -14,7 +14,7 @@ namespace PixelVision8.Player
         public static List<AttackResults> ProcessRound(List<Attack> events)
         {
             List<AttackResults> results = new List<AttackResults>();
-            results.Add(new AttackResults(){ printDesc = new List<string>(){"Combat Started"}}); //empty for testing
+            //results.Add(new AttackResults(){ printDesc = new List<string>(){"Combat Started"}}); //empty for testing
             events = events.OrderByDescending(e => e.attacker.currentStats.SPD).ToList();
             foreach(var e in events)
             {

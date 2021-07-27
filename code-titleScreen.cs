@@ -10,6 +10,8 @@ namespace PixelVision8.Player
     {
         public static JrpgRoslynChip parentRef;
         //Probably need to set up a title screen meta-sprite
+        //a cool widescreen image to drop in as a meta-sprite.
+        //and some copyright info, plus a high score display of all classes' highest levels added up.
 
         public static void Init()
         {

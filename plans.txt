@@ -71,6 +71,8 @@ Auto-fight option (simplest choice is auto-melee each round until it gets toggle
 IMPLEMENTATION DETAILS
 Restoring MP: How? Give classes an ability that does this? Make it part of the Defend action? On level up?
 
+A sound effect should be played for each action, Probably determined by the ability or action.
+
 Leveling up:
 Gaining a level is generally the most efficient option, (and might restore HP/MP to full?)
 Items can be a huge stat boost, but they're based on your current level, and randomly rolled, so they arent always great
