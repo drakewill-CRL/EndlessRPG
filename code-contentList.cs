@@ -13,6 +13,7 @@ namespace PixelVision8.Player
         public static List<Enemy> enemies = new List<Enemy>() {
         new Enemy() {
             name = "Test Target" ,
+            desc = "a thing to beat on while making menus work",
             level = 1,
             startingStats = baseStats,
             StatsPerLevel = baseStats,

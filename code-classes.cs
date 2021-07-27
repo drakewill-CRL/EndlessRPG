@@ -115,6 +115,7 @@ namespace PixelVision8.Player
         public string name;
     }
 
+    //AttackResults is now the number-changing results for CombatEngine.
     public class AttackResults
     {
         //What happens after an attack.
@@ -122,8 +123,19 @@ namespace PixelVision8.Player
         public List<Fightable> target = new List<Fightable>();
         //public Stats attackerChanges; //Just put the attack in the target and targetChanges list.
         public List<Stats> targetChanges = new List<Stats>(); //Must line up index-wise with the targets.
-        public List<string> printDesc = new List<string>(); //Multiple targets COULD mean multiple results to display. Might not.
+        public List<string> printDesc = new List<string>();
+        //targetchanges should really be done in the CombatEngine, and the printDesc should just show what happened/update the display
+        //So I might also need a DIFFERENT list of stuff (display changes, animation effects to draw, etc) for the display-phase stuff, and let stats be done automatically in the combat engine.
+    }
 
+    //DisplayResults is the class used by FightScene to show how combat went.
+    public class DisplayResults
+    {
+        public string desc; //Explains what happened this step.
+        public Fightable target; //Could be null. MIght need to be a list in the future?
+        public string changedItem = ""; //Which property changed. could be sprite.
+        public string changedTo =""; //what it changed to.
+        
     }
 
     public class AI

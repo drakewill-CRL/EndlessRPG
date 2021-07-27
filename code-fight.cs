@@ -33,7 +33,7 @@ namespace PixelVision8.Player
         };
 
         static List<Attack> pendingAttacks = new List<Attack>();
-        static List<AttackResults> resultsToParse = new List<AttackResults>();
+        static List<DisplayResults> resultsToParse = new List<DisplayResults>();
 
         public static int arrowPosIndex = 0; //default to fight
         public static int phase = 0; // 0 = action selection, 1 = watch round play out.
@@ -95,10 +95,10 @@ namespace PixelVision8.Player
             // characters.Add(char4);
 
             enemies = ContentLists.PossibleEncounters[0]; //doesnt work?
-            for(int i = 0; i < enemies.Count(); i++)
+            for (int i = 0; i < enemies.Count(); i++)
             {
-                enemies[i].posX = 8 + ((i/2) * 64);
-                enemies[i].posY = 16 + ((i%2) * 64);
+                enemies[i].posX = 8 + ((i / 2) * 64);
+                enemies[i].posY = 16 + ((i % 2) * 64);
             }
             // Enemy enemy1 = new Enemy();
             // enemy1.spriteSet = "enemy1";
@@ -162,21 +162,9 @@ namespace PixelVision8.Player
                     {
                         //Get the next thing to display and process.
                         var process = resultsToParse[0];
-                        //process target stat changes
-                        for(int i =0; i < process.target.Count(); i++)
-                        {
-                            process.target[i].currentStats.Add(process.targetChanges[i]);
-                            if (process.target[i].currentStats.HP <= 0)
-                                {
-                                    process.target[i].spriteSet = "";
-                                }
-                        }
-
-                        displayResultData = process.printDesc[0];
-                        process.printDesc.Remove(displayResultData);
-                        displayFrameCounter = displayTime;
-                        if (process.printDesc.Count() == 0)
-                            resultsToParse.Remove(process);
+                        //TODO: swap sprite states as ordered here.
+                        UpdateSpriteDisplay(process);
+                        resultsToParse.Remove(process);
                     }
                 }
             }
@@ -233,8 +221,6 @@ namespace PixelVision8.Player
                     DrawCombatLogText();
                     break;
             }
-
-
         }
 
         public static void Input()
@@ -261,7 +247,16 @@ namespace PixelVision8.Player
                                 arrowPosIndex = characters[activeCharSelecting].abilities.Count() - 1;
                             helpText = characters[activeCharSelecting].abilities[arrowPosIndex].description;
                             break;
-                        case 2: //target enemy
+                        case 2: //target enemy. Skip dead enemies.
+                            var currentIndex = arrowPosIndex;
+                            List<int> validOptions = GetValidEnemyTargets();
+                            arrowPosIndex = validOptions.FirstOrDefault(o => o < arrowPosIndex); //Should be 0 automatically if on the last entry.
+                            if (arrowPosIndex == 0 && (currentIndex == 0 || enemies[0].currentStats.HP == 0)) //We were already on the first entry, and got 0 as the OrDefault value. OR ITS DEAD
+                                arrowPosIndex = 4;
+                            if(arrowPosIndex < 4)
+                                helpText = enemies[arrowPosIndex].desc;
+                            else
+                                helpText = "All Enemies";
                             break;
                         case 3://target PC
                             break;
@@ -288,6 +283,12 @@ namespace PixelVision8.Player
                             helpText = characters[activeCharSelecting].abilities[arrowPosIndex].description;
                             break;
                         case 2: //target enemy
+                            List<int> validOptions = GetValidEnemyTargets();
+                            arrowPosIndex = validOptions.FirstOrDefault(o => o > arrowPosIndex); //Should be 0 automatically if on the last entry.
+                            if (arrowPosIndex < 4)
+                                helpText = enemies[arrowPosIndex].desc;
+                            else
+                                helpText = "All Enemies";
                             break;
                         case 3://target PC
                             break;
@@ -310,7 +311,7 @@ namespace PixelVision8.Player
                                     currentAction.attacker = characters[activeCharSelecting];
                                     currentAction.thingToDo = ContentLists.allAbilities[1]; //Fight
                                     subMenuLevel = 2;
-                                    arrowPosIndex = 0;
+                                    arrowPosIndex = GetValidEnemyTargets().First();
                                     helpText = enemies[0].desc;
                                     break;
                                 case 1:
@@ -340,6 +341,7 @@ namespace PixelVision8.Player
                             currentAction = new Attack();
                             activeCharSelecting++;
                             arrowPosIndex = 0;
+                            subMenuLevel = 0;
                             break;
                         case 3: //select target ally
                             currentAction.targets.Add(characters[arrowPosIndex]);//selected thing.
@@ -349,8 +351,8 @@ namespace PixelVision8.Player
                     {
                         phase = 1; //Switch to results mode.
                         //and run enemy attacks, which TODO should go through some AI in the future.
-                        foreach(var e in enemies)
-                            pendingAttacks.Add(new Attack(){ attacker = e, targets = new List<Fightable>(){characters[0]}, thingToDo = ContentLists.allAbilities[0]});
+                        foreach (var e in enemies)
+                            pendingAttacks.Add(new Attack() { attacker = e, targets = new List<Fightable>() { characters[0] }, thingToDo = ContentLists.allAbilities[0] });
                         //pass attacks to combat engine to determine results
                         displayFrameCounter = displayTime;
                         resultsToParse = CombatEngine.ProcessRound(pendingAttacks);
@@ -411,7 +413,7 @@ namespace PixelVision8.Player
                 if (enemies[i].currentStats.HP > 0) //skip empty spaces for dead enemies.
                     parentRef.DrawText(enemies[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
 
-                parentRef.DrawText("All", 4 * 8, 28 * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+            parentRef.DrawText("All", 4 * 8, 28 * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
         }
 
         public static void DrawPCList()
@@ -438,6 +440,32 @@ namespace PixelVision8.Player
                 parentRef.DrawText(lines[i], 6 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
         }
 
+        public static List<int> GetValidEnemyTargets()
+        {
+            List<int> validOptions = new List<int>();
+            for (int i = 0; i < enemies.Count(); i++)
+            {
+                if (enemies[i].currentStats.HP > 0)
+                    validOptions.Add(i);
+            }
+            validOptions.Add(4); //All Enemies/Allies.
+            return validOptions;
+        }
+
+        public static void UpdateSpriteDisplay(DisplayResults dr)
+        {
+            displayResultData = dr.desc;
+            displayFrameCounter = displayTime;
+
+            switch(dr.changedItem)
+            {
+                case "spriteState":
+                    dr.target.spriteSet = dr.changedTo;
+                break;
+                default:
+                break;
+            }
+        }
     }
 
 
