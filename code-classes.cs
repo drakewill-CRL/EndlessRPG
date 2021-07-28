@@ -59,9 +59,6 @@ namespace PixelVision8.Player
             results.attacker = attacker;
             foreach (var t in targets)
             {
-                Stats ts = new Stats();
-                results.targetChanges.Add(ts);
-                //results.printDesc.Add("attack results");
                 switch (key)
                 {
                     case 0: //Do a kickflip!
@@ -70,8 +67,7 @@ namespace PixelVision8.Player
                     case 1: //Fight
                         results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for 1 / REAL DAMAGE NOT IMPLEMENTED");
                         results.target.Add(t);
-                        ts.HP = -1;
-                        // results.targetChanges.Add(new Stats(){ HP = -1});
+                         results.targetChanges.Add(new Stats(){ HP = -1});
                         // Console.WriteLine("removing " + results.targetChanges[0].HP + " HP");
                         // Console.WriteLine("targetchanges is " + results.targetChanges.Count() + "  long");
 

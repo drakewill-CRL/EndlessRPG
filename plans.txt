@@ -71,7 +71,20 @@ Auto-fight option (simplest choice is auto-melee each round until it gets toggle
 IMPLEMENTATION DETAILS
 Restoring MP: How? Give classes an ability that does this? Make it part of the Defend action? On level up?
 
+Display:
+PCs need a place to display name and HP/MaxHP. Where at? Probably on the right of the PC sprites?
+4 rows of text for that (leave 1 blank for spacing):
+name
+level [or status effects?]
+hp/maxhp
+or use a bar for that? 
+Mp/maxMP? or display that on the ability panel?
+
+sounds
 A sound effect should be played for each action, Probably determined by the ability or action.
+Should figure out background music (play a wav song on one channel, play some other noise to stop it and then play new song?)
+--This might need PV8 to play compressed files, like .ogg files (i might have to PR this in myself)
+Will also need a list of which sound effects are which, possibly a descriptive table.
 
 Leveling up:
 Gaining a level is generally the most efficient option, (and might restore HP/MP to full?)

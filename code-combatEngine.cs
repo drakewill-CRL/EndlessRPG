@@ -25,6 +25,8 @@ namespace PixelVision8.Player
                     var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo.abilityKey);
                     results.Add(abilOutcome);
 
+                    foreach(var adesc in abilOutcome.printDesc)
+                        outerResults.Add(new DisplayResults(){ desc = adesc});
                     //process target stat changes now, so dead enemies don't attack. TODO update the results returned here to be display-results, not stat-results.
                     for (int i = 0; i < abilOutcome.target.Count(); i++)
                     {
@@ -32,9 +34,6 @@ namespace PixelVision8.Player
                         if (abilOutcome.target[i].currentStats.HP <= 0)
                             outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc= abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "dead" });
                     }
-
-                    foreach(var adesc in abilOutcome.printDesc)
-                        outerResults.Add(new DisplayResults(){ desc = adesc});
                 }
                 else
                     outerResults.Add(new DisplayResults(){  desc = e.attacker.name + " couldn't act"});

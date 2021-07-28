@@ -48,7 +48,7 @@ namespace PixelVision8.Player
 
         static int displayTime = 120; //# of frames to display each message for.
         static int displayFrameCounter = 0; //the one we tick down
-        static string displayResultData = "no results yet";
+        static string displayResultData = "Checking...";
 
         public static string helpText = "";
         //TODO: work out a setup for transition animations (EX: characters walking forward or back to their spot)
@@ -157,6 +157,8 @@ namespace PixelVision8.Player
                         pendingAttacks = new List<Attack>();
                         displayResultData = "Checking...";
                         helpText = menuHelpTexts[0];
+                        if (!enemies.Any(e => e.CanAct()))
+                            helpText = "everybody dead, spawn new encounter.";
                     }
                     else
                     {
@@ -285,6 +287,8 @@ namespace PixelVision8.Player
                         case 2: //target enemy
                             List<int> validOptions = GetValidEnemyTargets();
                             arrowPosIndex = validOptions.FirstOrDefault(o => o > arrowPosIndex); //Should be 0 automatically if on the last entry.
+                            if (arrowPosIndex == 0)
+                                arrowPosIndex = validOptions.First();
                             if (arrowPosIndex < 4)
                                 helpText = enemies[arrowPosIndex].desc;
                             else
