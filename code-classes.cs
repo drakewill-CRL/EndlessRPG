@@ -63,6 +63,8 @@ namespace PixelVision8.Player
                 {
                     case 0: //Do a kickflip!
                         results.printDesc.Add(attacker.name + " does a sweet kickflip! Nothing else happens.");
+                        results.target.Add(attacker);
+                        results.targetChanges.Add(new Stats(){ MP = -1});
                         break;
                     case 1: //Fight
                         results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for 1 / REAL DAMAGE NOT IMPLEMENTED");
@@ -125,12 +127,16 @@ namespace PixelVision8.Player
     }
 
     //DisplayResults is the class used by FightScene to show how combat went.
+    //Might have a thing set up where display texts have a frameCounter value long enough to read it
+    //and stat changes have a 0 or 1 frame time to make those advance along faster.
     public class DisplayResults
     {
         public string desc; //Explains what happened this step.
         public Fightable target; //Could be null. MIght need to be a list in the future?
+        public Stats changeStats = new Stats(); //For displaying HP/MP value changes during display phase.
         public string changedItem = ""; //Which property changed. could be sprite.
         public string changedTo =""; //what it changed to.
+        public int frameCounter = 120; //How long to display this particular result, if they're not all on the same timer.
         
     }
 

@@ -16,6 +16,7 @@ namespace PixelVision8.Player
         public Stats currentStats = new Stats(); //should be equal to getTotalStats most of the time.
         public Stats statBoosts = new Stats(); //boosted stats from XP instead of a weapon or level.
         public Stats tempChanges = new Stats(); //Effects from debuffs or situations etc.
+        public Stats displayStats = new Stats(); //The stats to use on-screen and process during fight results animation, so HP/MP bars show correct values during playback.
         public int posX;
         public int posY;
         public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.

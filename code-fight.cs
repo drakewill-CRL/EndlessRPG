@@ -12,6 +12,8 @@ namespace PixelVision8.Player
         public static List<Character> characters = new List<Character>();
         public static List<Enemy> enemies = new List<Enemy>();
 
+        public static Random random = new Random();
+
         public static Stats applyToAll = new Stats(); //Possibly where fight-specific gimmicks or spells go.
 
         public static string[] menuHelpTexts = new string[5] { //The 5 main menu options
@@ -30,6 +32,14 @@ namespace PixelVision8.Player
             new Tuple<int, int>(3 * 8, 24 * 8), //defend
             new Tuple<int, int>(3 * 8, 26 * 8), //run
             new Tuple<int, int>(3 * 8, 28 * 8), //auto
+        };
+
+        public static List<Tuple<int, int>> charPositions = new List<Tuple<int, int>>()
+        {
+            new Tuple<int, int>(220, 16),
+            new Tuple<int, int>(220, 48),
+            new Tuple<int, int>(220, 64),
+            new Tuple<int, int>(220, 80)
         };
 
         static List<Attack> pendingAttacks = new List<Attack>();
@@ -52,8 +62,6 @@ namespace PixelVision8.Player
 
         public static string helpText = "";
         //TODO: work out a setup for transition animations (EX: characters walking forward or back to their spot)
-        //TODO: save list of places to put cursor for its positions (there's 4 for text selections, at least 4 for enemies.)
-        //TODO: help text
         //TODO: chrome for frames and all that. Those might be big metasprites
 
         public static void Init()
@@ -65,14 +73,15 @@ namespace PixelVision8.Player
             //once its finalized set up a construction for Character that handles all this.
             Character char1 = new Character();
             char1.spriteSet = "char1";
-            char1.posX = 300;
-            char1.posY = 16;
+            char1.posX = charPositions[0].Item1;
+            char1.posY = charPositions[0].Item2;
             char1.drawState = "Idle";
             char1.name = "Larry";
             char1.abilities = new List<Ability>();
             char1.startingStats = ContentLists.baseStats;
             char1.StatsPerLevel = ContentLists.baseStats;
             char1.currentStats = char1.getTotalStats();
+            char1.displayStats = char1.currentStats;
             char1.abilities.Add(ContentLists.allAbilities[0]);
             characters.Add(char1);
             // Character char2 = new Character();
@@ -157,14 +166,17 @@ namespace PixelVision8.Player
                         pendingAttacks = new List<Attack>();
                         displayResultData = "Checking...";
                         helpText = menuHelpTexts[0];
-                        if (!enemies.Any(e => e.CanAct()))
-                            helpText = "everybody dead, spawn new encounter.";
+                        //if (!enemies.Any(e => e.CanAct()))
+                        //helpText = "everybody dead, spawn new encounter.";
                     }
                     else
                     {
                         //Get the next thing to display and process.
                         var process = resultsToParse[0];
                         //TODO: swap sprite states as ordered here.
+                        displayFrameCounter = process.frameCounter;
+                        if (process.target != null)
+                            process.target.displayStats.Add(process.changeStats);
                         UpdateSpriteDisplay(process);
                         resultsToParse.Remove(process);
                     }
@@ -200,6 +212,7 @@ namespace PixelVision8.Player
             {
                 parentRef.DrawMetaSprite(e.spriteSet, e.posX, e.posY);
             }
+            DrawStatusDisplays(); //Might need to increase the separation between display-data and combat-data further.
 
             switch (phase)
             {
@@ -255,7 +268,7 @@ namespace PixelVision8.Player
                             arrowPosIndex = validOptions.FirstOrDefault(o => o < arrowPosIndex); //Should be 0 automatically if on the last entry.
                             if (arrowPosIndex == 0 && (currentIndex == 0 || enemies[0].currentStats.HP == 0)) //We were already on the first entry, and got 0 as the OrDefault value. OR ITS DEAD
                                 arrowPosIndex = 4;
-                            if(arrowPosIndex < 4)
+                            if (arrowPosIndex < 4)
                                 helpText = enemies[arrowPosIndex].desc;
                             else
                                 helpText = "All Enemies";
@@ -280,7 +293,7 @@ namespace PixelVision8.Player
                             break;
                         case 1://ability menu
                             arrowPosIndex++;
-                            if (arrowPosIndex >= ArrowPoints.Count())
+                            if (arrowPosIndex >= characters[activeCharSelecting].abilities.Count())
                                 arrowPosIndex = 0;
                             helpText = characters[activeCharSelecting].abilities[arrowPosIndex].description;
                             break;
@@ -338,6 +351,21 @@ namespace PixelVision8.Player
                             break;
                         case 1: //abilities menu
                                 //Hmm, abilities might or might not need the sub-menus. Have to check per ability.
+                            var tLevel = characters[activeCharSelecting].abilities[arrowPosIndex].targetType;
+                            if (tLevel == 0)//self or auto-target
+                            {
+                                //TODO: functionalize this, cause it's gonna get called a lot.
+                                currentAction.attacker = characters[activeCharSelecting];
+                                currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
+                                pendingAttacks.Add(currentAction);
+                                currentAction = new Attack();
+                                activeCharSelecting++;
+                                arrowPosIndex = 0;
+                                subMenuLevel = 0;
+                            }
+                            //TODO: what about abilities that need to target someone? 
+                            //Move to the next menu and set current info on the current attack.
+
                             break;
                         case 2: //select target enemy and advance to next one.
                             currentAction.targets.Add(enemies[arrowPosIndex]);//selected thing.
@@ -354,8 +382,14 @@ namespace PixelVision8.Player
                     if (pendingAttacks.Count() >= characters.Count(c => c.CanAct()))
                     {
                         phase = 1; //Switch to results mode.
+                        //Set display stats to the currentStats values now, then tick those down during the phase.
+                        foreach (var c in characters)
+                            c.displayStats = c.currentStats;
+                        //foreach(var e in enemies) //Not currently relevant but could be in the future.
+                        //e.displayStats = e.currentStats;
+
                         //and run enemy attacks, which TODO should go through some AI in the future.
-                        foreach (var e in enemies)
+                        foreach (var e in enemies.Where(e => e.CanAct()))
                             pendingAttacks.Add(new Attack() { attacker = e, targets = new List<Fightable>() { characters[0] }, thingToDo = ContentLists.allAbilities[0] });
                         //pass attacks to combat engine to determine results
                         displayFrameCounter = displayTime;
@@ -433,7 +467,7 @@ namespace PixelVision8.Player
             var wrapped = parentRef.WordWrap(helpText, 25);
             var lines = parentRef.SplitLines(wrapped);
             for (int i = 0; i < lines.Count(); i++)
-                parentRef.DrawText(lines[i], 15 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
+                parentRef.DrawText(lines[i], 16 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
         }
 
         public static void DrawCombatLogText()
@@ -459,16 +493,34 @@ namespace PixelVision8.Player
         public static void UpdateSpriteDisplay(DisplayResults dr)
         {
             displayResultData = dr.desc;
-            displayFrameCounter = displayTime;
+            //displayFrameCounter = displayTime;
 
-            switch(dr.changedItem)
+            switch (dr.changedItem)
             {
                 case "spriteState":
                     dr.target.spriteSet = dr.changedTo;
-                break;
+                    break;
                 default:
-                break;
+                    break;
             }
+        }
+
+        public static void DrawStatusDisplays()
+        {
+            for (int i = 0; i < characters.Count(); i++)
+            {
+                parentRef.DrawText(characters[i].name, charPositions[i].Item1 + 32, charPositions[i].Item2, DrawMode.Sprite, "large", 15);
+                parentRef.DrawText("HP " + characters[i].displayStats.HP + "/" + characters[i].displayStats.maxHP, charPositions[i].Item1 + 32, charPositions[i].Item2 + 8, DrawMode.Sprite, "large", 15);
+                parentRef.DrawText("MP " + characters[i].displayStats.MP + "/" + characters[i].displayStats.maxMP, charPositions[i].Item1 + 32, charPositions[i].Item2 + 16, DrawMode.Sprite, "large", 15);
+                //might use the 4th line for status indicators (poisoned, blind, etc)
+            }
+        }
+
+        public static void GetNewEncounter()
+        {
+            //TODO: figure out rules for which encounters are valid.
+            //TODO: scale encounter to party level. (enemy levels = character average levels)
+            enemies = ContentLists.PossibleEncounters.OrderBy(e => random.Next()).First();
         }
     }
 

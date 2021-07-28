@@ -25,6 +25,7 @@ frames: 7-11 total?
 2-4 use ability
 1 dead
 1 on-recieve-hit
+1 'ready' sprite (for the active character you're picking stuff for)?
 
 NEWGAME
 Pick your character's roles, and possible sprite set
@@ -101,3 +102,16 @@ MAGIC - ability damage
 MDEF: counters MAGIC
 SPD - determines initiative order
 LUK - determines crit chance (Attackers LUK - targets LUK = X. Roll dX to see if its over 20. Negative X means the defense can critical block/attack can botch on rolls under 0. LUK is not a dump stat! Probably.)
+
+
+MP:
+I could do a traditional MP system
+OR i could make MP a counter that wears down and all abilities are equally costly
+(EX: you're Batman, your utility belt has 5 things, what 5 things they are is determined when you need them)
+and you have to make them last until you refresh them (on level up? or on beating a boss)?
+
+If I make this an Eclipse Phase setting game, should I switch the combat rules to match EP 2e?
+EP has lots of possibilities for roles though 
+each morph, faction, occupation could be a role on its own, and i can mix or match them up.
+and not awful to give each 4 unique powers
+(and expand on mechanics in the future to allow for more roles.)
