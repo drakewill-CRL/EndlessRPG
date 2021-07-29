@@ -71,6 +71,12 @@ namespace PixelVision8.Player
         //public void UseAbility() { return; } //must be overridden? Might not be what I think
         public int abilityKey;
 
+        public Ability Clone()
+        {
+            Ability clone = (Ability)this.MemberwiseClone();
+            return clone;
+
+        }
         public static AttackResults UseAbility(Fightable attacker, List<Fightable> targets, int key)
         {
             //All abilities' effects will just get handled in this one giant switch function for now.
@@ -84,14 +90,14 @@ namespace PixelVision8.Player
                     case 0: //Do a kickflip!
                         results.printDesc.Add(attacker.name + " does a sweet kickflip! Nothing else happens.");
                         results.target.Add(attacker);
-                        results.targetChanges.Add(new Stats(){ MP = -1});
+                        results.targetChanges.Add(new Stats() { MP = -1 });
                         break;
                     case 1: //Fight
                         if (t.currentStats.HP > 0)
                         {
-                        results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for 1 / REAL DAMAGE NOT IMPLEMENTED");
-                        results.target.Add(t);
-                         results.targetChanges.Add(new Stats(){ HP = -1});
+                            results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for 1 / REAL DAMAGE NOT IMPLEMENTED");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = -1 });
                         }
                         else
                         {
@@ -161,9 +167,9 @@ namespace PixelVision8.Player
         public Fightable target; //Could be null. MIght need to be a list in the future?
         public Stats changeStats = new Stats(); //For displaying HP/MP value changes during display phase.
         public string changedItem = ""; //Which property changed. could be sprite.
-        public string changedTo =""; //what it changed to.
+        public string changedTo = ""; //what it changed to.
         public int frameCounter = 120; //How long to display this particular result, if they're not all on the same timer.
-        
+
     }
 
     public class AI

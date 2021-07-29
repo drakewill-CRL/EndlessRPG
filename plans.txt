@@ -103,6 +103,7 @@ MDEF: counters MAGIC
 SPD - determines initiative order
 LUK - determines crit chance (Attackers LUK - targets LUK = X. Roll dX to see if its over 20. Negative X means the defense can critical block/attack can botch on rolls under 0. LUK is not a dump stat! Probably.)
 
+Could have a hardcore/random start mode - roles are randomly selected but gives different bragging rights? most fights survived as random party insteaed of total best levels?
 
 MP:
 I could do a traditional MP system
@@ -119,3 +120,17 @@ and not awful to give each 4 unique powers
 Do I want abilities to be under a menu? Or do I just want to present those 4 options directly?
 (This makes the middle layer between target select unnecessary)
 I might do this to avoid some of the growing complexity.
+
+likely roles: remember roughly assuming Eclipse Phase setting. These will have varying stat and damage type distributions
+Infantry
+(fight, shoot-one-first-quick, shoot-one last but stronger, shoot-all, gain a damage type swap)
+Medic
+(fight, regen-1, heal-1, resurrect-1, debuff enemy stat)
+Tactician
+(fight, attack 1 element A, attack 1 element B, Analyze ability(see enemy stats), run(reroll encounter, maybe named Reposition))
+Neo-octopus
+(fight, attack-all, buff-all, debuff-all, camoflague for self-boost of some kind?)
+Hacker
+(fight, buff 1 ally, disable 1 enemy, re-roll ally weapon stats(once per level),  debuff 1 enemy)
+Async
+(fight, element A attack all, hit target weakness, heal 1 ally, good luck (self crit buf))

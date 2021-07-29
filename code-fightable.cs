@@ -86,6 +86,13 @@ namespace PixelVision8.Player
             return copy;
         }
 
+        public void LevelUp()
+        {
+            currentStats.Add(StatsPerLevel);
+            currentStats.HP = currentStats.maxHP;
+            currentStats.MP = currentStats.maxMP;
+        }
+
     }
 
     public class Enemy : Fightable

@@ -9,17 +9,13 @@ namespace PixelVision8.Player
     public static class FightScene
     {
         //MOST OBVIOUS TODOS:
-        //fix cloned object stats, since right now burning MP from one seems to burn MP from the clone?
-        //Might need a Stats(stats) constructor to copy values.
         //Fix help text after picking an ability (make it fight's text)
-        //pull in new enemies to start the game. 
         //ensure rewards occur.
         //make some sound effects and get the list going on which one is what.
         //enemy AI need to exist (even if its randomly pull from list of abilities, including Fight as an ability.)
         //Set role to be a character property, and set stat lists from it as appropriate
         //figure out why MP is burned twice : once at end of turn (probably from combat round), and again during display for the action (and it stays applied?)
         //--i think that means i shouldn't re-process display stats until the end of the display phase?
-        //better color for not-enough-MP ability text
         //ensure CANCEL button returns you to correct previous menu (dont go to Abilities menu from enemy selection on Fight)
 
         public static JrpgRoslynChip parentRef;
@@ -96,15 +92,16 @@ namespace PixelVision8.Player
             char1.StatsPerLevel = ContentLists.baseStats;
             char1.currentStats = char1.getTotalStats();
             char1.displayStats = char1.currentStats;
-            char1.abilities.Add(ContentLists.allAbilities[0]); //sure 4 kickflips for testing why not.
-            char1.abilities.Add(ContentLists.allAbilities[0]);
-            char1.abilities.Add(ContentLists.allAbilities[0]);
-            char1.abilities.Add(ContentLists.allAbilities[0]);
+            char1.abilities.Add(ContentLists.allAbilities[1].Clone());
+            char1.abilities.Add(ContentLists.allAbilities[0].Clone()); //sure 4 kickflips for testing why not.
+            char1.abilities.Add(ContentLists.allAbilities[0].Clone());
+            char1.abilities.Add(ContentLists.allAbilities[0].Clone());
+            char1.abilities.Add(ContentLists.allAbilities[0].Clone());
             characters.Add(char1);
             var char2 = char1.Clone();
             char2.posX = charPositions[1].Item1;
             char2.posY = charPositions[1].Item2;
-            characters.Add(char2);
+            characters.Add(char2); //need to re-clone its abilities.
 
             GetNewEncounter();
 
@@ -228,8 +225,8 @@ namespace PixelVision8.Player
 
             //debug draws here:
             //parentRef.DrawText("debug", 12 * 8, 12, DrawMode.Sprite, "large", 12);
-            parentRef.DrawText("enemies:" + enemies.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
-            parentRef.DrawText("actable enemies:" + enemies.Count(e => e.CanAct()), 12 * 8, 20, DrawMode.Sprite, "large", 12);
+           // parentRef.DrawText("enemies:" + enemies.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
+           // parentRef.DrawText("actable enemies:" + enemies.Count(e => e.CanAct()), 12 * 8, 20, DrawMode.Sprite, "large", 12);
 
             //test sprites
             foreach (var c in characters)
@@ -247,9 +244,10 @@ namespace PixelVision8.Player
             {
                 case 0: //prep/selection phase
                     if (subMenuLevel == 0)
-                        DrawMenuList();
-                    else if (subMenuLevel == 1)
+                        //DrawMenuList();
                         DrawAbilityList(characters[activeCharSelecting].abilities);
+                    //else if (subMenuLevel == 1)
+                        //DrawAbilityList(characters[activeCharSelecting].abilities);
                     else if (subMenuLevel == 2)
                         DrawEnemyList();
                     else if (subMenuLevel == 3)
@@ -473,6 +471,7 @@ namespace PixelVision8.Player
 
         public static void DrawMenuList() //Tile draw commands only need done once until they change.
         {
+            //TODO: swap this to use the character's role's abilities here.
             //This is the default menu list of options and possibly some help text.
             //Fight, Ability, Defend, Run (% chance to re-roll the current fight, but you don't get XP for surviving.)
 
@@ -491,7 +490,7 @@ namespace PixelVision8.Player
                 if (characters[activeCharSelecting].abilities[i].mpCost <= characters[activeCharSelecting].currentStats.MP)
                     parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
                 else
-                    parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 7); //todo determine correct color
+                    parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 12); 
             }
         }
 
