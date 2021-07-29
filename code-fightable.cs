@@ -51,10 +51,11 @@ namespace PixelVision8.Player
         public Fightable Clone()
         {
             Fightable copy = (Fightable)this.MemberwiseClone(); 
+            copy.startingStats = copy.startingStats.Clone();
+            copy.StatsPerLevel = copy.StatsPerLevel.Clone();
             copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
+            copy.displayStats = copy.currentStats.Clone();
             return copy;
-            //TODO: do any of the lists need copied or changed?
-            //currentStats probably does.
         }
     }
 
@@ -78,10 +79,11 @@ namespace PixelVision8.Player
         public Character Clone()
         {
             Character copy = (Character)this.MemberwiseClone(); 
+            copy.startingStats = copy.startingStats.Clone();
+            copy.StatsPerLevel = copy.StatsPerLevel.Clone();
             copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
+            copy.displayStats = copy.currentStats.Clone();
             return copy;
-            //TODO: do any of the lists need copied or changed?
-            //currentStats probably does.
         }
 
     }
@@ -90,6 +92,17 @@ namespace PixelVision8.Player
     {
         //enemies don't have any unique properties?
         //public string sprite; 
+
+        public Enemy Clone()
+        {
+            Enemy copy = (Enemy)this.MemberwiseClone(); 
+            copy.startingStats = copy.startingStats.Clone();
+            copy.StatsPerLevel = copy.StatsPerLevel.Clone();
+            copy.statBoosts = copy.statBoosts.Clone();
+            copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
+            copy.displayStats = copy.currentStats.Clone();
+            return copy;
+        }
 
     }
 }

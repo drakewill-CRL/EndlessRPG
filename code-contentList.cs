@@ -15,9 +15,10 @@ namespace PixelVision8.Player
             name = "Test Target" ,
             desc = "a thing to beat on while making menus work",
             level = 1,
-            startingStats = baseStats,
-            StatsPerLevel = baseStats,
-            currentStats = baseStats,
+            startingStats = baseStats.Clone(),
+            StatsPerLevel = new Stats(),
+            currentStats = baseStats.Clone(),
+            statBoosts = new Stats(),
             spriteSet="enemy1",
             abilities = new List<Ability>() {}
             }

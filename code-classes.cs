@@ -38,6 +38,26 @@ namespace PixelVision8.Player
             SPD += incoming.SPD;
             LUK += incoming.LUK;
         }
+        public void Set(Stats incoming)
+        {
+            //HP += incoming.HP;
+            maxHP = incoming.maxHP;
+            HP = incoming.HP; //allows damage to be relayed via a stats object
+            maxMP = incoming.maxMP;
+            MP = incoming.MP; //attacker can burn MP after the attack.
+            STR = incoming.STR;
+            DEF = incoming.DEF;
+            MAGIC = incoming.MAGIC;
+            MDEF = incoming.MDEF;
+            SPD = incoming.SPD;
+            LUK = incoming.LUK;
+        }
+
+        public Stats Clone()
+        {
+            Stats clone = (Stats)this.MemberwiseClone();
+            return clone;
+        }
     }
 
     public class Ability
@@ -67,9 +87,16 @@ namespace PixelVision8.Player
                         results.targetChanges.Add(new Stats(){ MP = -1});
                         break;
                     case 1: //Fight
+                        if (t.currentStats.HP > 0)
+                        {
                         results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for 1 / REAL DAMAGE NOT IMPLEMENTED");
                         results.target.Add(t);
                          results.targetChanges.Add(new Stats(){ HP = -1});
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " attacked a dead target.");
+                        }
                         break;
                     case 2: //defend
                         results.printDesc.Add(attacker.name + " defends, defend not implemented");
@@ -102,6 +129,8 @@ namespace PixelVision8.Player
         public List<Fightable> targets = new List<Fightable>();
         public string thingToRoll;
         public Ability thingToDo; //Ability here would also mean that I need entries for the baseline commands.
+        //Future possible needs:
+        //list of special-priority flags so some moves could always go first/last, used for ordering attacks.
     }
 
     public class Item

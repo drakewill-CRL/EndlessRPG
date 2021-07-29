@@ -115,3 +115,7 @@ EP has lots of possibilities for roles though
 each morph, faction, occupation could be a role on its own, and i can mix or match them up.
 and not awful to give each 4 unique powers
 (and expand on mechanics in the future to allow for more roles.)
+
+Do I want abilities to be under a menu? Or do I just want to present those 4 options directly?
+(This makes the middle layer between target select unnecessary)
+I might do this to avoid some of the growing complexity.

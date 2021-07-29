@@ -20,6 +20,7 @@ namespace PixelVision8.Player
         //figure out why MP is burned twice : once at end of turn (probably from combat round), and again during display for the action (and it stays applied?)
         //--i think that means i shouldn't re-process display stats until the end of the display phase?
         //better color for not-enough-MP ability text
+        //ensure CANCEL button returns you to correct previous menu (dont go to Abilities menu from enemy selection on Fight)
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -105,6 +106,7 @@ namespace PixelVision8.Player
             char2.posY = charPositions[1].Item2;
             characters.Add(char2);
 
+            GetNewEncounter();
 
             // Character char2 = new Character();
             // char2.spriteSet = "char1";
@@ -125,12 +127,12 @@ namespace PixelVision8.Player
             // char4.drawState = "Idle";
             // characters.Add(char4);
 
-            enemies = ContentLists.PossibleEncounters[0]; //doesnt work?
-            for (int i = 0; i < enemies.Count(); i++)
-            {
-                enemies[i].posX = 8 + ((i / 2) * 64);
-                enemies[i].posY = 16 + ((i % 2) * 64);
-            }
+            //enemies = ContentLists.PossibleEncounters[0]; //doesnt work?
+            //for (int i = 0; i < enemies.Count(); i++)
+            //{
+              //  enemies[i].posX = 8 + ((i / 2) * 64);
+               // enemies[i].posY = 16 + ((i % 2) * 64);
+            //}
             // Enemy enemy1 = new Enemy();
             // enemy1.spriteSet = "enemy1";
             // enemy1.name = "Test Target";
@@ -181,6 +183,10 @@ namespace PixelVision8.Player
                 {
                     if (resultsToParse.Count() == 0)
                     {
+                        //get a new encounter if needed
+                        if (enemies.All(e => e.currentStats.HP <= 0))
+                            GetNewEncounter();
+
                         phase = 0;
                         subMenuLevel = 0;
                         activeCharSelecting = 0;
@@ -222,7 +228,8 @@ namespace PixelVision8.Player
 
             //debug draws here:
             //parentRef.DrawText("debug", 12 * 8, 12, DrawMode.Sprite, "large", 12);
-            parentRef.DrawText("enemy1HP:" + enemies[0].currentStats.HP, 12 * 8, 12, DrawMode.Sprite, "large", 12);
+            parentRef.DrawText("enemies:" + enemies.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
+            parentRef.DrawText("actable enemies:" + enemies.Count(e => e.CanAct()), 12 * 8, 20, DrawMode.Sprite, "large", 12);
 
             //test sprites
             foreach (var c in characters)
@@ -388,7 +395,8 @@ namespace PixelVision8.Player
                                 activeCharSelecting++;
                                 arrowPosIndex = 0;
                                 subMenuLevel = 0;
-                                helpText = characters[activeCharSelecting].name + "'s action";
+                                if (activeCharSelecting < characters.Count())   
+                                    helpText = characters[activeCharSelecting].name + "'s action";
                             }
                             //TODO: what about abilities that need to target someone? 
                             //Move to the next menu and set current info on the current attack.
@@ -400,13 +408,18 @@ namespace PixelVision8.Player
 
                             break;
                         case 2: //select target enemy and advance to next one.
-                            currentAction.targets.Add(enemies[arrowPosIndex]);//selected thing.
+                            if (arrowPosIndex < 4)
+                                currentAction.targets.Add(enemies[arrowPosIndex]);//selected thing.
+                            else
+                                currentAction.targets.AddRange(enemies); //all things. Should disable this option if the thing is single target? or not let things be choosable between 1 and all?
+
                             pendingAttacks.Add(currentAction);
                             currentAction = new Attack();
                             activeCharSelecting++;
                             arrowPosIndex = 0;
                             subMenuLevel = 0;
-                            helpText = characters[activeCharSelecting].name + "'s action";
+                            if (activeCharSelecting < characters.Count())   
+                                helpText = characters[activeCharSelecting].name + "'s action";
                             break;
                         case 3: //select target ally
                             currentAction.targets.Add(characters[arrowPosIndex]);//selected thing.
@@ -417,7 +430,7 @@ namespace PixelVision8.Player
                         phase = 1; //Switch to results mode.
                         //Set display stats to the currentStats values now, then tick those down during the phase.
                         foreach (var c in characters)
-                            c.displayStats = c.currentStats;
+                            c.displayStats.Set(c.currentStats);
                         //foreach(var e in enemies) //Not currently relevant but could be in the future.
                         //e.displayStats = e.currentStats;
 
@@ -425,7 +438,7 @@ namespace PixelVision8.Player
                         foreach (var e in enemies.Where(e => e.CanAct()))
                             pendingAttacks.Add(new Attack() { attacker = e, targets = new List<Fightable>() { characters[0] }, thingToDo = ContentLists.allAbilities[0] });
                         //pass attacks to combat engine to determine results
-                        displayFrameCounter = displayTime;
+                        displayFrameCounter = 1;
                         resultsToParse = CombatEngine.ProcessRound(pendingAttacks);
                     }
                     parentRef.PlaySound(0);
@@ -556,9 +569,23 @@ namespace PixelVision8.Player
 
         public static void GetNewEncounter()
         {
+            Console.WriteLine("getting new encounter");
             //TODO: figure out rules for which encounters are valid.
             //TODO: scale encounter to party level. (enemy levels = character average levels)
-            enemies = ContentLists.PossibleEncounters.OrderBy(e => random.Next()).First();
+            var encounter =ContentLists.PossibleEncounters.OrderBy(e => random.Next()).First(); 
+            enemies = new List<Enemy>();
+            foreach(var e in encounter)
+                enemies.Add(e.Clone());
+
+            for (int i = 0; i < enemies.Count(); i++)
+            {
+                enemies[i].posX = 8 + ((i / 2) * 64);
+                enemies[i].posY = 16 + ((i % 2) * 64);
+            }
+            helpText = "Another wave of enemies approached!";
+            displayFrameCounter = 60;
+            Console.WriteLine(enemies[0].currentStats.HP);
+                           //helpText = "HONK! enemies load with 0 HP";
         }
     }
 
