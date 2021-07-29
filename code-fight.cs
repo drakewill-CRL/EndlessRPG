@@ -9,8 +9,6 @@ namespace PixelVision8.Player
     public static class FightScene
     {
         //MOST OBVIOUS TODOS:
-        //make abilities unusable if you don't have enough MP for them. 
-        //Display ability MP cost in help test. (might make it a property to be able to run code to get dynamic values.)
         //fix cloned object stats, since right now burning MP from one seems to burn MP from the clone?
         //Might need a Stats(stats) constructor to copy values.
         //Fix help text after picking an ability (make it fight's text)
@@ -18,6 +16,10 @@ namespace PixelVision8.Player
         //ensure rewards occur.
         //make some sound effects and get the list going on which one is what.
         //enemy AI need to exist (even if its randomly pull from list of abilities, including Fight as an ability.)
+        //Set role to be a character property, and set stat lists from it as appropriate
+        //figure out why MP is burned twice : once at end of turn (probably from combat round), and again during display for the action (and it stays applied?)
+        //--i think that means i shouldn't re-process display stats until the end of the display phase?
+        //better color for not-enough-MP ability text
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -280,7 +282,7 @@ namespace PixelVision8.Player
                             arrowPosIndex--;
                             if (arrowPosIndex < 0)
                                 arrowPosIndex = characters[activeCharSelecting].abilities.Count() - 1;
-                            helpText = characters[activeCharSelecting].abilities[arrowPosIndex].description;
+                            helpText = characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description;
                             break;
                         case 2: //target enemy. Skip dead enemies.
                             var currentIndex = arrowPosIndex;
@@ -315,7 +317,7 @@ namespace PixelVision8.Player
                             arrowPosIndex++;
                             if (arrowPosIndex >= characters[activeCharSelecting].abilities.Count())
                                 arrowPosIndex = 0;
-                            helpText = characters[activeCharSelecting].abilities[arrowPosIndex].description;
+                            helpText = characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description;
                             break;
                         case 2: //target enemy
                             List<int> validOptions = GetValidEnemyTargets();
@@ -355,7 +357,7 @@ namespace PixelVision8.Player
                                     //Abilities, show list
                                     subMenuLevel = 1;
                                     arrowPosIndex = 0;
-                                    helpText = characters[activeCharSelecting].abilities[0].description;
+                                    helpText = characters[activeCharSelecting].abilities[0].mpCost + "MP: " + characters[activeCharSelecting].abilities[0].description;
                                     break;
                                 case 2:
                                     //DEFEND, declare it and move on
@@ -371,6 +373,9 @@ namespace PixelVision8.Player
                             break;
                         case 1: //abilities menu
                                 //Hmm, abilities might or might not need the sub-menus. Have to check per ability.
+                            if (characters[activeCharSelecting].currentStats.MP >= characters[activeCharSelecting].abilities[arrowPosIndex].mpCost)
+                            {
+                            
                             var tLevel = characters[activeCharSelecting].abilities[arrowPosIndex].targetType;
                             if (tLevel == 0)//self or auto-target
                             {
@@ -383,9 +388,15 @@ namespace PixelVision8.Player
                                 activeCharSelecting++;
                                 arrowPosIndex = 0;
                                 subMenuLevel = 0;
+                                helpText = characters[activeCharSelecting].name + "'s action";
                             }
                             //TODO: what about abilities that need to target someone? 
                             //Move to the next menu and set current info on the current attack.
+                            }
+                            else
+                            {
+                                //TODO: play negative sound, don't advance.
+                            }
 
                             break;
                         case 2: //select target enemy and advance to next one.
@@ -395,6 +406,7 @@ namespace PixelVision8.Player
                             activeCharSelecting++;
                             arrowPosIndex = 0;
                             subMenuLevel = 0;
+                            helpText = characters[activeCharSelecting].name + "'s action";
                             break;
                         case 3: //select target ally
                             currentAction.targets.Add(characters[arrowPosIndex]);//selected thing.
@@ -462,7 +474,12 @@ namespace PixelVision8.Player
         {
             //We should have 4 in this list.
             for (int i = 0; i < abilities.Count(); i++)
-                parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+            {
+                if (characters[activeCharSelecting].abilities[i].mpCost <= characters[activeCharSelecting].currentStats.MP)
+                    parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+                else
+                    parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 7); //todo determine correct color
+            }
         }
 
         public static void DrawEnemyList()
