@@ -18,7 +18,8 @@ namespace PixelVision8.Player
             startingStats = baseStats,
             StatsPerLevel = baseStats,
             currentStats = baseStats,
-            spriteSet="enemy1"
+            spriteSet="enemy1",
+            abilities = new List<Ability>() {}
             }
         };
 
@@ -34,12 +35,11 @@ namespace PixelVision8.Player
 
         public static List<Ability> allAbilities = new List<Ability>() {
             new Ability() {
-                name = "Sample",
-                description = "You do a sweet kickflip and hurt the enemy or something.",
+                name = "Kickflip",
+                description = "You do a sweet kickflip and hurt the enemy or something. Maybe not.",
                 mpCost = 1,
                 level = 1,
                 targetType = 0, //automatic targeting
-                //UseAbility = {} //uh oh, how is this going to work?
                 abilityKey = 0
             },
             new Ability() {

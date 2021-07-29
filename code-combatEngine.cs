@@ -21,7 +21,7 @@ namespace PixelVision8.Player
             {
                 if (e.attacker.CanAct()) //This could get flipped by earlier actions in the list.
                 {
-                    //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not.
+                    //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
                     var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo.abilityKey);
                     results.Add(abilOutcome);
                     for(int i = 0; i < abilOutcome.target.Count(); i++)

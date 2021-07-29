@@ -57,7 +57,7 @@ namespace PixelVision8.Player
             //until i cna figure out how to in-line a function declaration in an initializer.
             AttackResults results = new AttackResults();
             results.attacker = attacker;
-            foreach (var t in targets)
+            foreach (var t in targets) //So abilities can't have 0 targets. fake that out if needed by targeting self.
             {
                 switch (key)
                 {
@@ -70,9 +70,6 @@ namespace PixelVision8.Player
                         results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for 1 / REAL DAMAGE NOT IMPLEMENTED");
                         results.target.Add(t);
                          results.targetChanges.Add(new Stats(){ HP = -1});
-                        // Console.WriteLine("removing " + results.targetChanges[0].HP + " HP");
-                        // Console.WriteLine("targetchanges is " + results.targetChanges.Count() + "  long");
-
                         break;
                     case 2: //defend
                         results.printDesc.Add(attacker.name + " defends, defend not implemented");

@@ -8,6 +8,17 @@ namespace PixelVision8.Player
 {
     public static class FightScene
     {
+        //MOST OBVIOUS TODOS:
+        //make abilities unusable if you don't have enough MP for them. 
+        //Display ability MP cost in help test. (might make it a property to be able to run code to get dynamic values.)
+        //fix cloned object stats, since right now burning MP from one seems to burn MP from the clone?
+        //Might need a Stats(stats) constructor to copy values.
+        //Fix help text after picking an ability (make it fight's text)
+        //pull in new enemies to start the game. 
+        //ensure rewards occur.
+        //make some sound effects and get the list going on which one is what.
+        //enemy AI need to exist (even if its randomly pull from list of abilities, including Fight as an ability.)
+
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
         public static List<Enemy> enemies = new List<Enemy>();
@@ -82,8 +93,17 @@ namespace PixelVision8.Player
             char1.StatsPerLevel = ContentLists.baseStats;
             char1.currentStats = char1.getTotalStats();
             char1.displayStats = char1.currentStats;
+            char1.abilities.Add(ContentLists.allAbilities[0]); //sure 4 kickflips for testing why not.
+            char1.abilities.Add(ContentLists.allAbilities[0]);
+            char1.abilities.Add(ContentLists.allAbilities[0]);
             char1.abilities.Add(ContentLists.allAbilities[0]);
             characters.Add(char1);
+            var char2 = char1.Clone();
+            char2.posX = charPositions[1].Item1;
+            char2.posY = charPositions[1].Item2;
+            characters.Add(char2);
+
+
             // Character char2 = new Character();
             // char2.spriteSet = "char1";
             // char2.posX = 300;
@@ -356,6 +376,7 @@ namespace PixelVision8.Player
                             {
                                 //TODO: functionalize this, cause it's gonna get called a lot.
                                 currentAction.attacker = characters[activeCharSelecting];
+                                currentAction.targets.Add(characters[activeCharSelecting]);
                                 currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
                                 pendingAttacks.Add(currentAction);
                                 currentAction = new Attack();

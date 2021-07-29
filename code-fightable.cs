@@ -20,7 +20,7 @@ namespace PixelVision8.Player
         public int posX;
         public int posY;
         public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
-        public List<Ability> abilities;
+        public List<Ability> abilities; //TODO: this might need to be a list/array of int to pull from the allAbilities list later?
         public string desc = "";
 
         Item weapon = new Item();
@@ -74,6 +74,15 @@ namespace PixelVision8.Player
 
         string weaponName = ""; //Fluff, used for item rolls to name weapons.
         string armorName = ""; //fluff, used for item rolls to name defensive items.
+
+        public Character Clone()
+        {
+            Character copy = (Character)this.MemberwiseClone(); 
+            copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
+            return copy;
+            //TODO: do any of the lists need copied or changed?
+            //currentStats probably does.
+        }
 
     }
 
