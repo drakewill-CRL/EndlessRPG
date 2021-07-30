@@ -16,11 +16,13 @@ namespace PixelVision8.Player
             List<DisplayResults> outerResults = new List<DisplayResults>();
             List<AttackResults> results = new List<AttackResults>();
             outerResults.Add(new DisplayResults() { frameCounter = 60, desc = "Combat Started" }); //empty for testing
-            events = events.OrderByDescending(e => e.attacker.currentStats.SPD).ToList();
+            events = events.OrderByDescending(e => e.thingToDo.specialSpeedLevel).ThenByDescending(e => e.attacker.currentStats.SPD).ToList();
             foreach (var e in events)
             {
                 if (e.attacker.CanAct()) //This could get flipped by earlier actions in the list.
                 {
+                    if (e.attacker.currentStats.MP > e.thingToDo.mpCost)
+                    {
                     //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
                     var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo.abilityKey);
                     results.Add(abilOutcome);
@@ -38,6 +40,12 @@ namespace PixelVision8.Player
                         if (abilOutcome.target[i].currentStats.HP <= 0)
                             outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "dead" });
 
+                    }
+                    }
+                    else
+                    {
+                        //out of mana message
+                        outerResults.Add(new DisplayResults() { desc = e.attacker.name + " didn't have the MP to use " + e.thingToDo.name });
                     }
                 }
                 //else

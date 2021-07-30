@@ -9,7 +9,6 @@ namespace PixelVision8.Player
     public static class FightScene
     {
         //MOST OBVIOUS TODOS:
-        //Fix help text after picking an ability (make it fight's text)
         //ensure rewards occur.
         //make some sound effects and get the list going on which one is what.
         //enemy AI need to exist (even if its randomly pull from list of abilities, including Fight as an ability.)
@@ -17,6 +16,9 @@ namespace PixelVision8.Player
         //figure out why MP is burned twice : once at end of turn (probably from combat round), and again during display for the action (and it stays applied?)
         //--i think that means i shouldn't re-process display stats until the end of the display phase?
         //ensure CANCEL button returns you to correct previous menu (dont go to Abilities menu from enemy selection on Fight)
+        //rename MP to AP (Ability points)
+        //auto-res people after fight with 1 HP if not a total party kill
+        //check for party killed too. Haven't yet checked for that.
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -26,22 +28,22 @@ namespace PixelVision8.Player
 
         public static Stats applyToAll = new Stats(); //Possibly where fight-specific gimmicks or spells go.
 
-        public static string[] menuHelpTexts = new string[5] { //The 5 main menu options
-            "Melee attack a targeted enemy",
-            "Use one of your abillities",
-            "Skip an action to take half damage",
-            "Flee from this fight and roll another encounter, but gain no XP.",
-            "Start auto-fight until you hit B to cancel it."
-        };
+        // public static string[] menuHelpTexts = new string[5] { //The 5 main menu options
+        //     "Melee attack a targeted enemy",
+        //     "Use one of your abillities",
+        //     "Skip an action to take half damage",
+        //     "Flee from this fight and roll another encounter, but gain no XP.",
+        //     "Start auto-fight until you hit B to cancel it."
+        // };
 
         //NOTE: might just have to set this up to allow enemy and PC selection in these entries instead. Shoudl skip dead enemies, not dead PCs.
         public static List<Tuple<int, int>> ArrowPoints = new List<Tuple<int, int>>()
         {
-            new Tuple<int, int>(3 * 8, 20 * 8), //fight
-            new Tuple<int, int>(3 * 8, 22 * 8), //ability
-            new Tuple<int, int>(3 * 8, 24 * 8), //defend
-            new Tuple<int, int>(3 * 8, 26 * 8), //run
-            new Tuple<int, int>(3 * 8, 28 * 8), //auto
+            new Tuple<int, int>(1 * 8, 20 * 8), //fight
+            new Tuple<int, int>(1 * 8, 22 * 8), //ability
+            new Tuple<int, int>(1 * 8, 24 * 8), //defend
+            new Tuple<int, int>(1 * 8, 26 * 8), //run
+            new Tuple<int, int>(1 * 8, 28 * 8), //auto
         };
 
         public static List<Tuple<int, int>> charPositions = new List<Tuple<int, int>>()
@@ -78,7 +80,7 @@ namespace PixelVision8.Player
         {
             //This gets called manually before entering the fight scene from new game.
             //Test values for layout purposes.
-            helpText = menuHelpTexts[0];
+            helpText = GetHelpText(); // menuHelpTexts[0];
 
             //once its finalized set up a construction for Character that handles all this.
             Character char1 = new Character();
@@ -87,21 +89,17 @@ namespace PixelVision8.Player
             char1.posY = charPositions[0].Item2;
             char1.drawState = "Idle";
             char1.name = "Larry";
-            char1.abilities = new List<Ability>();
-            char1.startingStats = ContentLists.baseStats;
-            char1.StatsPerLevel = ContentLists.baseStats;
+            char1.role = ContentLists.allRoles[1];
+            char1.abilities = char1.role.abilities; // new List<Ability>();
+            char1.startingStats = char1.role.startStats;
+            char1.StatsPerLevel = char1.role.statsPerLevel;
             char1.currentStats = char1.getTotalStats();
-            char1.displayStats = char1.currentStats;
-            char1.abilities.Add(ContentLists.allAbilities[1].Clone());
-            char1.abilities.Add(ContentLists.allAbilities[0].Clone()); //sure 4 kickflips for testing why not.
-            char1.abilities.Add(ContentLists.allAbilities[0].Clone());
-            char1.abilities.Add(ContentLists.allAbilities[0].Clone());
-            char1.abilities.Add(ContentLists.allAbilities[0].Clone());
+            char1.displayStats = char1.currentStats.Clone();
             characters.Add(char1);
             var char2 = char1.Clone();
             char2.posX = charPositions[1].Item1;
             char2.posY = charPositions[1].Item2;
-            characters.Add(char2); //need to re-clone its abilities.
+            characters.Add(char2); //need to re-clone its abilities?
 
             GetNewEncounter();
 
@@ -127,8 +125,8 @@ namespace PixelVision8.Player
             //enemies = ContentLists.PossibleEncounters[0]; //doesnt work?
             //for (int i = 0; i < enemies.Count(); i++)
             //{
-              //  enemies[i].posX = 8 + ((i / 2) * 64);
-               // enemies[i].posY = 16 + ((i % 2) * 64);
+            //  enemies[i].posX = 8 + ((i / 2) * 64);
+            // enemies[i].posY = 16 + ((i % 2) * 64);
             //}
             // Enemy enemy1 = new Enemy();
             // enemy1.spriteSet = "enemy1";
@@ -171,6 +169,7 @@ namespace PixelVision8.Player
             //Check if all enemies are dead, if so award 1 xp to all living PCs and roll a new encounter.
 
             if (phase == 0)
+                //TODO: maybe listen for CANCEL button to disable auto-fight
                 return; //let other functions do their thing
             if (phase == 1)
             {
@@ -190,7 +189,7 @@ namespace PixelVision8.Player
                         arrowPosIndex = 0;
                         pendingAttacks = new List<Attack>();
                         displayResultData = "Checking...";
-                        helpText = menuHelpTexts[0];
+                        helpText = GetHelpText(); //menuHelpTexts[0];
                         //if (!enemies.Any(e => e.CanAct()))
                         //helpText = "everybody dead, spawn new encounter.";
                     }
@@ -225,8 +224,8 @@ namespace PixelVision8.Player
 
             //debug draws here:
             //parentRef.DrawText("debug", 12 * 8, 12, DrawMode.Sprite, "large", 12);
-           // parentRef.DrawText("enemies:" + enemies.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
-           // parentRef.DrawText("actable enemies:" + enemies.Count(e => e.CanAct()), 12 * 8, 20, DrawMode.Sprite, "large", 12);
+            // parentRef.DrawText("enemies:" + enemies.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
+            // parentRef.DrawText("actable enemies:" + enemies.Count(e => e.CanAct()), 12 * 8, 20, DrawMode.Sprite, "large", 12);
 
             //test sprites
             foreach (var c in characters)
@@ -247,7 +246,7 @@ namespace PixelVision8.Player
                         //DrawMenuList();
                         DrawAbilityList(characters[activeCharSelecting].abilities);
                     //else if (subMenuLevel == 1)
-                        //DrawAbilityList(characters[activeCharSelecting].abilities);
+                    //DrawAbilityList(characters[activeCharSelecting].abilities);
                     else if (subMenuLevel == 2)
                         DrawEnemyList();
                     else if (subMenuLevel == 3)
@@ -267,7 +266,7 @@ namespace PixelVision8.Player
 
         public static void Input()
         {
-            //TODO: left and right can toggle between enemies and allies on the submenu 2/3 (which makes them the same level)
+            //TODO: left and right can toggle between enemies and allies on the submenu 2/3 (which makes them the same level)?
             //up and down move arrow, A advances to next command, B rolls back to previous
             //tricky part, the arrow can be on the menu, a submenu, players, or enemies
             //also, update help text when arrow moves to match whatever its on
@@ -281,24 +280,25 @@ namespace PixelVision8.Player
                             arrowPosIndex--;
                             if (arrowPosIndex < 0)
                                 arrowPosIndex = ArrowPoints.Count() - 1;
-                            helpText = menuHelpTexts[arrowPosIndex];
+                            //helpText = menuHelpTexts[arrowPosIndex];=
+                            helpText = GetHelpText();
                             break;
-                        case 1://ability menu
-                            arrowPosIndex--;
-                            if (arrowPosIndex < 0)
-                                arrowPosIndex = characters[activeCharSelecting].abilities.Count() - 1;
-                            helpText = characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description;
-                            break;
+                        // case 1://ability menu
+                        //     arrowPosIndex--;
+                        //     if (arrowPosIndex < 0)
+                        //         arrowPosIndex = characters[activeCharSelecting].abilities.Count() - 1;
+                        //     helpText = characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description;
+                        //     break;
                         case 2: //target enemy. Skip dead enemies.
                             var currentIndex = arrowPosIndex;
                             List<int> validOptions = GetValidEnemyTargets();
                             arrowPosIndex = validOptions.FirstOrDefault(o => o < arrowPosIndex); //Should be 0 automatically if on the last entry.
                             if (arrowPosIndex == 0 && (currentIndex == 0 || enemies[0].currentStats.HP == 0)) //We were already on the first entry, and got 0 as the OrDefault value. OR ITS DEAD
-                                arrowPosIndex = 4;
-                            if (arrowPosIndex < 4)
-                                helpText = enemies[arrowPosIndex].desc;
-                            else
-                                helpText = "All Enemies";
+                                arrowPosIndex = GetValidEnemyTargets().LastOrDefault();
+                            //if (arrowPosIndex < 4)
+                            helpText = enemies[arrowPosIndex].desc;
+                            //else
+                            //helpText = "All Enemies"; //removed this option, abilities will determine their target range.
                             break;
                         case 3://target PC
                             break;
@@ -316,23 +316,23 @@ namespace PixelVision8.Player
                             arrowPosIndex++;
                             if (arrowPosIndex >= ArrowPoints.Count())
                                 arrowPosIndex = 0;
-                            helpText = menuHelpTexts[arrowPosIndex];
+                            helpText = GetHelpText();
                             break;
-                        case 1://ability menu
-                            arrowPosIndex++;
-                            if (arrowPosIndex >= characters[activeCharSelecting].abilities.Count())
-                                arrowPosIndex = 0;
-                            helpText = characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description;
-                            break;
+                        // case 1://ability menu
+                        //     arrowPosIndex++;
+                        //     if (arrowPosIndex >= characters[activeCharSelecting].abilities.Count())
+                        //         arrowPosIndex = 0;
+                        //     helpText = characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description;
+                        //     break;
                         case 2: //target enemy
                             List<int> validOptions = GetValidEnemyTargets();
                             arrowPosIndex = validOptions.FirstOrDefault(o => o > arrowPosIndex); //Should be 0 automatically if on the last entry.
                             if (arrowPosIndex == 0)
                                 arrowPosIndex = validOptions.First();
-                            if (arrowPosIndex < 4)
-                                helpText = enemies[arrowPosIndex].desc;
-                            else
-                                helpText = "All Enemies";
+                            //if (arrowPosIndex < 3)
+                            helpText = enemies[arrowPosIndex].desc;
+                            //else
+                            //helpText = "All Enemies";
                             break;
                         case 3://target PC
                             break;
@@ -348,79 +348,105 @@ namespace PixelVision8.Player
                     switch (subMenuLevel)
                     {
                         case 0: //main menu
-                            switch (arrowPosIndex)
-                            {
-                                case 0:
-                                    //FIGHT, select a target.
-                                    currentAction.attacker = characters[activeCharSelecting];
-                                    currentAction.thingToDo = ContentLists.allAbilities[1]; //Fight
-                                    subMenuLevel = 2;
-                                    arrowPosIndex = GetValidEnemyTargets().First();
-                                    helpText = enemies[0].desc;
-                                    break;
-                                case 1:
-                                    //Abilities, show list
-                                    subMenuLevel = 1;
-                                    arrowPosIndex = 0;
-                                    helpText = characters[activeCharSelecting].abilities[0].mpCost + "MP: " + characters[activeCharSelecting].abilities[0].description;
-                                    break;
-                                case 2:
-                                    //DEFEND, declare it and move on
-                                    break;
-                                case 3:
-                                    //RUN, declare it and move on
-                                    break;
-                                case 4:
-                                    //AUTO, set auto-fight on for everybody.
-                                    break;
-                            }
-
-                            break;
-                        case 1: //abilities menu
-                                //Hmm, abilities might or might not need the sub-menus. Have to check per ability.
+                                //switch (arrowPosIndex)
+                                //{
+                                //case 0:
                             if (characters[activeCharSelecting].currentStats.MP >= characters[activeCharSelecting].abilities[arrowPosIndex].mpCost)
                             {
-                            
-                            var tLevel = characters[activeCharSelecting].abilities[arrowPosIndex].targetType;
-                            if (tLevel == 0)//self or auto-target
-                            {
-                                //TODO: functionalize this, cause it's gonna get called a lot.
-                                currentAction.attacker = characters[activeCharSelecting];
-                                currentAction.targets.Add(characters[activeCharSelecting]);
-                                currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
-                                pendingAttacks.Add(currentAction);
-                                currentAction = new Attack();
-                                activeCharSelecting++;
-                                arrowPosIndex = 0;
-                                subMenuLevel = 0;
-                                if (activeCharSelecting < characters.Count())   
-                                    helpText = characters[activeCharSelecting].name + "'s action";
-                            }
-                            //TODO: what about abilities that need to target someone? 
-                            //Move to the next menu and set current info on the current attack.
+
+                                var tLevel = characters[activeCharSelecting].abilities[arrowPosIndex].targetType;
+                                if (tLevel == 0)//self or auto-target
+                                {
+                                    //TODO: functionalize this, cause it's gonna get called a lot?
+                                    currentAction.attacker = characters[activeCharSelecting];
+                                    currentAction.targets.Add(characters[activeCharSelecting]);
+                                    currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
+                                    pendingAttacks.Add(currentAction);
+                                    currentAction = new Attack();
+                                    activeCharSelecting++;
+                                    arrowPosIndex = 0;
+                                    subMenuLevel = 0;
+                                    if (activeCharSelecting < characters.Count())
+                                        helpText = characters[activeCharSelecting].name + "'s action";
+                                }
+                                else if (tLevel == 2) //target enemy
+                                {
+                                    currentAction.attacker = characters[activeCharSelecting];
+                                    currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
+                                    arrowPosIndex = GetValidEnemyTargets().FirstOrDefault();
+                                    helpText = enemies[arrowPosIndex].desc;
+                                    subMenuLevel = 2;
+                                }
+                                else if (tLevel == 3) // target ally.
+                                {
+                                    currentAction.attacker = characters[activeCharSelecting];
+                                    currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
+                                    arrowPosIndex = 0;
+                                    helpText = characters[arrowPosIndex].role.name;
+                                    subMenuLevel = 3;
+
+                                }
+                                //TODO: what about abilities that need to target someone? 
+                                //Move to the next menu and set current info on the current attack.
                             }
                             else
                             {
                                 //TODO: play negative sound, don't advance.
                             }
-
                             break;
+
+                        //ORIGINAL 
+                        //FIGHT, select a target.
+                        //currentAction.attacker = characters[activeCharSelecting];
+                        //currentAction.thingToDo = ContentLists.allAbilities[1]; //Fight
+                        //subMenuLevel = 2;
+                        //arrowPosIndex = GetValidEnemyTargets().First();
+                        //helpText = enemies[0].desc;
+                        //break;
+                        //case 1:
+                        //Abilities, show list
+                        //subMenuLevel = 1;
+                        //arrowPosIndex = 0;
+                        //helpText = characters[activeCharSelecting].abilities[0].mpCost + "MP: " + characters[activeCharSelecting].abilities[0].description;
+                        //break;
+                        //case 2:
+                        //DEFEND, declare it and move on
+                        //break;
+                        //case 3:
+                        //RUN, declare it and move on
+                        //break;
+                        //case 4:
+                        //AUTO, set auto-fight on for everybody.
+                        //break;
+                        //}
+
+                        //break;
+                        //case 1: //abilities menu
+                        //Moved to 0;
+                        //break;
                         case 2: //select target enemy and advance to next one.
-                            if (arrowPosIndex < 4)
-                                currentAction.targets.Add(enemies[arrowPosIndex]);//selected thing.
-                            else
-                                currentAction.targets.AddRange(enemies); //all things. Should disable this option if the thing is single target? or not let things be choosable between 1 and all?
+                                //if (arrowPosIndex < 3)
+                            currentAction.targets.Add(enemies[arrowPosIndex]);//selected thing.
+                                                                              //else
+                                                                              //currentAction.targets.AddRange(enemies); //all things. Should disable this option if the thing is single target? or not let things be choosable between 1 and all?
 
                             pendingAttacks.Add(currentAction);
                             currentAction = new Attack();
                             activeCharSelecting++;
                             arrowPosIndex = 0;
                             subMenuLevel = 0;
-                            if (activeCharSelecting < characters.Count())   
+                            if (activeCharSelecting < characters.Count())
                                 helpText = characters[activeCharSelecting].name + "'s action";
                             break;
                         case 3: //select target ally
                             currentAction.targets.Add(characters[arrowPosIndex]);//selected thing.
+                            pendingAttacks.Add(currentAction);
+                            currentAction = new Attack();
+                            activeCharSelecting++;
+                            arrowPosIndex = 0;
+                            subMenuLevel = 0;
+                            if (activeCharSelecting < characters.Count())
+                                helpText = characters[activeCharSelecting].name + "'s action";
                             break;
                     }
                     if (pendingAttacks.Count() >= characters.Count(c => c.CanAct()))
@@ -450,18 +476,26 @@ namespace PixelVision8.Player
                     switch (subMenuLevel)
                     {
                         case 0: //main menu
-                                //play error sound
+                                //rollback to the previous character.
+                                if(activeCharSelecting > 0)
+                                {
+                                    pendingAttacks.Remove(pendingAttacks.Last());
+                                    activeCharSelecting--;
+                                    helpText = "Rewinding to " + characters[activeCharSelecting].name + "'s action";
+                                }
+                                //play BZZT/backwards sound.
+
                             break;
-                        case 1: //abilities menu
-                            subMenuLevel = 0;
-                            arrowPosIndex = 0;
-                            helpText = menuHelpTexts[0];
-                            break;
+                        //case 1: //abilities menu
+                        //subMenuLevel = 0;
+                        //arrowPosIndex = 0;
+                        //helpText = menuHelpTexts[0];
+                        //break;
                         case 2: //select target enemy
-                            subMenuLevel = 1;
+                            subMenuLevel = 0;
                             break;
                         case 3: //select target ally
-                            subMenuLevel = 1;
+                            subMenuLevel = 0;
                             break;
                     }
                     parentRef.PlaySound(0);
@@ -469,18 +503,18 @@ namespace PixelVision8.Player
             }
         }
 
-        public static void DrawMenuList() //Tile draw commands only need done once until they change.
-        {
-            //TODO: swap this to use the character's role's abilities here.
-            //This is the default menu list of options and possibly some help text.
-            //Fight, Ability, Defend, Run (% chance to re-roll the current fight, but you don't get XP for surviving.)
+        // public static void DrawMenuList() //Tile draw commands only need done once until they change.
+        // {
+        //     //TODO: swap this to use the character's role's abilities here.
+        //     //This is the default menu list of options and possibly some help text.
+        //     //Fight, Ability, Defend, Run (% chance to re-roll the current fight, but you don't get XP for surviving.)
 
-            parentRef.DrawText("Fight", 4 * 8, 20 * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
-            parentRef.DrawText("Ability", 4 * 8, 22 * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText("Defend", 4 * 8, 24 * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText("Run", 4 * 8, 26 * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText("Auto", 4 * 8, 28 * 8, DrawMode.Sprite, "large", 15);
-        }
+        //     parentRef.DrawText("Fight", 4 * 8, 20 * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+        //     parentRef.DrawText("Ability", 4 * 8, 22 * 8, DrawMode.Sprite, "large", 15);
+        //     parentRef.DrawText("Defend", 4 * 8, 24 * 8, DrawMode.Sprite, "large", 15);
+        //     parentRef.DrawText("Run", 4 * 8, 26 * 8, DrawMode.Sprite, "large", 15);
+        //     parentRef.DrawText("Auto", 4 * 8, 28 * 8, DrawMode.Sprite, "large", 15);
+        // }
 
         public static void DrawAbilityList(List<Ability> abilities)
         {
@@ -488,9 +522,9 @@ namespace PixelVision8.Player
             for (int i = 0; i < abilities.Count(); i++)
             {
                 if (characters[activeCharSelecting].abilities[i].mpCost <= characters[activeCharSelecting].currentStats.MP)
-                    parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+                    parentRef.DrawText(abilities[i].name, 2 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
                 else
-                    parentRef.DrawText(abilities[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 12); 
+                    parentRef.DrawText(abilities[i].name, 2 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 12);
             }
         }
 
@@ -499,14 +533,14 @@ namespace PixelVision8.Player
             //skip dead enemies, leave their slot blank.
             for (int i = 0; i < enemies.Count(); i++)
                 if (enemies[i].currentStats.HP > 0) //skip empty spaces for dead enemies.
-                    parentRef.DrawText(enemies[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+                    parentRef.DrawText(enemies[i].name, 2 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
 
-            parentRef.DrawText("All", 4 * 8, 28 * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
+            //parentRef.DrawText("All", 4 * 8, 28 * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
         }
 
         public static void DrawPCList()
         {
-            //draw all PCs even dead ones, in case we're trying to res one.
+            //draw all PCs even dead ones, in case we're trying to res one or buff one after res.
             for (int i = 0; i < characters.Count(); i++)
                 parentRef.DrawText(characters[i].name, 4 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
         }
@@ -536,7 +570,7 @@ namespace PixelVision8.Player
                 if (enemies[i].currentStats.HP > 0)
                     validOptions.Add(i);
             }
-            validOptions.Add(4); //All Enemies/Allies.
+            //validOptions.Add(4); //All Enemies/Allies.
             return validOptions;
         }
 
@@ -571,20 +605,33 @@ namespace PixelVision8.Player
             Console.WriteLine("getting new encounter");
             //TODO: figure out rules for which encounters are valid.
             //TODO: scale encounter to party level. (enemy levels = character average levels)
-            var encounter =ContentLists.PossibleEncounters.OrderBy(e => random.Next()).First(); 
+            var encounter = ContentLists.PossibleEncounters.OrderBy(e => random.Next()).First();
+            var partyLevel = characters.Select(c => c.level).Average();
             enemies = new List<Enemy>();
-            foreach(var e in encounter)
+            foreach (var e in encounter)
                 enemies.Add(e.Clone());
 
             for (int i = 0; i < enemies.Count(); i++)
             {
                 enemies[i].posX = 8 + ((i / 2) * 64);
                 enemies[i].posY = 16 + ((i % 2) * 64);
+                //scale to party level
+                for (int j = 1; j < partyLevel; j++)
+                    enemies[i].currentStats.Add(enemies[i].StatsPerLevel);
+
+                enemies[i].currentStats.HP = enemies[i].currentStats.maxHP;
+
             }
             helpText = "Another wave of enemies approached!";
             displayFrameCounter = 60;
-            Console.WriteLine(enemies[0].currentStats.HP);
-                           //helpText = "HONK! enemies load with 0 HP";
+        }
+
+        public static string GetHelpText()
+        {
+            if (characters.Count() > 0 && characters[activeCharSelecting] != null)
+                return characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description; ; //The typical answer.
+
+            return "";
         }
     }
 

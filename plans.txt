@@ -134,3 +134,19 @@ Hacker
 (fight, buff 1 ally, disable 1 enemy, re-roll ally weapon stats(once per level),  debuff 1 enemy)
 Async
 (fight, element A attack all, hit target weakness, heal 1 ally, good luck (self crit buf))
+
+HEALING NOTE
+players might get different levels of healing depending on their morph type
+EX: heals for biomorphs don't help synthmorphs, and rebuilding nanites for synths don't help biomorphs. Pods get half of either.
+
+'ELEMENTAL' typing
+Attacks have a damage type:
+
+Heals also have a heal type:
+Bio or Synth. Only helps on morphs of the same type. Pods are half of each, get half benefit.
+
+
+Unlockables:
+global stat boosts (EX: get role X to level Y, all characters gain Z in a specific stat)
+New roles (and/or upgrades for roles)
+new title screens (eventually, i will commission a few once the rest of the game is going. Might just make them random, unlockable is a possibility though.)

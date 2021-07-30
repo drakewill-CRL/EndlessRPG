@@ -29,8 +29,12 @@ namespace PixelVision8.Player
             //HP += incoming.HP;
             maxHP += incoming.maxHP;
             HP += incoming.HP; //allows damage to be relayed via a stats object
+            if (HP <0)
+                HP = 0;
             maxMP += incoming.maxMP;
             MP += incoming.MP; //attacker can burn MP after the attack.
+            if (MP <0)
+                MP = 0;
             STR += incoming.STR;
             DEF += incoming.DEF;
             MAGIC += incoming.MAGIC;
@@ -40,7 +44,6 @@ namespace PixelVision8.Player
         }
         public void Set(Stats incoming)
         {
-            //HP += incoming.HP;
             maxHP = incoming.maxHP;
             HP = incoming.HP; //allows damage to be relayed via a stats object
             maxMP = incoming.maxMP;
@@ -60,62 +63,7 @@ namespace PixelVision8.Player
         }
     }
 
-    public class Ability
-    {
-        public string name;
-        public string description; //help text that appears in combat. Might need to be a property to update with levels.
-        public int mpCost;
-        public int level; //Used to power up the effects of the ability.
-        public int targetType; //0: no target selection(self, random, all enemies, or all allies.). 2: target  1 enemy 3: target 1 ally.
-
-        //public void UseAbility() { return; } //must be overridden? Might not be what I think
-        public int abilityKey;
-
-        public Ability Clone()
-        {
-            Ability clone = (Ability)this.MemberwiseClone();
-            return clone;
-
-        }
-        public static AttackResults UseAbility(Fightable attacker, List<Fightable> targets, int key)
-        {
-            //All abilities' effects will just get handled in this one giant switch function for now.
-            //until i cna figure out how to in-line a function declaration in an initializer.
-            AttackResults results = new AttackResults();
-            results.attacker = attacker;
-            foreach (var t in targets) //So abilities can't have 0 targets. fake that out if needed by targeting self.
-            {
-                switch (key)
-                {
-                    case 0: //Do a kickflip!
-                        results.printDesc.Add(attacker.name + " does a sweet kickflip! Nothing else happens.");
-                        results.target.Add(attacker);
-                        results.targetChanges.Add(new Stats() { MP = -1 });
-                        break;
-                    case 1: //Fight
-                        if (t.currentStats.HP > 0)
-                        {
-                            results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for 1 / REAL DAMAGE NOT IMPLEMENTED");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -1 });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
-                        break;
-                    case 2: //defend
-                        results.printDesc.Add(attacker.name + " defends, defend not implemented");
-                        break;
-                    case 3: //Run
-                        results.printDesc.Add(attacker.name + " runs, run not implemented");
-                        break;
-                }
-            }
-
-            return results;
-        }
-    }
+    
 
 
     public class Role
@@ -176,5 +124,6 @@ namespace PixelVision8.Player
     {
         //mostly a placeholder to remind me i need to work on enemy AI rules.
         //baseilne: just attack. will work until i get abilities and such in place.
+        //public 
     }
 }
