@@ -8,6 +8,8 @@ namespace PixelVision8.Player
 {
     public static class gameState
     {
+
+        public static Random random = new Random();
         //Some of this might get moved to individual game files.
         public static int mode = 0; // which scene we're in right now.
         //0 = title screen

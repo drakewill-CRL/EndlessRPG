@@ -63,9 +63,6 @@ namespace PixelVision8.Player
         }
     }
 
-    
-
-
     public class Role
     {
         public string name;
@@ -85,6 +82,7 @@ namespace PixelVision8.Player
         public Ability thingToDo; //Ability here would also mean that I need entries for the baseline commands.
         //Future possible needs:
         //list of special-priority flags so some moves could always go first/last, used for ordering attacks.
+        public string damageType = "blunt"; //used for damage-mod calculations elsewhere.
     }
 
     public class Item
@@ -120,10 +118,31 @@ namespace PixelVision8.Player
 
     }
 
-    public class AI
+    public static class AI
     {
         //mostly a placeholder to remind me i need to work on enemy AI rules.
         //baseilne: just attack. will work until i get abilities and such in place.
-        //public 
+        //TODO: make a setup to attach different AIs to different enemies.
+        //most will use PickRandom for the most part, but some might need a script to follow for tactics.
+
+        public static Attack PickRandom(Fightable f)
+        {
+            Attack results = new Attack();
+            results.attacker = f;
+            results.thingToDo = f.abilities.Where(a => a.mpCost <= f.currentStats.MP).OrderBy(a => gameState.random.Next()).First();
+            switch(results.thingToDo.targetType)
+            {
+                case 0: //ability determines targeting.
+                break;
+                //1 was removed
+                case 2: //target a random opponent (characters here)
+                results.targets.Add(FightScene.characters.Where(c => c.CanAct()).OrderBy(a => gameState.random.Next()).FirstOrDefault());
+                break;
+                case 3: //target a random ally (enemies here)
+                results.targets.Add(FightScene.enemies.Where(c => c.CanAct()).OrderBy(a => gameState.random.Next()).FirstOrDefault());
+                break;
+            }
+            return results;
+        }
     }
 }

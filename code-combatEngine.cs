@@ -13,34 +13,35 @@ namespace PixelVision8.Player
 
         public static List<DisplayResults> ProcessRound(List<Attack> events)
         {
+
             List<DisplayResults> outerResults = new List<DisplayResults>();
             List<AttackResults> results = new List<AttackResults>();
             outerResults.Add(new DisplayResults() { frameCounter = 60, desc = "Combat Started" }); //empty for testing
-            events = events.OrderByDescending(e => e.thingToDo.specialSpeedLevel).ThenByDescending(e => e.attacker.currentStats.SPD).ToList();
+            events = events.OrderByDescending(e => e.thingToDo.specialSpeedLevel).ThenByDescending(e => e.attacker.currentStats.SPD).ThenByDescending(e => gameState.random.Next()).ToList();
             foreach (var e in events)
             {
                 if (e.attacker.CanAct()) //This could get flipped by earlier actions in the list.
                 {
-                    if (e.attacker.currentStats.MP > e.thingToDo.mpCost)
+                    if (e.attacker.currentStats.MP >= e.thingToDo.mpCost)
                     {
-                    //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
-                    var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo.abilityKey);
-                    results.Add(abilOutcome);
-                    for (int i = 0; i < abilOutcome.target.Count(); i++)
-                    {
-                        outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = "", changeStats = abilOutcome.targetChanges[i], frameCounter = 1 });
-                    }
+                        //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
+                        var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo.abilityKey);
+                        results.Add(abilOutcome);
+                        for (int i = 0; i < abilOutcome.target.Count(); i++)
+                        {
+                            outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = "", changeStats = abilOutcome.targetChanges[i], frameCounter = 1 });
+                        }
 
-                    foreach (var adesc in abilOutcome.printDesc)
-                        outerResults.Add(new DisplayResults() { desc = adesc });
-                    //process target stat changes now, so dead enemies don't attack.
-                    for (int i = 0; i < abilOutcome.target.Count(); i++)
-                    {
-                        abilOutcome.target[i].currentStats.Add(abilOutcome.targetChanges[i]);
-                        if (abilOutcome.target[i].currentStats.HP <= 0)
-                            outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "dead" });
+                        foreach (var adesc in abilOutcome.printDesc)
+                            outerResults.Add(new DisplayResults() { desc = adesc });
+                        //process target stat changes now, so dead enemies don't attack.
+                        for (int i = 0; i < abilOutcome.target.Count(); i++)
+                        {
+                            abilOutcome.target[i].currentStats.Add(abilOutcome.targetChanges[i]);
+                            if (abilOutcome.target[i].currentStats.HP <= 0)
+                                outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "dead" });
 
-                    }
+                        }
                     }
                     else
                     {
@@ -49,7 +50,7 @@ namespace PixelVision8.Player
                     }
                 }
                 //else
-                    //outerResults.Add(new DisplayResults() { desc = e.attacker.name + " couldn't act" });
+                //outerResults.Add(new DisplayResults() { desc = e.attacker.name + " couldn't act" });
             }
 
             //TODO: check here if all opponents are dead, award results and display info

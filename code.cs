@@ -21,10 +21,6 @@ namespace PixelVision8.Player
 {
     public class JrpgRoslynChip : GameChip
     {
-
-        List<Role> roles = new List<Role>() {
-            new Role() {name = "Generic"}
-        };
         public override void Init()
         {
             FightScene.parentRef = this;
@@ -36,19 +32,8 @@ namespace PixelVision8.Player
 
             LoadGameData();
             //Any post-startup resets of values would go here.
-			gameState.mode = 1;
-
-            // var message = "EMPTY C# GAME\n\n\nThis is an empty game template.\n\n\nVisit 'www.pixelvision8.com' to learn more about creating games from scratch.";
-            // var display = Display();
-            // var wrap = WordWrap(message, (display.X / 8) - 2);
-            // var lines = SplitLines(wrap);
-            // var total = lines.Length;
-            // var startY = ((display.Y / 8) - 1) - total;
-
-            // // We want to render the text from the bottom of the screen so we offset
-            // // it and loop backwards.
-            // for (var i = total - 1; i >= 0; i--)
-            //     DrawText(lines[i], 1, startY + (i - 1), DrawMode.Tile, "large", 15);
+			gameState.mode = 1; //jump to fight screen
+            //gameState.mode = 0; //testing title screen.
         }
 
         public override void Draw()
@@ -57,7 +42,7 @@ namespace PixelVision8.Player
             switch (gameState.mode)
             {
                 case 0:
-                    //DrawTitleScreen();
+                    TitleScene.Draw();
                     break;
                 case 1:
                     FightScene.Draw();
@@ -77,7 +62,7 @@ namespace PixelVision8.Player
             switch (gameState.mode)
             {
                 case 0:
-                    //DrawTitleScreen();
+                    TitleScene.Update(timeDelta );
                     break;
                 case 1:
                     FightScene.Update(timeDelta);

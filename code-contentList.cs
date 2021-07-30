@@ -12,20 +12,7 @@ namespace PixelVision8.Player
 
         public static List<string> damageTypes = new List<string>() {"blunt", "pierce", "slash", "fire", "bioHeal", "synthHeal"};
 
-        public static List<Enemy> enemies = new List<Enemy>() {
-        new Enemy() {
-            name = "Test Target" ,
-            desc = "a thing to beat on while making menus work",
-            level = 1,
-            startingStats = baseStats.Clone(),
-            StatsPerLevel = new Stats(),
-            currentStats = baseStats.Clone(),
-            statBoosts = new Stats(),
-            spriteSet="enemy1",
-            abilities = new List<Ability>() {}
-            }
-        };
-
+        
         public static List<Ability> allAbilities = new List<Ability>() {
             new Ability() {
                 name = "Kickflip",
@@ -95,6 +82,8 @@ namespace PixelVision8.Player
             },
         };
 
+        public static Dictionary<string, Ability> abilitiesByName = allAbilities.ToDictionary(k => k.name, v => v);
+
         public static List<Role> allRoles = new List<Role>() {
             new Role() {
                 name = "test role", 
@@ -108,8 +97,26 @@ namespace PixelVision8.Player
                 statsPerLevel = new Stats() {HP = 1, maxHP = 1, MP = 1, maxMP = 1, STR = 1, DEF = 1, MAGIC = 1, MDEF = 1, SPD = 1, LUK = 1}, 
                 abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
             }
-
         };
+
+        public static Dictionary<string, Role> rolesByName = allRoles.ToDictionary(k => k.name, v => v);
+
+        public static List<Enemy> enemies = new List<Enemy>() {
+        new Enemy() {
+            name = "Test Target" ,
+            desc = "a thing to beat on while making menus work",
+            level = 1,
+            startingStats = baseStats.Clone(),
+            StatsPerLevel = new Stats(),
+            currentStats = baseStats.Clone(),
+            statBoosts = new Stats(),
+            spriteSet="enemy1",
+            abilities = new List<Ability>() {allAbilities[0].Clone(), allAbilities[1].Clone()}
+            }
+        };
+
+        public static Dictionary<string, Enemy> enemiesByName = enemies.ToDictionary(k => k.name, v => v);
+
 
         public static List<List<Enemy>> PossibleEncounters = new List<List<Enemy>>()
         { 

@@ -83,12 +83,17 @@ namespace PixelVision8.Player
             Character copy = (Character)this.MemberwiseClone(); 
             copy.startingStats = copy.startingStats.Clone();
             copy.StatsPerLevel = copy.StatsPerLevel.Clone();
-            copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
+            copy.statBoosts = copy.statBoosts.Clone();
+            copy.currentStats = copy.getTotalStats();
             copy.displayStats = copy.currentStats.Clone();
+            copy.abilities = new List<Ability>();
+            foreach(var a in abilities)
+                copy.abilities.Add(a.Clone());
+
             return copy;
         }
 
-        public void LevelUp()
+        public void LevelUp() //TODO: move to Fightable instead of Character?
         {
             currentStats.Add(StatsPerLevel);
             currentStats.HP = currentStats.maxHP;
@@ -108,8 +113,12 @@ namespace PixelVision8.Player
             copy.startingStats = copy.startingStats.Clone();
             copy.StatsPerLevel = copy.StatsPerLevel.Clone();
             copy.statBoosts = copy.statBoosts.Clone();
-            copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
+            copy.currentStats = copy.getTotalStats();
             copy.displayStats = copy.currentStats.Clone();
+            copy.abilities = new List<Ability>();
+            foreach(var a in abilities)
+                copy.abilities.Add(a.Clone());
+
             return copy;
         }
 

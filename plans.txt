@@ -12,7 +12,7 @@ Every 4 fights they live through, your characters gain a level
 Each role has X abilities and gains a fixed stat array per level.
 A level up may be traded for an equipment roll
 (the item will be on-level for your party, and roughly biased towards the character it's rolling for, but the slot and stats or any special abilities will be random.)
-Every X fights (12? 20?) is a boss fight
+Every X fights (12? 20? 19? 15?) is a boss fight
 Boss fights are a separate encounter list (or a fixed list for a plot?) with significantly higher stats.
 
 GRAPHICS
@@ -71,6 +71,13 @@ Auto-fight option (simplest choice is auto-melee each round until it gets toggle
 
 IMPLEMENTATION DETAILS
 Restoring MP: How? Give classes an ability that does this? Make it part of the Defend action? On level up?
+
+Bosses should probably be every 19 or 20 fights. They'll creep forward one encounter per loop, so every 4 bosses will be right after a level up.
+I don't want them to show up right after a level up every time.
+
+working name is Eclipse Phase:Expendables
+may change later, or reskin as desired.
+
 
 Display:
 PCs need a place to display name and HP/MaxHP. Where at? Probably on the right of the PC sprites?
@@ -134,6 +141,8 @@ Hacker
 (fight, buff 1 ally, disable 1 enemy, re-roll ally weapon stats(once per level),  debuff 1 enemy)
 Async
 (fight, element A attack all, hit target weakness, heal 1 ally, good luck (self crit buf))
+Operative (SS13 reference - red hardsuit and laser sword)
+(fight with laser-sword damage type, C4 explode-all-enemies, hack a synth enemy, buff speed on ally, expensive res power on ally)
 
 HEALING NOTE
 players might get different levels of healing depending on their morph type
@@ -150,3 +159,15 @@ Unlockables:
 global stat boosts (EX: get role X to level Y, all characters gain Z in a specific stat)
 New roles (and/or upgrades for roles)
 new title screens (eventually, i will commission a few once the rest of the game is going. Might just make them random, unlockable is a possibility though.)
+
+
+ABILITY NOTE
+should have Game Over fire off after all results are processed.
+This leaves room for a Pheonix-style ability to work 
+PHEONIX: goes late (Speed 2? so last-attack could counter it or speed 1/0/-1 to go after slow attacks?), but restores caster to half HP.
+I wonder if I'd want passive abilities to exist and be checked or triggered.
+
+I might need to set specific parts of the tilemap to be game areas.
+EX: Tilemap 1 is 0,0 to 43, 31 (one screen in tiles)
+Maybe Title Scren is that screen, then shift camera to another screen for combat mode, maybe a third for upgrades
+Maybe i should do the tilemap drawing in a -1 phase before going to actual loops?
