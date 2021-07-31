@@ -13,10 +13,12 @@ namespace PixelVision8.Player
         //make some sound effects and get the list going on which one is what.
         //figure out why MP is burned twice : once at end of turn (probably from combat round), and again during display for the action (and it stays applied?)
         //--i think that means i shouldn't re-process display stats until the end of the display phase?
+        //Figure out why other abilities don't use MP - covering fire doesn't burn MP?
         //rename MP to AP (Ability points)
-        //auto-res people after fight with 1 HP if not a total party kill
+        //--rename MAGIG and MDEF as well then to something else.
         //check for party killed too. Haven't yet checked for that.
         //See whats up with ability selection, looks like enemies occasionally don't attack (probably picking an ability they dont have MP for?)
+        //
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -81,7 +83,7 @@ namespace PixelVision8.Player
             char1.drawState = "Idle";
             char1.name = "Larry";
             char1.role = ContentLists.allRoles[1];
-            char1.abilities = char1.role.abilities; // new List<Ability>();
+            char1.abilities = char1.role.abilities; 
             char1.startingStats = char1.role.startStats;
             char1.StatsPerLevel = char1.role.statsPerLevel;
             char1.currentStats = char1.getTotalStats();
@@ -332,7 +334,28 @@ namespace PixelVision8.Player
                                     arrowPosIndex = 0;
                                     helpText = characters[arrowPosIndex].role.name;
                                     subMenuLevel = 3;
-
+                                }
+                                else if (tLevel == 4) // All enemies
+                                {
+                                    currentAction.attacker = characters[activeCharSelecting];
+                                    currentAction.targets.AddRange(enemies);
+                                    currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
+                                    pendingAttacks.Add(currentAction);
+                                    currentAction = new Attack();
+                                    activeCharSelecting++;
+                                    arrowPosIndex = 0;
+                                    subMenuLevel = 0;
+                                }
+                                else if (tLevel == 5) // All allies
+                                {
+                                    currentAction.attacker = characters[activeCharSelecting];
+                                    currentAction.targets.AddRange(characters);
+                                    currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
+                                    pendingAttacks.Add(currentAction);
+                                    currentAction = new Attack();
+                                    activeCharSelecting++;
+                                    arrowPosIndex = 0;
+                                    subMenuLevel = 0;
                                 }
                             }
                             else

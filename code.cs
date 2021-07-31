@@ -33,7 +33,7 @@ namespace PixelVision8.Player
             LoadGameData();
             //Any post-startup resets of values would go here.
 			gameState.mode = 1; //jump to fight screen
-            //gameState.mode = 0; //testing title screen.
+            gameState.mode = 0; //testing title screen.
         }
 
         public override void Draw()

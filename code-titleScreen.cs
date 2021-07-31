@@ -14,6 +14,7 @@ namespace PixelVision8.Player
         //and some copyright info, plus a high score display of all classes' highest levels added up.
         static int xScreenCoords = 0; // * 43 for X screens over
         static int yScreenCoords = 0; // * 31 for Y screens down.
+        static string pushStart  ="Press Start";
         static string credits = "EP Expendables 2021 Drake Williams";
         static string license1 = "Eclipse Phase Content by Posthuman Studios";
         static string license2 = "Licensed via CC 3.0 BY-NC-SA";
@@ -40,6 +41,7 @@ namespace PixelVision8.Player
                 parentRef.DrawMetaSprite("EPExpendablesTitle1", 1, 1, false, false, DrawMode.Tile, 0);
 
             
+            parentRef.DrawText(pushStart, 120, 27 * 8, DrawMode.Sprite, "large", 15);
             parentRef.DrawText(credits, 0, 28 * 8, DrawMode.Sprite, "large", 15);
             parentRef.DrawText(license1, 0, 29 *8 , DrawMode.Sprite, "large", 15);
             parentRef.DrawText(license2, 0, 30 *8, DrawMode.Sprite, "large", 15);

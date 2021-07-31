@@ -159,6 +159,10 @@ Unlockables:
 global stat boosts (EX: get role X to level Y, all characters gain Z in a specific stat)
 New roles (and/or upgrades for roles)
 new title screens (eventually, i will commission a few once the rest of the game is going. Might just make them random, unlockable is a possibility though.)
+defeating bosses, getting roles to certain levels, certain high score values, winning lucky encounter, getting to level X with a specific party makeup, total playtime, total wins/losses, etc
+can all things that trigger an unlock.
+If I do perma-progression towards an end-game, defeating bosses might do that (if they're every 20 level, you can start at that level for 'story' progress (EX: Floor 20, level 5))
+that might actually be a good idea.
 
 
 ABILITY NOTE

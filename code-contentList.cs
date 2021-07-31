@@ -20,7 +20,9 @@ namespace PixelVision8.Player
                 mpCost = 1,
                 level = 1,
                 targetType = 0, //automatic targeting
-                abilityKey = 0
+                abilityKey = 0,
+                damagetype = "blunt",
+                sourceStat = "STR"
             },
             new Ability() {
                 name = "Fight",
@@ -28,7 +30,9 @@ namespace PixelVision8.Player
                 mpCost = 0,
                 level = 1,
                 targetType = 2, //single enemy
-                abilityKey = 1
+                abilityKey = 1,
+                damagetype = "blunt",
+                sourceStat = "STR"
             },
             new Ability() {
                 name = "Defend",
@@ -36,7 +40,10 @@ namespace PixelVision8.Player
                 mpCost = 0,
                 level = 1,
                 targetType = 0, //auto, self
-                abilityKey = 2
+                abilityKey = 2,
+                damagetype = "blunt",
+                sourceStat = "STR"
+
             },
             new Ability() {
                 name = "Run", //Maybe 'Reposition'? 
@@ -44,7 +51,9 @@ namespace PixelVision8.Player
                 mpCost = 0,
                 level = 1,
                 targetType = 0, //auto, special case.
-                abilityKey = 3
+                abilityKey = 3,
+                damagetype = "blunt",
+                sourceStat = "STR"
             },
             new Ability() {
                 name = "Snapshot", 
@@ -53,7 +62,10 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 2, //one enemy
                 specialSpeedLevel = 5, //order by descending.
-                abilityKey = 4
+                abilityKey = 4,
+                damagetype = "blunt",
+                sourceStat = "STR",
+                powerMod = .8F
             },
             new Ability() {
                 name = "Aimed Shot", 
@@ -62,15 +74,21 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 2, //one enemy
                 specialSpeedLevel = 1,
-                abilityKey = 5
+                abilityKey = 5,
+                damagetype = "blunt",
+                sourceStat = "STR",
+                powerMod = 2F
             },
             new Ability() {
                 name = "Covering Fire", 
                 description = "Spray shots wildly, doing some damage to all enemies.",
                 mpCost = 2,
                 level = 1,
-                targetType = 0, //all enemies.
-                abilityKey = 6
+                targetType = 4, //all enemies.
+                abilityKey = 6,
+                damagetype = "blunt",
+                sourceStat = "STR",
+                powerMod = .5F
             },
             new Ability() {
                 name = "Tracer Rounds", 
@@ -78,7 +96,9 @@ namespace PixelVision8.Player
                 mpCost = 3,
                 level = 1,
                 targetType = 2, //one enemy
-                abilityKey = 7
+                abilityKey = 7,
+                damagetype = "fire",
+                sourceStat = "STR"
             },
         };
 

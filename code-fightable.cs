@@ -26,7 +26,7 @@ namespace PixelVision8.Player
         Item weapon = new Item();
         Item armor = new Item();
 
-        public Dictionary<string, float> damageMultipliers = new Dictionary<string, float>(); //damage type is the key, damage gets multiplied by the float.
+        public Dictionary<string, double> damageMultipliers = new Dictionary<string, double>(); //damage type is the key, damage gets multiplied by the double.
 
         public Stats getTotalStats() //TODO: do i want this to handle HP or keep that separate? I have to be care on where I set HP/MP if I do it here.
         {

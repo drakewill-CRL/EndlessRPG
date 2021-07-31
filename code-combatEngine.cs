@@ -25,7 +25,7 @@ namespace PixelVision8.Player
                     if (e.attacker.currentStats.MP >= e.thingToDo.mpCost)
                     {
                         //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
-                        var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo.abilityKey);
+                        var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo);
                         results.Add(abilOutcome);
                         for (int i = 0; i < abilOutcome.target.Count(); i++)
                         {
@@ -53,8 +53,6 @@ namespace PixelVision8.Player
                 //outerResults.Add(new DisplayResults() { desc = e.attacker.name + " couldn't act" });
             }
 
-            //TODO: check here if all opponents are dead, award results and display info
-            //and roll next encounter
             if (FightScene.enemies.All(e => e.currentStats.HP <= 0))
             {
                 DisplayResults winRewards = new DisplayResults();
@@ -64,24 +62,23 @@ namespace PixelVision8.Player
                 foreach (var c in FightScene.characters)
                 {
                     if (c.currentStats.HP > 0)
-                        c.XP++;
-                    if (c.XP >= 4)
                     {
-                        //queue level up for this character.
-                        c.XP = 0;
-                        c.level++;
+                        c.XP++;
+                        if (c.XP >= 4)
+                        {
+                            //TODO queue level up for this character. Probably a DisplayResult entry that tells the game to switch scenes.
+                            c.XP = 0;
+                            c.level++;
+                        }
+                    }
+                    else
+                    {
+                        c.currentStats.HP = 1;
                     }
                 }
-
-
             }
 
             return outerResults;
-
-        }
-
-        public static void CalcDamage(Attack a)
-        {
 
         }
 

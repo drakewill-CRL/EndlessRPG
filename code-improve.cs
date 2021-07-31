@@ -21,8 +21,7 @@ namespace PixelVision8.Player{
         public static void Draw()
         {
             //Plan:
-            //Screen will be 340*244, approx. "widescreen SNES" size.
-            //Sprites should be 16*32, SNES colors per sprite? that's 128 of 244 vert pixels, leaving 96 for menus/chrome/etc in a single vertical line.
+            //Screen will be 344*248, approx. "widescreen SNES" size.
 
         }
 
