@@ -9,7 +9,7 @@ namespace PixelVision8.Player
     public class Fightable //enemies and player characters, PCs get some extra stuff.
     {
         public string name;
-        public int level;
+        public int level = 1;
         public string creatureType; //Human, undead, others tbd. for weapon and spell banes?
         public Stats startingStats = new Stats();
         public Stats StatsPerLevel = new Stats();
@@ -28,7 +28,7 @@ namespace PixelVision8.Player
 
         public Dictionary<string, double> damageMultipliers = new Dictionary<string, double>(); //damage type is the key, damage gets multiplied by the double.
 
-        public Stats getTotalStats() //TODO: do i want this to handle HP or keep that separate? I have to be care on where I set HP/MP if I do it here.
+        public Stats getTotalStats(bool refill = false) //TODO: do i want this to handle HP or keep that separate? I have to be care on where I set HP/MP if I do it here.
         {
             Stats final = new Stats();
             final.Add(startingStats);
@@ -39,6 +39,16 @@ namespace PixelVision8.Player
             final.Add(armor.statBoost);
             final.Add(tempChanges);
 
+            if (refill || currentStats == null)
+            {
+                final.HP = final.maxHP;
+                final.MP = final.maxMP;
+            }
+            else
+            {
+                final.HP = currentStats.HP;
+                final.MP = currentStats.MP;
+            }
             return final;
         }
 

@@ -8,16 +8,17 @@ namespace PixelVision8.Player
 {
     public class Stats
     {
-        public int HP;
-        public int maxHP;
-        public int MP;
-        public int maxMP;
-        public int STR;
-        public int DEF;
-        public int MAGIC;
-        public int MDEF;
-        public int SPD; //for initiative
-        public int LUK; //For a few various things.
+        public int HP = 1;
+        public int maxHP = 1;
+        public int MP = 1;
+        public int maxMP = 1;
+        public int STR = 1;
+        public int DEF = 1;
+        public int MAGIC = 1;
+        public int MDEF = 1;
+        public int SPD = 1; //for initiative
+        public int LUK = 1; //For a few various things but mostly crit.
+        
         //You know, I had a write up for luck getting boosts from various things rolled randomly per character, like 
         //favorite color or lucky number or zodiac sign or such. Maybe I can port that in here later.
 

@@ -32,8 +32,9 @@ namespace PixelVision8.Player
 
             LoadGameData();
             //Any post-startup resets of values would go here.
-			gameState.mode = 1; //jump to fight screen
-            gameState.mode = 0; //testing title screen.
+			gameState.mode = gameState.FightSceneID; //jump to fight screen
+            //gameState.mode = gameState.TitleSceneID; //testing title screen.
+            gameState.mode = gameState.ImproveSceneID; //Drawing level up screen.
         }
 
         public override void Draw()
@@ -41,15 +42,15 @@ namespace PixelVision8.Player
             DrawText("FPS: " + ReadFPS(), 0, 0, DrawMode.Sprite, "large", 14); //This doesn't hit 60FPS
             switch (gameState.mode)
             {
-                case 0:
+                case gameState.TitleSceneID:
                     TitleScene.Draw();
                     break;
-                case 1:
+                case gameState.FightSceneID:
                     FightScene.Draw();
                     break;
-                //case 2:
-                    //DrawBlackJack();
-                    //break;
+                case gameState.ImproveSceneID:
+                    ImproveScene.Draw();
+                    break;
                 //case 3:
                     //Roulette.Draw();
                     //break;
@@ -61,15 +62,15 @@ namespace PixelVision8.Player
             RedrawDisplay();
             switch (gameState.mode)
             {
-                case 0:
-                    TitleScene.Update(timeDelta );
+                case gameState.TitleSceneID:
+                    TitleScene.Update(timeDelta);
                     break;
-                case 1:
+                case gameState.FightSceneID:
                     FightScene.Update(timeDelta);
                     break;
-                //case 2:
-                    ///DrawBlackJack();
-                    //break;
+                case gameState.ImproveSceneID:
+                    ImproveScene.Update(timeDelta);
+                    break;
                 //case 3:
                     //Roulette.Draw();
                     //break;

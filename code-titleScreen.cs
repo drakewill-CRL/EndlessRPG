@@ -52,10 +52,10 @@ namespace PixelVision8.Player
 
         public static void Input()
         {
-            if (parentRef.Button(Buttons.Start, InputState.Released))
+            if (parentRef.Button(Buttons.Start, InputState.Released) || parentRef.Button(Buttons.B, InputState.Released))
             {
                 clear = true;
-                gameState.mode = 1; //fight for test purposes
+                gameState.mode = gameState.FightSceneID; //fight for test purposes
                 //TODO: go to newGame screen to pick a party if no saved game to continue,
                 //or the fight screen with an existing party if there's an active save game.
             }

@@ -18,7 +18,8 @@ namespace PixelVision8.Player
         //--rename MAGIG and MDEF as well then to something else.
         //check for party killed too. Haven't yet checked for that.
         //See whats up with ability selection, looks like enemies occasionally don't attack (probably picking an ability they dont have MP for?)
-        //
+        //save game stuff
+        //Set up constants for mode values, instead of hard-coding them as magic ints.
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -86,7 +87,7 @@ namespace PixelVision8.Player
             char1.abilities = char1.role.abilities; 
             char1.startingStats = char1.role.startStats;
             char1.StatsPerLevel = char1.role.statsPerLevel;
-            char1.currentStats = char1.getTotalStats();
+            char1.currentStats = char1.getTotalStats(true);
             char1.displayStats = char1.currentStats.Clone();
             characters.Add(char1);
             var char2 = char1.Clone();
@@ -188,6 +189,7 @@ namespace PixelVision8.Player
             // parentRef.DrawText("enemies:" + enemies.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
             // parentRef.DrawText("actable enemies:" + enemies.Count(e => e.CanAct()), 12 * 8, 20, DrawMode.Sprite, "large", 12);
 
+            parentRef.BackgroundColor(0);
             parentRef.ScrollPosition(344);
             if (!hasDrawn)
                 DrawMenuChrome();
@@ -552,6 +554,8 @@ namespace PixelVision8.Player
             return "";
         }
 
+        //This could be replaced with drawing sprites directly in the tilemap, though that requires moving some sprite data to the Sprites.png file
+        //and then working with the tilemap editor.
         public static void DrawMenuChrome()
         {
             //Draw in some sprites to outline areas and boxes and such.
