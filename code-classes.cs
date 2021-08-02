@@ -10,12 +10,12 @@ namespace PixelVision8.Player
     {
         public int HP = 0;
         public int maxHP = 0;
-        public int MP = 0;
-        public int maxMP = 0;
+        public int AP = 0;
+        public int maxAP = 0;
         public int STR = 0;
         public int DEF = 0;
-        public int MAGIC = 0;
-        public int MDEF = 0;
+        public int INS = 0;
+        public int MOX = 0;
         public int SPD = 0; //for initiative
         public int LUK = 0; //For a few various things but mostly crit.
 
@@ -32,14 +32,14 @@ namespace PixelVision8.Player
             HP += incoming.HP; //allows damage to be relayed via a stats object
             if (HP <0)
                 HP = 0;
-            maxMP += incoming.maxMP;
-            MP += incoming.MP; //attacker can burn MP after the attack.
-            if (MP <0)
-                MP = 0;
+            maxAP += incoming.maxAP;
+            AP += incoming.AP; //attacker can burn AP after the attack.
+            if (AP <0)
+                AP = 0;
             STR += incoming.STR;
             DEF += incoming.DEF;
-            MAGIC += incoming.MAGIC;
-            MDEF += incoming.MDEF;
+            INS += incoming.INS;
+            MOX += incoming.MOX;
             SPD += incoming.SPD;
             LUK += incoming.LUK;
         }
@@ -47,12 +47,12 @@ namespace PixelVision8.Player
         {
             maxHP = incoming.maxHP;
             HP = incoming.HP; //allows damage to be relayed via a stats object
-            maxMP = incoming.maxMP;
-            MP = incoming.MP; //attacker can burn MP after the attack.
+            maxAP = incoming.maxAP;
+            AP = incoming.AP; //attacker can burn AP after the attack.
             STR = incoming.STR;
             DEF = incoming.DEF;
-            MAGIC = incoming.MAGIC;
-            MDEF = incoming.MDEF;
+            INS = incoming.INS;
+            MOX = incoming.MOX;
             SPD = incoming.SPD;
             LUK = incoming.LUK;
         }
@@ -67,6 +67,7 @@ namespace PixelVision8.Player
     public class Role
     {
         public string name;
+        public string spriteSet;
         public Stats startStats;
         public Stats statsPerLevel;
         public List<Ability> abilities;
@@ -112,7 +113,7 @@ namespace PixelVision8.Player
     {
         public string desc; //Explains what happened this step.
         public Fightable target; //Could be null. MIght need to be a list in the future?
-        public Stats changeStats = new Stats(); //For displaying HP/MP value changes during display phase.
+        public Stats changeStats = new Stats(); //For displaying HP/AP value changes during display phase.
         public string changedItem = ""; //Which property changed. could be sprite.
         public string changedTo = ""; //what it changed to.
         public int frameCounter = 120; //How long to display this particular result, if they're not all on the same timer.
@@ -131,7 +132,7 @@ namespace PixelVision8.Player
         {
             Attack results = new Attack();
             results.attacker = f;
-            results.thingToDo = f.abilities.Where(a => a.mpCost <= f.currentStats.MP).OrderBy(a => gameState.random.Next()).First();
+            results.thingToDo = f.abilities.Where(a => a.apCost <= f.currentStats.AP).OrderBy(a => gameState.random.Next()).First();
             switch(results.thingToDo.targetType)
             {
                 case 0: //ability determines targeting.

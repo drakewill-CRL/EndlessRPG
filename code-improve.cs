@@ -170,7 +170,7 @@ namespace PixelVision8.Player
                             gameState.levelingUpChar.statBoosts.maxHP+=5;
                             break;
                         case 1:
-                            gameState.levelingUpChar.statBoosts.maxMP+=5;
+                            gameState.levelingUpChar.statBoosts.maxAP+=5;
                             break;
                         case 2:
                             gameState.levelingUpChar.statBoosts.STR+=5;
@@ -179,10 +179,10 @@ namespace PixelVision8.Player
                             gameState.levelingUpChar.statBoosts.DEF+=5;
                             break;
                         case 4:
-                            gameState.levelingUpChar.statBoosts.MAGIC+=5;
+                            gameState.levelingUpChar.statBoosts.INS+=5;
                             break;
                         case 5:
-                            gameState.levelingUpChar.statBoosts.MDEF+=5;
+                            gameState.levelingUpChar.statBoosts.MOX+=5;
                             break;
                         case 6:
                             gameState.levelingUpChar.statBoosts.SPD+=5;
@@ -213,11 +213,11 @@ namespace PixelVision8.Player
 
             string currentCharStats = "";
             currentCharStats += "HP:" + gameState.levelingUpChar.currentStats.maxHP + ", ";
-            currentCharStats += "MP:" + gameState.levelingUpChar.currentStats.maxMP + ", ";
+            currentCharStats += "AP:" + gameState.levelingUpChar.currentStats.maxAP + ", ";
             currentCharStats += "STR:" + gameState.levelingUpChar.currentStats.STR + ", ";
             currentCharStats += "DEF:" + gameState.levelingUpChar.currentStats.DEF + ", ";
-            currentCharStats += "MAGIC:" + gameState.levelingUpChar.currentStats.MAGIC + ", ";
-            currentCharStats += "MDEF:" + gameState.levelingUpChar.currentStats.MDEF + ", ";
+            currentCharStats += "INS:" + gameState.levelingUpChar.currentStats.INS + ", ";
+            currentCharStats += "MOX:" + gameState.levelingUpChar.currentStats.MOX + ", ";
             currentCharStats += "SPD:" + gameState.levelingUpChar.currentStats.SPD + ", ";
             currentCharStats += "LUK:" + gameState.levelingUpChar.currentStats.LUK + ", ";
             var wrapped = parentRef.WordWrap(currentCharStats, 30);
@@ -236,11 +236,11 @@ namespace PixelVision8.Player
 
             string levelUpDesc = "Gain your role's stats and refresh HP and AP\n";
             levelUpDesc += "HP:" + gameState.levelingUpChar.role.statsPerLevel.maxHP + ", ";
-            levelUpDesc += "MP:" + gameState.levelingUpChar.role.statsPerLevel.maxMP + ", ";
+            levelUpDesc += "AP:" + gameState.levelingUpChar.role.statsPerLevel.maxAP + ", ";
             levelUpDesc += "STR:" + gameState.levelingUpChar.role.statsPerLevel.STR + ", ";
             levelUpDesc += "DEF:" + gameState.levelingUpChar.role.statsPerLevel.DEF + ", ";
-            levelUpDesc += "MAGIC:" + gameState.levelingUpChar.role.statsPerLevel.MAGIC + ", ";
-            levelUpDesc += "MDEF:" + gameState.levelingUpChar.role.statsPerLevel.MDEF + ", ";
+            levelUpDesc += "INS:" + gameState.levelingUpChar.role.statsPerLevel.INS + ", ";
+            levelUpDesc += "MOX:" + gameState.levelingUpChar.role.statsPerLevel.MOX + ", ";
             levelUpDesc += "SPD:" + gameState.levelingUpChar.role.statsPerLevel.SPD + ", ";
             levelUpDesc += "LUK:" + gameState.levelingUpChar.role.statsPerLevel.LUK + ", ";
             wrapped = parentRef.WordWrap(levelUpDesc, 30);
@@ -266,7 +266,7 @@ namespace PixelVision8.Player
 
             parentRef.DrawText("  HP     AP    STR    DEF", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);
             lineCounter++;
-            parentRef.DrawText("  MAGIC  MDEF  SPD    LUK", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);
+            parentRef.DrawText("  INS  MOX  SPD    LUK", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);
             lineCounter++; lineCounter++;
 
             parentRef.DrawText("Scavenge for an Item", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);

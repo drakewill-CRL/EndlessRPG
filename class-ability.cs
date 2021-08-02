@@ -10,7 +10,7 @@ namespace PixelVision8.Player
     {
         public string name; //Name has a 13 character limit to fit in the allocated box.
         public string description; //help text that appears in combat. Might need to be a property to update with levels.
-        public int mpCost;
+        public int apCost;
         public int level; //Used to power up the effects of the ability.
         public int targetType; //0: no target selection(self, random, all enemies, or all allies.). 2: target  1 enemy 3: target 1 ally.
         public string damagetype; //Should have a key/dictionary for this
@@ -33,7 +33,7 @@ namespace PixelVision8.Player
             AttackResults results = new AttackResults();
             results.attacker = attacker;
             results.target.Add(attacker);
-            results.targetChanges.Add(new Stats() {MP = -(ability.mpCost)});
+            results.targetChanges.Add(new Stats() {AP = -(ability.apCost)});
 
             //NOTE: special things need targets pulled in here.
             if (ability.targetType == 0)
@@ -134,10 +134,10 @@ namespace PixelVision8.Player
             switch (a.thingToDo.sourceStat)
             {
                 case "STR":
-                    attackPowerBase = a.attacker.currentStats.STR;
+                    attackPowerBase = a.attacker.currentStats.STR * 2;
                     break;
-                case "MAGIC":
-                    attackPowerBase = a.attacker.currentStats.MAGIC;
+                case "INS":
+                    attackPowerBase = a.attacker.currentStats.INS * 2;
                     break;
             }
 
@@ -152,8 +152,8 @@ namespace PixelVision8.Player
                 case "STR":
                     results = (attackPowerBase * multiplier) - target.currentStats.DEF;
                     break;
-                case "MAGIC":
-                    results = (attackPowerBase * multiplier) - target.currentStats.MDEF;
+                case "INS":
+                    results = (attackPowerBase * multiplier) - target.currentStats.MOX;
                     break;
             }
 
@@ -169,10 +169,10 @@ namespace PixelVision8.Player
             switch (ab.sourceStat)
             {
                 case "STR":
-                    attackPowerBase = attacker.currentStats.STR;
+                    attackPowerBase = attacker.currentStats.STR * 2;
                     break;
-                case "MAGIC":
-                    attackPowerBase = attacker.currentStats.MAGIC;
+                case "INS":
+                    attackPowerBase = attacker.currentStats.INS * 2;
                     break;
             }
 
@@ -187,11 +187,19 @@ namespace PixelVision8.Player
                 case "STR":
                     results = (attackPowerBase * multiplier) - target.currentStats.DEF;
                     break;
-                case "MAGIC":
-                    results = (attackPowerBase * multiplier) - target.currentStats.MDEF;
+                case "INS":
+                    results = (attackPowerBase * multiplier) - target.currentStats.MOX;
                     break;
             }
             results = results * ab.powerMod;
+            //crit chance calc
+            var luckSpread = attacker.currentStats.LUK - target.currentStats.LUK;
+            var isCrit = (gameState.random.Next(0, 100) > Math.Abs(luckSpread));
+            if (isCrit && luckSpread > 0)
+                results *= 2;
+            if (isCrit && luckSpread < 0)
+                results /= 2;
+            
 
             if (results < 0)
                 results = 0;

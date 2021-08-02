@@ -10,10 +10,10 @@ namespace PixelVision8.Player
     {
         //MOST OBVIOUS TODOS:
         //make some sound effects and get the list going on which one is what. Expand on the 3 present.
-        //rename MP to AP (Ability points)
-        //--rename MAGIG and MDEF as well then to something else.       
         //save game stuff
         //Clear out or re-init fight scene after game over.
+        //Start baseline sample content
+        //Get newgame scene going.
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -185,7 +185,7 @@ namespace PixelVision8.Player
             //test sprites
             foreach (var c in characters)
             {
-                parentRef.DrawMetaSprite(c.spriteSet + c.drawState, c.posX, c.posY);
+                parentRef.DrawMetaSprite(c.role.spriteSet + c.drawState, c.posX, c.posY);
             }
 
             foreach (var e in enemies)
@@ -292,7 +292,7 @@ namespace PixelVision8.Player
                     switch (subMenuLevel)
                     {
                         case 0: //main menu
-                            if (characters[activeCharSelecting].currentStats.MP >= characters[activeCharSelecting].abilities[arrowPosIndex].mpCost)
+                            if (characters[activeCharSelecting].currentStats.AP >= characters[activeCharSelecting].abilities[arrowPosIndex].apCost)
                             {
                                 var tLevel = characters[activeCharSelecting].abilities[arrowPosIndex].targetType;
                                 if (tLevel == 0)//self or auto-target
@@ -434,7 +434,7 @@ namespace PixelVision8.Player
             //We should have 4 in this list.
             for (int i = 0; i < abilities.Count(); i++)
             {
-                if (characters[activeCharSelecting].abilities[i].mpCost <= characters[activeCharSelecting].currentStats.MP)
+                if (characters[activeCharSelecting].abilities[i].apCost <= characters[activeCharSelecting].currentStats.AP)
                     parentRef.DrawText(abilities[i].name, 2 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 15); //spacing in tiles, * 8 for pixels.
                 else
                     parentRef.DrawText(abilities[i].name, 2 * 8, (20 + (i * 2)) * 8, DrawMode.Sprite, "large", 12);
@@ -492,7 +492,10 @@ namespace PixelVision8.Player
             switch (dr.changedItem)
             {
                 case "spriteState":
+                if (dr.target is Enemy)
                     dr.target.spriteSet = dr.changedTo;
+                else
+                    ((Character)dr.target).drawState = dr.changedTo;
                     break;
                 default:
                     break;
@@ -510,8 +513,10 @@ namespace PixelVision8.Player
             {
                 parentRef.DrawText(characters[i].name, charPositions[i].Item1 + 32, charPositions[i].Item2, DrawMode.Sprite, "large", 15);
                 parentRef.DrawText("HP " + characters[i].displayStats.HP + "/" + characters[i].displayStats.maxHP, charPositions[i].Item1 + 32, charPositions[i].Item2 + 8, DrawMode.Sprite, "large", 15);
-                parentRef.DrawText("MP " + characters[i].displayStats.MP + "/" + characters[i].displayStats.maxMP, charPositions[i].Item1 + 32, charPositions[i].Item2 + 16, DrawMode.Sprite, "large", 15);
+                parentRef.DrawText("AP " + characters[i].displayStats.AP + "/" + characters[i].displayStats.maxAP, charPositions[i].Item1 + 32, charPositions[i].Item2 + 16, DrawMode.Sprite, "large", 15);
                 //might use the 4th line for status indicators (poisoned, blind, etc)
+                if (characters[i].drawState == "Dead")
+                    parentRef.DrawText("Dead", charPositions[i].Item1 + 32, charPositions[i].Item2 + 24, DrawMode.Sprite, "large", 15);
             }
         }
 
@@ -542,7 +547,7 @@ namespace PixelVision8.Player
         public static string GetHelpText()
         {
             if (characters.Count() > 0 && characters[activeCharSelecting] != null)
-                return characters[activeCharSelecting].abilities[arrowPosIndex].mpCost + "MP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description; ; //The typical answer.
+                return characters[activeCharSelecting].abilities[arrowPosIndex].apCost + "AP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description; ; //The typical answer.
 
             return "";
         }

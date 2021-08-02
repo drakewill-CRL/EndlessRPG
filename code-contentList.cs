@@ -8,7 +8,7 @@ namespace PixelVision8.Player
 {
     public static class ContentLists
     {
-        public static Stats baseStats = new Stats() { HP = 1, maxHP = 1, MP = 1, maxMP = 1, STR = 1, DEF = 1, MAGIC = 1, MDEF = 1, SPD = 1, LUK = 1 };
+        public static Stats baseStats = new Stats() { HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1 };
 
         public static List<string> damageTypes = new List<string>() {"blunt", "pierce", "slash", "fire", "bioHeal", "synthHeal"};
 
@@ -17,7 +17,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Kickflip",
                 description = "You do a sweet kickflip and hurt the enemy or something. Maybe not.",
-                mpCost = 1,
+                apCost = 1,
                 level = 1,
                 targetType = 0, //automatic targeting
                 abilityKey = 0,
@@ -27,7 +27,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Fight",
                 description = "Basic attack on the selected target.",
-                mpCost = 0,
+                apCost = 0,
                 level = 1,
                 targetType = 2, //single enemy
                 abilityKey = 1,
@@ -37,7 +37,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Defend",
                 description = "Take half damage for the next round",
-                mpCost = 0,
+                apCost = 0,
                 level = 1,
                 targetType = 0, //auto, self
                 abilityKey = 2,
@@ -48,7 +48,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Run", //Maybe 'Reposition'? 
                 description = "Attempt to escape this fight and start a new encounter",
-                mpCost = 0,
+                apCost = 0,
                 level = 1,
                 targetType = 0, //auto, special case.
                 abilityKey = 3,
@@ -58,7 +58,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Snapshot", 
                 description = "Attack faster than usual, going before most targets.",
-                mpCost = 2,
+                apCost = 2,
                 level = 1,
                 targetType = 2, //one enemy
                 specialSpeedLevel = 5, //order by descending.
@@ -70,7 +70,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Aimed Shot", 
                 description = "Take your time focusing your attack on a vital point for additional damage.",
-                mpCost = 2,
+                apCost = 2,
                 level = 1,
                 targetType = 2, //one enemy
                 specialSpeedLevel = 1,
@@ -82,7 +82,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Covering Fire", 
                 description = "Spray shots wildly, doing some damage to all enemies.",
-                mpCost = 2,
+                apCost = 2,
                 level = 1,
                 targetType = 4, //all enemies.
                 abilityKey = 6,
@@ -93,7 +93,7 @@ namespace PixelVision8.Player
             new Ability() {
                 name = "Tracer Rounds", 
                 description = "Switch to incendiary shots, doing fire damage to a target.",
-                mpCost = 3,
+                apCost = 3,
                 level = 1,
                 targetType = 2, //one enemy
                 abilityKey = 7,
@@ -107,30 +107,43 @@ namespace PixelVision8.Player
         public static List<Role> allRoles = new List<Role>() {
             new Role() {
                 name = "test role", 
-                startStats = new Stats() {HP = 5, maxHP = 5, MP = 5, maxMP = 5, STR = 5, DEF = 5, MAGIC = 5, MDEF = 5, SPD = 5, LUK = 5}, 
-                statsPerLevel = new Stats() {HP = 1, maxHP = 1, MP = 1, maxMP = 1, STR = 1, DEF = 1, MAGIC = 1, MDEF = 1, SPD = 1, LUK = 1}, 
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 5, INS = 5, MOX = 5, SPD = 5, LUK = 5}, 
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1}, 
                 abilities = new List<Ability>() //todo: insert abilities here.
             },
             new Role() {
-                name = "Infantry",  //more EP name later.
-                startStats = new Stats() {HP = 5, maxHP = 5, MP = 5, maxMP = 5, STR = 5, DEF = 5, MAGIC = 5, MDEF = 5, SPD = 5, LUK = 5}, 
-                statsPerLevel = new Stats() {HP = 1, maxHP = 1, MP = 1, maxMP = 1, STR = 1, DEF = 1, MAGIC = 1, MDEF = 1, SPD = 1, LUK = 1}, 
+                name = "Soldier",
+                spriteSet = "infantry",
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5}, 
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1}, 
                 abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
             }
         };
 
         public static Dictionary<string, Role> rolesByName = allRoles.ToDictionary(k => k.name, v => v);
 
+        //Rough lazy balance guide:
+        //StartingStats are lower, but statsPerLevel are higher, than for PC roles.
         public static List<Enemy> enemies = new List<Enemy>() {
         new Enemy() {
-            name = "Test Target" ,
-            desc = "a thing to beat on while making menus work",
+            name = "TestCrab" ,
+            desc = "Sample enemy for testing stuff.",
             level = 1,
-            startingStats = new Stats() { HP = 50, maxHP = 50, MP = 20, maxMP = 20, STR = 10, DEF = 1, MAGIC = 10, MDEF = 1, SPD = 10, LUK = 1},
-            StatsPerLevel = new Stats() { HP = 5, maxHP = 5, MP = 1, maxMP = 1, STR = 1, DEF = 1, MAGIC = 1, MDEF = 1, SPD = 1, LUK = 1},
+            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 2, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 2, DEF = 2, INS = 1, MOX = 2, SPD = 1, LUK = 2},
             statBoosts = new Stats(),
-            spriteSet="enemy1",
+            spriteSet="crab1",
             abilities = new List<Ability>() {allAbilities[0].Clone(), allAbilities[1].Clone()}
+            },
+            new Enemy() {
+            name = "TITANovacrab" ,
+            desc = "A novacrab overrun by TITAN nanites and weakened from its constant exposure to space.",
+            level = 1,
+            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
+            statBoosts = new Stats(),
+            spriteSet="crab1",
+            abilities = new List<Ability>() {allAbilities[1].Clone()}
             }
         };
 
@@ -141,8 +154,8 @@ namespace PixelVision8.Player
         { 
             new List<Enemy>() 
             { 
-                (Enemy)enemies[0].Clone(), 
-                (Enemy)enemies[0].Clone()
+                (Enemy)enemies[1].Clone(), 
+                (Enemy)enemies[1].Clone()
             }
         };
     }

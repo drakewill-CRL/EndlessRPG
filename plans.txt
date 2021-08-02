@@ -105,8 +105,8 @@ Bosses get bigger scaling values and start over a party's level by a few levels
 STAT PURPOSES:
 STR - physical damage (FIGHT)
 DEF - counters STR
-MAGIC - ability damage
-MDEF: counters MAGIC
+INS - ability damage
+MOX: counters INS
 SPD - determines initiative order
 LUK - determines crit chance (Attackers LUK - targets LUK = X. Roll dX to see if its over 20. Negative X means the defense can critical block/attack can botch on rolls under 0. LUK is not a dump stat! Probably.)
 

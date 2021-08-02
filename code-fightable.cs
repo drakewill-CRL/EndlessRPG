@@ -16,7 +16,7 @@ namespace PixelVision8.Player
         public Stats currentStats = new Stats(); //should be equal to getTotalStats most of the time.
         public Stats statBoosts = new Stats(); //boosted stats from XP instead of a weapon or level.
         public Stats tempChanges = new Stats(); //Effects from debuffs or situations etc.
-        public Stats displayStats = new Stats(); //The stats to use on-screen and process during fight results animation, so HP/MP bars show correct values during playback.
+        public Stats displayStats = new Stats(); //The stats to use on-screen and process during fight results animation, so HP/AP bars show correct values during playback.
         public int posX;
         public int posY;
         public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
@@ -28,7 +28,7 @@ namespace PixelVision8.Player
 
         public Dictionary<string, double> damageMultipliers = new Dictionary<string, double>(); //damage type is the key, damage gets multiplied by the double.
 
-        public Stats getTotalStats(bool refill = false) //TODO: do i want this to handle HP or keep that separate? I have to be care on where I set HP/MP if I do it here.
+        public Stats getTotalStats(bool refill = false) //TODO: do i want this to handle HP or keep that separate? I have to be care on where I set HP/AP if I do it here.
         {
             Stats final = new Stats();
             final.Add(startingStats);
@@ -42,12 +42,12 @@ namespace PixelVision8.Player
             if (refill || currentStats == null)
             {
                 final.HP = final.maxHP;
-                final.MP = final.maxMP;
+                final.AP = final.maxAP;
             }
             else
             {
                 final.HP = currentStats.HP;
-                final.MP = currentStats.MP;
+                final.AP = currentStats.AP;
             }
             return final;
         }
@@ -107,9 +107,8 @@ namespace PixelVision8.Player
         {
             currentStats.Add(StatsPerLevel);
             currentStats.HP = currentStats.maxHP;
-            currentStats.MP = currentStats.maxMP;
+            currentStats.AP = currentStats.maxAP;
         }
-
     }
 
     public class Enemy : Fightable

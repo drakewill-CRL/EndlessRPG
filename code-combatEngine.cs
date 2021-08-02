@@ -22,7 +22,7 @@ namespace PixelVision8.Player
             {
                 if (e.attacker.CanAct()) //This could get flipped by earlier actions in the list.
                 {
-                    if (e.attacker.currentStats.MP >= e.thingToDo.mpCost)
+                    if (e.attacker.currentStats.AP >= e.thingToDo.apCost)
                     {
                         //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
                         var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo);
@@ -41,13 +41,13 @@ namespace PixelVision8.Player
                         {
                             abilOutcome.target[i].currentStats.Add(abilOutcome.targetChanges[i]);
                             if (abilOutcome.target[i].currentStats.HP <= 0)
-                                outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "dead" });
+                                outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "Dead" });
                         }
                     }
                     else
                     {
                         //out of mana message
-                        outerResults.Add(new DisplayResults() { desc = e.attacker.name + " didn't have the MP to use " + e.thingToDo.name });
+                        outerResults.Add(new DisplayResults() { desc = e.attacker.name + " didn't have the AP to use " + e.thingToDo.name });
                     }
                 }
                 //else

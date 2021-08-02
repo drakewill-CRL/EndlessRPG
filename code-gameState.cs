@@ -59,11 +59,11 @@ namespace PixelVision8.Player
         public static int Char1Ability4Level = 0;
         //Points spent boosting stats. (these get added to the base stat value)
         public static int Char1BonusMaxHp = 0;
-        public static int Char1BonusMaxMp = 0;
+        public static int Char1BonusMaxAp = 0;
         public static int Char1BonusSTR = 0;
         public static int Char1BonusDEF = 0;
-        public static int Char1BonusMAGIC = 0;
-        public static int Char1BonusMDEF = 0;
+        public static int Char1BonusINS = 0;
+        public static int Char1BonusMOX = 0;
 
     }
 }

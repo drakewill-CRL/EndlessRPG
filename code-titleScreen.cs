@@ -17,7 +17,7 @@ namespace PixelVision8.Player
         static string pushStart  ="Press Start";
         static string credits = "EP Expendables 2021 Drake Williams";
         static string license1 = "Eclipse Phase Content by Posthuman Studios";
-        static string license2 = "Licensed via CC 3.0 BY-NC-SA";
+        static string license2 = "Licensed via CC BY-NC-SA 4.0";
         static bool hasDrawn = false;
         static bool clear = false;
 
