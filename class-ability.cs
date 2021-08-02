@@ -29,10 +29,19 @@ namespace PixelVision8.Player
         }
         public static AttackResults UseAbility(Fightable attacker, List<Fightable> targets, Ability ability)
         {
-            //All abilities' effects will just get handled in this one giant switch function for now.
-            //until i cna figure out how to in-line a function declaration in an initializer.
+            //All abilities' effects will just get handled in this one giant switch function. 
             AttackResults results = new AttackResults();
             results.attacker = attacker;
+            results.target.Add(attacker);
+            results.targetChanges.Add(new Stats() {MP = -(ability.mpCost)});
+
+            //NOTE: special things need targets pulled in here.
+            if (ability.targetType == 0)
+            {
+                //Self target. Other auto-target abilities might need flagged somewhere else or processed in the attacker phase.
+                targets.Add(attacker);
+            }
+
             foreach (var t in targets) //So abilities can't have 0 targets. fake that out if needed by targeting self.
             {
                 //TODO: might just make common checks flags here to make code easier to read below.
@@ -41,8 +50,6 @@ namespace PixelVision8.Player
                 {
                     case 0: //Do a kickflip!
                         results.printDesc.Add(attacker.name + " does a sweet kickflip! Nothing else happens.");
-                        results.target.Add(attacker);
-                        results.targetChanges.Add(new Stats() { MP = -1 });
                         break;
                     case 1: //Fight
                         if (t.currentStats.HP > 0)
@@ -127,10 +134,10 @@ namespace PixelVision8.Player
             switch (a.thingToDo.sourceStat)
             {
                 case "STR":
-                    attackPowerBase = a.attacker.currentStats.STR * 2;
+                    attackPowerBase = a.attacker.currentStats.STR;
                     break;
                 case "MAGIC":
-                    attackPowerBase = a.attacker.currentStats.MAGIC * 2;
+                    attackPowerBase = a.attacker.currentStats.MAGIC;
                     break;
             }
 
@@ -162,10 +169,10 @@ namespace PixelVision8.Player
             switch (ab.sourceStat)
             {
                 case "STR":
-                    attackPowerBase = attacker.currentStats.STR * 2;
+                    attackPowerBase = attacker.currentStats.STR;
                     break;
                 case "MAGIC":
-                    attackPowerBase = attacker.currentStats.MAGIC * 2;
+                    attackPowerBase = attacker.currentStats.MAGIC;
                     break;
             }
 

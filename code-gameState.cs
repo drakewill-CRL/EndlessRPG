@@ -17,6 +17,16 @@ namespace PixelVision8.Player
         //2 = improve screen
         //3 = newGame screen
 
+        /* 
+        sound IDs
+        0: arrow-move and menu-advance
+        1: quick gun attack
+        2: menu-negative (action not allowed)
+        3: PC is hit (1 is the PC attacking.)
+
+        */
+        
+
         public const int TitleSceneID = 0;
         public const int NewGameSceneID = 1;
         public const int FightSceneID = 2;

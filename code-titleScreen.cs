@@ -37,6 +37,8 @@ namespace PixelVision8.Player
             //Screen will be 344*248, approx. "widescreen SNES" size.
             //Sprites should be 16*32, SNES colors per sprite? that's 128 of 244 vert pixels, leaving 96 for menus/chrome/etc in a single vertical line.
             //TODO: multiple title screens, selected at random. possibly as unlocks.
+            parentRef.BackgroundColor(0);
+            parentRef.ScrollPosition(0);
             if (!hasDrawn)
                 parentRef.DrawMetaSprite("EPExpendablesTitle1", 1, 1, false, false, DrawMode.Tile, 0);
 

@@ -9,17 +9,11 @@ namespace PixelVision8.Player
     public static class FightScene
     {
         //MOST OBVIOUS TODOS:
-        //ensure rewards occur.
-        //make some sound effects and get the list going on which one is what.
-        //figure out why MP is burned twice : once at end of turn (probably from combat round), and again during display for the action (and it stays applied?)
-        //--i think that means i shouldn't re-process display stats until the end of the display phase?
-        //Figure out why other abilities don't use MP - covering fire doesn't burn MP?
+        //make some sound effects and get the list going on which one is what. Expand on the 3 present.
         //rename MP to AP (Ability points)
-        //--rename MAGIG and MDEF as well then to something else.
-        //check for party killed too. Haven't yet checked for that.
-        //See whats up with ability selection, looks like enemies occasionally don't attack (probably picking an ability they dont have MP for?)
+        //--rename MAGIG and MDEF as well then to something else.       
         //save game stuff
-        //Set up constants for mode values, instead of hard-coding them as magic ints.
+        //Clear out or re-init fight scene after game over.
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -162,10 +156,11 @@ namespace PixelVision8.Player
             }
             if (phase == 2)
             {
+                DrawCombatLogText();
                 displayFrameCounter--;
                 if (displayFrameCounter == 0)
                 {
-                    //TODO bounce to title screen.
+                    gameState.mode = gameState.TitleSceneID;
                 }
             }
         }
@@ -175,15 +170,8 @@ namespace PixelVision8.Player
             //Plan:
             //Screen will be 344*248, approx. "widescreen SNES" size.
             //Sprites should be 16*32, SNES colors per sprite? that's 128 of 244 vert pixels, leaving 96 for menus/chrome/etc in a single vertical line.
-
-            //Test layout areas.
-            //DrawRect ( x, y, width, height, color, drawMode )
-            //parentRef.DrawRect(300,16, 16, 32 * 4, 2, DrawMode.Sprite); //Baseline PC sprite locations
-
-            // parentRef.DrawRect(0, 150, 340, 8*11, 3, DrawMode.Sprite); //Possible text/command area.
-
-            //parentRef.DrawRect(8,16, 250, 32 * 4, 4, DrawMode.Sprite); //Possible enemy area
-
+            //Might make these 32x32, with some empty space to allow for dead/ready sprites to be wider than then standing ones.
+            //enemies are 64x64
             //debug draws here:
             //parentRef.DrawText("debug", 12 * 8, 12, DrawMode.Sprite, "large", 12);
             // parentRef.DrawText("enemies:" + enemies.Count(), 12 * 8, 12, DrawMode.Sprite, "large", 12);
@@ -363,6 +351,7 @@ namespace PixelVision8.Player
                             else
                             {
                                 //TODO: play negative sound, don't advance.
+                                parentRef.PlaySound(2);
                             }
                             break;
                         case 2: //select target enemy and advance to next one.
@@ -508,6 +497,11 @@ namespace PixelVision8.Player
                 default:
                     break;
             }
+            if (dr.isLevelUp)
+            {
+                gameState.levelingUpChar = (Character)dr.target;
+                gameState.mode = gameState.ImproveSceneID;
+            }
         }
 
         public static void DrawStatusDisplays()
@@ -523,7 +517,6 @@ namespace PixelVision8.Player
 
         public static void GetNewEncounter()
         {
-            Console.WriteLine("getting new encounter");
             //TODO: figure out rules for which encounters are valid.
             var encounter = ContentLists.PossibleEncounters.OrderBy(e => gameState.random.Next()).First();
             var partyLevel = characters.Select(c => c.level).Average();
@@ -536,11 +529,11 @@ namespace PixelVision8.Player
                 enemies[i].posX = 8 + ((i / 2) * 64);
                 enemies[i].posY = 16 + ((i % 2) * 64);
                 //scale to party level
+                enemies[i].currentStats.Set(enemies[i].startingStats);
                 for (int j = 1; j < partyLevel; j++)
                     enemies[i].currentStats.Add(enemies[i].StatsPerLevel);
 
                 enemies[i].currentStats.HP = enemies[i].currentStats.maxHP;
-
             }
             helpText = "Another wave of enemies approached!";
             displayFrameCounter = 60;

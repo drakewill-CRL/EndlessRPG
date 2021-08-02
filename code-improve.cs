@@ -21,8 +21,9 @@ namespace PixelVision8.Player
         //should also list off stats a level grants.
         //will need to get which character from gameState.
 
-        static int xScreennCoords = 2; //In case I draw stuff in the background via tiles.
+        static int xScreenCoords = 2; //In case I draw stuff in the background via tiles.
         static int yScreenCoords = 0;
+        static int arrowAdjustment = 0; //add this to Y values to fix arrow positions.
 
         static List<Tuple<int, int>> ArrowPoints = new List<Tuple<int, int>>()
         {
@@ -61,6 +62,7 @@ namespace PixelVision8.Player
             //Screen will be 344*248, approx. "widescreen SNES" size.
             //this needs a different background color.
             parentRef.BackgroundColor(2);
+            parentRef.ScrollPosition(344 * xScreenCoords); //2 screens over.
             DrawDescriptions();
             DrawArrow();
         }
@@ -79,7 +81,7 @@ namespace PixelVision8.Player
                 {
                     arrowPosIndex+= 4;
                     if (arrowPosIndex >= ArrowPointsStatBoosts.Count())
-                        arrowPosIndex = 0 + (ArrowPointsStatBoosts.Count() -arrowPosIndex);
+                        arrowPosIndex = arrowPosIndex - ArrowPointsStatBoosts.Count();
                 }
             }
 
@@ -95,7 +97,7 @@ namespace PixelVision8.Player
                 {
                     arrowPosIndex -= 4;
                     if (arrowPosIndex < 0)
-                        arrowPosIndex = ArrowPointsStatBoosts.Count() - arrowPosIndex - 1;
+                        arrowPosIndex =arrowPosIndex + ArrowPointsStatBoosts.Count();
 
                 }
             }
@@ -142,11 +144,9 @@ namespace PixelVision8.Player
                     if (arrowPosIndex == 0)
                     {
                         //Level up!
-                        // gameState.levelingUpChar.currentStats.Add(gameState.levelingUpChar.role.statsPerLevel);
-                        // gameState.levelingUpChar.currentStats.HP = gameState.levelingUpChar.currentStats.maxHP;
-                        // gameState.levelingUpChar.currentStats.MP = gameState.levelingUpChar.currentStats.maxMP;
                         gameState.levelingUpChar.level++;
                         gameState.levelingUpChar.currentStats = gameState.levelingUpChar.getTotalStats(true);
+                        gameState.levelingUpChar.displayStats.Set(gameState.levelingUpChar.currentStats);
                     }
                     else if (arrowPosIndex == 1)
                     {
@@ -192,8 +192,13 @@ namespace PixelVision8.Player
                             break;
                     }
                     gameState.levelingUpChar.currentStats = gameState.levelingUpChar.getTotalStats(false);
+                    gameState.levelingUpChar.displayStats.Set(gameState.levelingUpChar.currentStats);
                     gameState.mode = gameState.FightSceneID;
                 }
+
+                //reset for next time.
+                arrowPosIndex = 0;
+                phase = 0;
             }
         }
 
@@ -223,6 +228,8 @@ namespace PixelVision8.Player
                 lineCounter++;
             }
             lineCounter++;
+
+            arrowAdjustment = lineCounter - 7;
 
             parentRef.DrawText("Level Up", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);
             lineCounter++;
@@ -277,9 +284,9 @@ namespace PixelVision8.Player
         public static void DrawArrow()
         {
             if (phase == 0)
-                parentRef.DrawMetaSprite("arrow", ArrowPoints[arrowPosIndex].Item1 * 8, ArrowPoints[arrowPosIndex].Item2 * 8);
+                parentRef.DrawMetaSprite("arrow", ArrowPoints[arrowPosIndex].Item1 * 8, ((ArrowPoints[arrowPosIndex].Item2) + arrowAdjustment) * 8);
             else
-                parentRef.DrawMetaSprite("arrow", ArrowPointsStatBoosts[arrowPosIndex].Item1 * 8, ArrowPointsStatBoosts[arrowPosIndex].Item2 * 8);
+                parentRef.DrawMetaSprite("arrow", ArrowPointsStatBoosts[arrowPosIndex].Item1 * 8, ((ArrowPointsStatBoosts[arrowPosIndex].Item2)  + arrowAdjustment) * 8);
 
         }
 

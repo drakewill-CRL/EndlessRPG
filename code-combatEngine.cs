@@ -33,14 +33,15 @@ namespace PixelVision8.Player
                         }
 
                         foreach (var adesc in abilOutcome.printDesc)
-                            outerResults.Add(new DisplayResults() { desc = adesc });
+                        {
+                            outerResults.Add(new DisplayResults() { desc = adesc, frameCounter = 120 });
+                        }
                         //process target stat changes now, so dead enemies don't attack.
                         for (int i = 0; i < abilOutcome.target.Count(); i++)
                         {
                             abilOutcome.target[i].currentStats.Add(abilOutcome.targetChanges[i]);
                             if (abilOutcome.target[i].currentStats.HP <= 0)
                                 outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "dead" });
-
                         }
                     }
                     else
@@ -68,7 +69,12 @@ namespace PixelVision8.Player
                         {
                             //TODO queue level up for this character. Probably a DisplayResult entry that tells the game to switch scenes.
                             c.XP = 0;
-                            c.level++;
+                            //c.level++; //This happens as a choice for leveling characters.
+                            var levelUpEntry = new DisplayResults();
+                            levelUpEntry.desc =  c.name + " Gets an improvement!";
+                            levelUpEntry.target = c;
+                            levelUpEntry.isLevelUp = true;
+                            outerResults.Add(levelUpEntry);
                         }
                     }
                     else
@@ -77,6 +83,11 @@ namespace PixelVision8.Player
                     }
                 }
             }
+
+            //Dump combat log to the console.
+            Console.WriteLine("--------------------------");
+            foreach(var o in outerResults)
+                Console.WriteLine(o.desc + " : " + o.frameCounter);
 
             return outerResults;
 

@@ -8,17 +8,17 @@ namespace PixelVision8.Player
 {
     public class Stats
     {
-        public int HP = 1;
-        public int maxHP = 1;
-        public int MP = 1;
-        public int maxMP = 1;
-        public int STR = 1;
-        public int DEF = 1;
-        public int MAGIC = 1;
-        public int MDEF = 1;
-        public int SPD = 1; //for initiative
-        public int LUK = 1; //For a few various things but mostly crit.
-        
+        public int HP = 0;
+        public int maxHP = 0;
+        public int MP = 0;
+        public int maxMP = 0;
+        public int STR = 0;
+        public int DEF = 0;
+        public int MAGIC = 0;
+        public int MDEF = 0;
+        public int SPD = 0; //for initiative
+        public int LUK = 0; //For a few various things but mostly crit.
+
         //You know, I had a write up for luck getting boosts from various things rolled randomly per character, like 
         //favorite color or lucky number or zodiac sign or such. Maybe I can port that in here later.
 
@@ -116,6 +116,7 @@ namespace PixelVision8.Player
         public string changedItem = ""; //Which property changed. could be sprite.
         public string changedTo = ""; //what it changed to.
         public int frameCounter = 120; //How long to display this particular result, if they're not all on the same timer.
+        public bool isLevelUp = false;
 
     }
 

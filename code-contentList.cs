@@ -126,9 +126,8 @@ namespace PixelVision8.Player
             name = "Test Target" ,
             desc = "a thing to beat on while making menus work",
             level = 1,
-            startingStats = baseStats.Clone(),
-            StatsPerLevel = new Stats(),
-            currentStats = baseStats.Clone(),
+            startingStats = new Stats() { HP = 50, maxHP = 50, MP = 20, maxMP = 20, STR = 10, DEF = 1, MAGIC = 10, MDEF = 1, SPD = 10, LUK = 1},
+            StatsPerLevel = new Stats() { HP = 5, maxHP = 5, MP = 1, maxMP = 1, STR = 1, DEF = 1, MAGIC = 1, MDEF = 1, SPD = 1, LUK = 1},
             statBoosts = new Stats(),
             spriteSet="enemy1",
             abilities = new List<Ability>() {allAbilities[0].Clone(), allAbilities[1].Clone()}

@@ -34,7 +34,7 @@ namespace PixelVision8.Player
             //Any post-startup resets of values would go here.
 			gameState.mode = gameState.FightSceneID; //jump to fight screen
             //gameState.mode = gameState.TitleSceneID; //testing title screen.
-            gameState.mode = gameState.ImproveSceneID; //Drawing level up screen.
+            //gameState.mode = gameState.ImproveSceneID; //Drawing level up screen.
         }
 
         public override void Draw()
