@@ -14,6 +14,8 @@ namespace PixelVision8.Player
         //Clear out or re-init fight scene after game over.
         //Start baseline sample content
         //Get newgame scene going.
+        //
+        
 
         public static JrpgRoslynChip parentRef;
         public static List<Character> characters = new List<Character>();
@@ -36,10 +38,10 @@ namespace PixelVision8.Player
 
         public static List<Tuple<int, int>> charPositions = new List<Tuple<int, int>>()
         {
-            new Tuple<int, int>(220, 16),
-            new Tuple<int, int>(220, 48),
-            new Tuple<int, int>(220, 64),
-            new Tuple<int, int>(220, 80)
+            new Tuple<int, int>(204, 16),
+            new Tuple<int, int>(204, 48),
+            new Tuple<int, int>(204, 64),
+            new Tuple<int, int>(204, 80)
         };
 
         static List<Attack> pendingAttacks = new List<Attack>();
@@ -75,7 +77,7 @@ namespace PixelVision8.Player
             char1.spriteSet = "char1";
             char1.posX = charPositions[0].Item1;
             char1.posY = charPositions[0].Item2;
-            char1.drawState = "Idle";
+            char1.drawState = "";
             char1.name = "Larry";
             char1.role = ContentLists.allRoles[1];
             char1.abilities = char1.role.abilities; 
@@ -111,7 +113,7 @@ namespace PixelVision8.Player
             {
                 displayFrameCounter--;
                 //We have to figure out where we are in the display process
-                if (displayFrameCounter == 0)
+                if (displayFrameCounter == 0) //TODO: if I make this a while loop, i can process all results with a frameCounter of 0 before displaying the next one.
                 {
                     if (resultsToParse.Count() == 0)
                     {
@@ -185,12 +187,12 @@ namespace PixelVision8.Player
             //test sprites
             foreach (var c in characters)
             {
-                parentRef.DrawMetaSprite(c.role.spriteSet + c.drawState, c.posX, c.posY);
+                parentRef.DrawMetaSprite(c.role.spriteSet + c.drawState, c.posX, c.posY, false, false, DrawMode.Sprite, 0);
             }
 
             foreach (var e in enemies)
             {
-                parentRef.DrawMetaSprite(e.spriteSet, e.posX, e.posY);
+                parentRef.DrawMetaSprite(e.spriteSet + e.drawState, e.posX, e.posY);
             }
             DrawStatusDisplays();
 
@@ -492,14 +494,15 @@ namespace PixelVision8.Player
             switch (dr.changedItem)
             {
                 case "spriteState":
-                if (dr.target is Enemy)
-                    dr.target.spriteSet = dr.changedTo;
-                else
-                    ((Character)dr.target).drawState = dr.changedTo;
+                    dr.target.drawState = dr.changedTo;
+                    break;
+                case "colorShift":
+                    dr.target.colorShift = Int32.Parse(dr.changedTo);
                     break;
                 default:
                     break;
             }
+            //TODO: decide how to make this fire off at the END of the frame?
             if (dr.isLevelUp)
             {
                 gameState.levelingUpChar = (Character)dr.target;
@@ -511,12 +514,12 @@ namespace PixelVision8.Player
         {
             for (int i = 0; i < characters.Count(); i++)
             {
-                parentRef.DrawText(characters[i].name, charPositions[i].Item1 + 32, charPositions[i].Item2, DrawMode.Sprite, "large", 15);
-                parentRef.DrawText("HP " + characters[i].displayStats.HP + "/" + characters[i].displayStats.maxHP, charPositions[i].Item1 + 32, charPositions[i].Item2 + 8, DrawMode.Sprite, "large", 15);
-                parentRef.DrawText("AP " + characters[i].displayStats.AP + "/" + characters[i].displayStats.maxAP, charPositions[i].Item1 + 32, charPositions[i].Item2 + 16, DrawMode.Sprite, "large", 15);
+                parentRef.DrawText(characters[i].name, charPositions[i].Item1 + 48, charPositions[i].Item2, DrawMode.Sprite, "large", 15);
+                parentRef.DrawText("HP " + characters[i].displayStats.HP + "/" + characters[i].displayStats.maxHP, charPositions[i].Item1 + 48, charPositions[i].Item2 + 8, DrawMode.Sprite, "large", 15);
+                parentRef.DrawText("AP " + characters[i].displayStats.AP + "/" + characters[i].displayStats.maxAP, charPositions[i].Item1 + 48, charPositions[i].Item2 + 16, DrawMode.Sprite, "large", 15);
                 //might use the 4th line for status indicators (poisoned, blind, etc)
                 if (characters[i].drawState == "Dead")
-                    parentRef.DrawText("Dead", charPositions[i].Item1 + 32, charPositions[i].Item2 + 24, DrawMode.Sprite, "large", 15);
+                    parentRef.DrawText("Dead", charPositions[i].Item1 + 48, charPositions[i].Item2 + 24, DrawMode.Sprite, "large", 15);
             }
         }
 
@@ -547,7 +550,7 @@ namespace PixelVision8.Player
         public static string GetHelpText()
         {
             if (characters.Count() > 0 && characters[activeCharSelecting] != null)
-                return characters[activeCharSelecting].abilities[arrowPosIndex].apCost + "AP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description; ; //The typical answer.
+                return characters[activeCharSelecting].abilities[arrowPosIndex].apCost + " AP: " + characters[activeCharSelecting].abilities[arrowPosIndex].description; ; //The typical answer.
 
             return "";
         }

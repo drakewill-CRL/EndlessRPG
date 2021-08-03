@@ -20,6 +20,8 @@ namespace PixelVision8.Player
         public int posX;
         public int posY;
         public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
+        public string drawState = ""; //holds the state to display on screen.   blank is 'idle'
+        public int colorShift = 0; //for cycling palettes in DisplayResults.
         public List<Ability> abilities; //TODO: this might need to be a list/array of int to pull from the allAbilities list later?
         public string desc = "";
 
@@ -76,14 +78,14 @@ namespace PixelVision8.Player
     {
         public Role role;
         public int XP; //1 XP at the end of a fight if they're alive, 4XP is a level-up        
-        public string drawState = "Idle"; //holds the state to display on screen.   
-        string spriteIdle = "Idle";
-        string spriteAbilty = "Ability";
-        int abilityFrames = 2; //files end in 1 and 2.
-        string spriteAttack = "Attack";
-        int attackFrames = 2; //files end in 1 and 2.
-        string spriteHit = "Hit";
-        string spriteDead = "Dead";
+        
+        //string spriteIdle = "";
+        //string spriteAbilty = "Ability";
+        //int abilityFrames = 2; //files end in 1 and 2.
+        //string spriteAttack = "Attack";
+        //int attackFrames = 2; //files end in 1 and 2.
+        //string spriteHit = "Hit";
+        //string spriteDead = "Dead";
 
         string weaponName = ""; //Fluff, used for item rolls to name weapons.
         string armorName = ""; //fluff, used for item rolls to name defensive items.

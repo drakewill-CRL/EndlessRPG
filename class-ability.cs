@@ -55,7 +55,7 @@ namespace PixelVision8.Player
                         if (t.currentStats.HP > 0)
                         {
                             var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " bonks " + targets[0].name + " for " + damage);
+                            results.printDesc.Add(attacker.name + " attacks " + targets[0].name + " for " + damage);
                             results.target.Add(t);
                             results.targetChanges.Add(new Stats() { HP = -damage });
                         }
