@@ -14,8 +14,9 @@ namespace PixelVision8.Player
         //and some copyright info, plus a high score display of all classes' highest levels added up.
         static int xScreenCoords = 0; // * 43 for X screens over
         static int yScreenCoords = 0; // * 31 for Y screens down.
+        static string version = "v 0.00";
         static string pushStart  ="Press Start";
-        static string credits = "EP Expendables 2021 Drake Williams";
+        static string credits = "2021 Drake Williams and Marcos Sastre";
         static string license1 = "Eclipse Phase Content by Posthuman Studios";
         static string license2 = "Licensed via CC BY-NC-SA 4.0";
         static bool hasDrawn = false;
@@ -42,11 +43,11 @@ namespace PixelVision8.Player
             if (!hasDrawn)
                 parentRef.DrawMetaSprite("EPExpendablesTitle1", 1, 1, false, false, DrawMode.Tile, 0);
 
-            
-            parentRef.DrawText(pushStart, 120, 27 * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText(credits, 0, 28 * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText(license1, 0, 29 *8 , DrawMode.Sprite, "large", 15);
-            parentRef.DrawText(license2, 0, 30 *8, DrawMode.Sprite, "large", 15);
+            CenterText(pushStart, 27 *8);
+            RightAlignText(version, 27 *8);
+            CenterText(credits, 28 *8);
+            CenterText(license1, 29 *8);
+            CenterText(license2, 30 *8);
             if (clear)
                 parentRef.Clear();
 
@@ -61,6 +62,20 @@ namespace PixelVision8.Player
                 //TODO: go to newGame screen to pick a party if no saved game to continue,
                 //or the fight screen with an existing party if there's an active save game.
             }
+        }
+
+        public static void CenterText(string text, int y)
+        {
+            //var startPoint = gameState.screenWidth - (text.Length * 8);
+            var startPoint = (344 - (text.Length * 8)) / 2;
+            parentRef.DrawText(text, startPoint, y, DrawMode.Sprite, "large", 15);
+        }
+
+        public static void RightAlignText(string text, int y)
+        {
+            //var startPoint = gameState.screenWidth - (text.Length * 8);
+            var startPoint = (344 - (text.Length * 8));
+            parentRef.DrawText(text, startPoint, y, DrawMode.Sprite, "large", 15);
         }
 
     }

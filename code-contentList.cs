@@ -10,9 +10,11 @@ namespace PixelVision8.Player
     {
         public static Stats baseStats = new Stats() { HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1 };
 
-        public static List<string> damageTypes = new List<string>() {"blunt", "pierce", "slash", "fire", "bioHeal", "synthHeal"};
+        //TODO: Eclipse Phase-ify the damage types. Probably Kinetic/Energy as the base 2, plus specials like EMP or radiation.
+        public static List<string> damageTypes = new List<string>() { "blunt", "pierce", "slash", "fire", "bioHeal", "synthHeal", "emp" };
 
-        
+
+        //TODO: update abilities with corrected damage types
         public static List<Ability> allAbilities = new List<Ability>() {
             new Ability() {
                 name = "Kickflip",
@@ -55,8 +57,9 @@ namespace PixelVision8.Player
                 damagetype = "blunt",
                 sourceStat = "STR"
             },
+            //Infantry abilities
             new Ability() {
-                name = "Snapshot", 
+                name = "Snapshot",
                 description = "Attack faster than usual, going before most targets.",
                 apCost = 2,
                 level = 1,
@@ -68,7 +71,7 @@ namespace PixelVision8.Player
                 powerMod = .8F
             },
             new Ability() {
-                name = "Aimed Shot", 
+                name = "Aimed Shot",
                 description = "Take your time focusing your attack on a vital point for additional damage.",
                 apCost = 2,
                 level = 1,
@@ -80,7 +83,7 @@ namespace PixelVision8.Player
                 powerMod = 2F
             },
             new Ability() {
-                name = "Covering Fire", 
+                name = "Covering Fire",
                 description = "Spray shots wildly, doing some damage to all enemies.",
                 apCost = 2,
                 level = 1,
@@ -91,7 +94,7 @@ namespace PixelVision8.Player
                 powerMod = .5F
             },
             new Ability() {
-                name = "Tracer Rounds", 
+                name = "Tracer Rounds",
                 description = "Switch to incendiary shots, doing fire damage to a target.",
                 apCost = 3,
                 level = 1,
@@ -100,22 +103,51 @@ namespace PixelVision8.Player
                 damagetype = "fire",
                 sourceStat = "STR"
             },
+            //Medic abilities
+            //Techie abilities
+            //CovertOp abilities
+            //Enemy abilities
         };
 
         public static Dictionary<string, Ability> abilitiesByName = allAbilities.ToDictionary(k => k.name, v => v);
 
         public static List<Role> allRoles = new List<Role>() {
             new Role() {
-                name = "test role", 
-                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 5, INS = 5, MOX = 5, SPD = 5, LUK = 5}, 
-                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1}, 
+                name = "test role",
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 5, INS = 5, MOX = 5, SPD = 5, LUK = 5},
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
                 abilities = new List<Ability>() //todo: insert abilities here.
             },
             new Role() {
-                name = "Soldier",
+                name = "Soldier", //soldiers are all-offense on abilities, rounded stats.
                 spriteSet = "infantry",
-                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5}, 
-                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1}, 
+                morphType = "bio",
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
+                abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
+            },
+            new Role() { //Medics heal biomorphs and debuff bio enemies
+                name = "Medic",
+                spriteSet = "medic",
+                morphType ="bio",
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
+                abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
+            },
+            new Role() {  //techies do EMP damage to synthmorphs and heal synth allies
+                name = "Techie",
+                spriteSet = "techie",
+                morphType = "synth",
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
+                abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
+            },
+            new Role() { //Covert Ops run on speed and luck and maybe lots of AP. Disposable pod body inside some armor
+                name = "CovertOp",
+                spriteSet = "covertop",
+                morphType = "pod",
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
                 abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
             }
         };
@@ -151,10 +183,10 @@ namespace PixelVision8.Player
 
 
         public static List<List<Enemy>> PossibleEncounters = new List<List<Enemy>>()
-        { 
-            new List<Enemy>() 
-            { 
-                (Enemy)enemies[1].Clone(), 
+        {
+            new List<Enemy>()
+            {
+                (Enemy)enemies[1].Clone(),
                 (Enemy)enemies[1].Clone()
             }
         };

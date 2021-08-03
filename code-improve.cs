@@ -266,7 +266,7 @@ namespace PixelVision8.Player
 
             parentRef.DrawText("  HP     AP    STR    DEF", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);
             lineCounter++;
-            parentRef.DrawText("  INS  MOX  SPD    LUK", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);
+            parentRef.DrawText("  INS    MOX   SPD    LUK", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);
             lineCounter++; lineCounter++;
 
             parentRef.DrawText("Scavenge for an Item", 6 * 8, lineCounter * 8, DrawMode.Sprite, "large", 15);

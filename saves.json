@@ -3,7 +3,15 @@
     "GameChip":
     {
         "savedData":{
-            
+            "test role": "0",
+            "Soldier": "0",
+            "Medic": "0",
+            "Techie": "0",
+            "Covert Op": "0",
+            "FirstRun": "undefined",
+            "unlockedInfantry": "1",
+            "unlockedMedic": "1",
+            "unlockedTechie": "1"
         }
     }
 }

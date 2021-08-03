@@ -8,6 +8,7 @@ namespace PixelVision8.Player
 {
     public class Stats
     {
+        //TODO: EP-theming. STR should be SOM, and DEF can be VIGOR? LUK might become FLEX?
         public int HP = 0;
         public int maxHP = 0;
         public int AP = 0;
@@ -67,6 +68,7 @@ namespace PixelVision8.Player
     public class Role
     {
         public string name;
+        public string morphType; //Bio, Synth, or Pod. Affects healing.
         public string spriteSet;
         public Stats startStats;
         public Stats statsPerLevel;

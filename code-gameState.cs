@@ -8,9 +8,15 @@ namespace PixelVision8.Player
 {
     public static class gameState
     {
+        public static Point display =new Point(0,0);
+        //public static int screenWidth = 344;
 
         public static Random random = new Random();
         //Some of this might get moved to individual game files.
+        public static  TimeSpan timePlayed = new TimeSpan(0,0,0);
+        public static int fightsWon = 0;
+        public static int totalBestLevels = 0;
+        public static Dictionary<string, int> bestLevels = new Dictionary<string, int>();
         public static int mode = TitleSceneID; // which scene we're in right now. Numbered by order they were developed in.
         //0 = title screen
         //1 = fight screen
@@ -33,12 +39,10 @@ namespace PixelVision8.Player
         public const int ImproveSceneID = 3;
 
         public static bool gameActive = false; //Is there a game in progress to continue from?
-        public static int fightsWon = 0; //Current fights survived,
         public static int bestFightsWon = 0; //high score for a whole party.
 
-        //This part would need copypasted per Role.
-        public static bool RoleUnlocked = false;
-        public static int BestRoleLevel = 0;
+        public static List<String> unlockedRoles = new List<string>();
+        public static List<int> unlockedTitleScreens = new List<int>(); //pending implementation
 
         public static Character levelingUpChar = FightScene.characters[0]; //gets set before switching to improvement scene.
         

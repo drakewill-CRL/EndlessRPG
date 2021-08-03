@@ -1,12 +1,6 @@
 //
-// Pixel Vision 8 - New Template Script
-// Copyright (C) 2017, Pixel Vision 8 (@pixelvision8)
-// Created by Jesse Freeman (@jessefreeman)
-// Converted from the Lua file by Drake Williams [drakewill+pv8@gmail.com]
-//
-// This project was designed to display some basic instructions when you create
-// a new game.  Simply delete the following code and implement your own Init(),
-// Update() and Draw() logic.
+// Pixel Vision 8 - Eclipse Phase Expendables
+// 2021 Drake Wiliams and Marcos Sastre
 // 
 // Learn more about making Pixel Vision 8 games at
 // https://www.pixelvision8.com/getting-started
@@ -30,10 +24,14 @@ namespace PixelVision8.Player
 
             FightScene.Init();
 
-            LoadGameData();
+            if (ReadSaveData("FirstRun") == "undefined")
+                InitializeSaveData();
+            else
+                LoadGameData();
+
             //Any post-startup resets of values would go here.
-			gameState.mode = gameState.FightSceneID; //jump to fight screen
-            //gameState.mode = gameState.TitleSceneID; //testing title screen.
+			//gameState.mode = gameState.FightSceneID; //jump to fight screen
+            gameState.mode = gameState.TitleSceneID; //testing title screen.
             //gameState.mode = gameState.ImproveSceneID; //Drawing level up screen.
         }
 
@@ -59,6 +57,8 @@ namespace PixelVision8.Player
 
         public override void Update(int timeDelta)
         {
+            //TODO: count MS here, when i hit a full seconds add 1 to gameState.TimePlayed
+
             RedrawDisplay();
             switch (gameState.mode)
             {
@@ -96,7 +96,44 @@ namespace PixelVision8.Player
 
             //load current run data
 
-            //load unlockable flags
+            //load role-specific data
+            foreach(var role in ContentLists.allRoles)
+            {
+                if (ReadSaveData("unlocked" + role.name, "0") == "1")
+                    gameState.unlockedRoles.Add(role.name);
+                
+                gameState.bestLevels.Add(role.name, Int32.Parse(ReadSaveData("best" + role.name + "Level", "0")));
+
+            }
+
+            gameState.fightsWon = Int32.Parse(ReadSaveData("fightsWon", "0"));
+            gameState.totalBestLevels = gameState.bestLevels.Sum(l => l.Value);
+
+            gameState.timePlayed = TimeSpan.FromSeconds(Double.Parse(ReadSaveData("timePlayed", "0")));
+
+        }
+
+        public void InitializeSaveData()
+        {
+            //Set default flags
+            WriteSaveData("FirstRun", "0");
+
+            //Unlock initial roles.
+            WriteSaveData("unlockedInfantry", "1");
+            WriteSaveData("unlockedMedic", "1");
+            WriteSaveData("unlockedTechie", "1");
+            WriteSaveData("unlockedCovertOp", "1");
+
+            //Set default scores
+            foreach(var role in ContentLists.allRoles)
+                WriteSaveData("best" + role.name + "Level", "0");
+
+            WriteSaveData("fightsWon", "0");
+            WriteSaveData("totalBestLevels", "0");
+            WriteSaveData("timePlayed", "0"); //in seconds.
+
+            WriteSaveData("gameActive", "0"); //is there a suspended game to load, or are we making a new game?
+
 
         }
     }

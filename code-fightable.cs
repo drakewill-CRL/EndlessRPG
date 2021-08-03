@@ -10,7 +10,7 @@ namespace PixelVision8.Player
     {
         public string name;
         public int level = 1;
-        public string creatureType; //Human, undead, others tbd. for weapon and spell banes?
+        public string morphType; //Bio, Synth, Pod. Possibly others for enemies
         public Stats startingStats = new Stats();
         public Stats StatsPerLevel = new Stats();
         public Stats currentStats = new Stats(); //should be equal to getTotalStats most of the time.
@@ -21,8 +21,8 @@ namespace PixelVision8.Player
         public int posY;
         public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
         public string drawState = ""; //holds the state to display on screen.   blank is 'idle'
-        public int colorShift = 0; //for cycling palettes in DisplayResults.
-        public List<Ability> abilities; //TODO: this might need to be a list/array of int to pull from the allAbilities list later?
+        public int colorShift = 0; //for cycling palettes in DisplayResults. TODO: use this in draw commands.
+        public List<Ability> abilities;
         public string desc = "";
 
         Item weapon = new Item();
@@ -78,17 +78,14 @@ namespace PixelVision8.Player
     {
         public Role role;
         public int XP; //1 XP at the end of a fight if they're alive, 4XP is a level-up        
-        
-        //string spriteIdle = "";
-        //string spriteAbilty = "Ability";
-        //int abilityFrames = 2; //files end in 1 and 2.
-        //string spriteAttack = "Attack";
-        //int attackFrames = 2; //files end in 1 and 2.
-        //string spriteHit = "Hit";
-        //string spriteDead = "Dead";
-
         string weaponName = ""; //Fluff, used for item rolls to name weapons.
         string armorName = ""; //fluff, used for item rolls to name defensive items.
+
+        public Character(Role role)
+        {
+            //TODO: fill in all the default info from the supplied role.
+            return;
+        }
 
         public Character Clone()
         {

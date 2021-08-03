@@ -31,7 +31,6 @@ namespace PixelVision8.Player
                         outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Attack", frameCounter = 6 });
                         outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Ready", frameCounter = 6 });
 
-
                         //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
                         var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo);
                         results.Add(abilOutcome);

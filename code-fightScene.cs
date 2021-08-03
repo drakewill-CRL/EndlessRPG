@@ -12,9 +12,25 @@ namespace PixelVision8.Player
         //make some sound effects and get the list going on which one is what. Expand on the 3 present.
         //save game stuff
         //Clear out or re-init fight scene after game over.
-        //Start baseline sample content
+        //Start baseline sample content (soldier done, medic/techie/covertOp pending)
         //Get newgame scene going.
-        //
+        //Assign abilities from abilitiesByName dictionary so I don't have to worry about id/order.
+        //clean up some code to make things easier/faster/cleaner later?
+        //Make SELECT toggle auto-fight. Auto-fight rules will be simple AI for now, will expand on later with additional AI logic.
+        //Update title screen image, ponder alternative names. Gatehold?
+        //Make Character constructor that takes a Role and a Level to start at.
+        //I wanted abilities to leveup up at some point. What happened to that?
+
+
+        //V 0.01 requirements: - the MVP POC
+        //4 starter classes
+        //-- abilities and sprites in place
+        //NewGame screen to pick characters and roles for each slot.
+        //Game ends after 20 fights (4 bosses) - could use this as a progress checkpoint to resume from next time. Would be level 5 starting this way.
+        //5 enemies present and sprited in. somewhat varied in stats and abilities.
+        //10 encounters made out of X enemy combos.
+        //test stuff not present in normal loop
+        //better title screen image.
         
 
         public static JrpgRoslynChip parentRef;
@@ -29,11 +45,11 @@ namespace PixelVision8.Player
 
         public static List<Tuple<int, int>> ArrowPoints = new List<Tuple<int, int>>()
         {
-            new Tuple<int, int>(1 * 8, 20 * 8), //fight
-            new Tuple<int, int>(1 * 8, 22 * 8), //ability
-            new Tuple<int, int>(1 * 8, 24 * 8), //defend
-            new Tuple<int, int>(1 * 8, 26 * 8), //run
-            new Tuple<int, int>(1 * 8, 28 * 8), //auto
+            new Tuple<int, int>(1 * 8, 20 * 8), 
+            new Tuple<int, int>(1 * 8, 22 * 8), 
+            new Tuple<int, int>(1 * 8, 24 * 8), 
+            new Tuple<int, int>(1 * 8, 26 * 8), 
+            new Tuple<int, int>(1 * 8, 28 * 8), 
         };
 
         public static List<Tuple<int, int>> charPositions = new List<Tuple<int, int>>()
@@ -73,7 +89,7 @@ namespace PixelVision8.Player
             helpText = GetHelpText(); // menuHelpTexts[0];
 
             //once its finalized set up a construction for Character that handles all this.
-            Character char1 = new Character();
+            Character char1 = new Character(ContentLists.allRoles[1]);
             char1.spriteSet = "char1";
             char1.posX = charPositions[0].Item1;
             char1.posY = charPositions[0].Item2;
@@ -91,6 +107,7 @@ namespace PixelVision8.Player
             char2.posX = charPositions[1].Item1;
             char2.posY = charPositions[1].Item2;
             characters.Add(char2);
+            if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
 
             GetNewEncounter();
 
@@ -123,7 +140,7 @@ namespace PixelVision8.Player
                             displayResultData = "Game Over";
                             displayFrameCounter = 600;
                             //play sad song.
-                            //save game data.
+                            //update save game data
                             phase = 2;
                             return;
                         }
@@ -138,6 +155,7 @@ namespace PixelVision8.Player
                         phase = 0;
                         subMenuLevel = 0;
                         activeCharSelecting = 0;
+                        if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                         arrowPosIndex = 0;
                         pendingAttacks = new List<Attack>();
                         displayResultData = "Checking...";
@@ -305,7 +323,9 @@ namespace PixelVision8.Player
                                     currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
                                     pendingAttacks.Add(currentAction);
                                     currentAction = new Attack();
+                                    characters[activeCharSelecting].drawState = "";
                                     activeCharSelecting++;
+                                    if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                                     arrowPosIndex = 0;
                                     subMenuLevel = 0;
                                     if (activeCharSelecting < characters.Count())
@@ -334,7 +354,9 @@ namespace PixelVision8.Player
                                     currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
                                     pendingAttacks.Add(currentAction);
                                     currentAction = new Attack();
+                                    characters[activeCharSelecting].drawState = "";
                                     activeCharSelecting++;
+                                    if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                                     arrowPosIndex = 0;
                                     subMenuLevel = 0;
                                 }
@@ -345,7 +367,9 @@ namespace PixelVision8.Player
                                     currentAction.thingToDo = characters[activeCharSelecting].abilities[arrowPosIndex];
                                     pendingAttacks.Add(currentAction);
                                     currentAction = new Attack();
+                                    characters[activeCharSelecting].drawState = "";
                                     activeCharSelecting++;
+                                    if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                                     arrowPosIndex = 0;
                                     subMenuLevel = 0;
                                 }
@@ -360,7 +384,9 @@ namespace PixelVision8.Player
                             currentAction.targets.Add(enemies[arrowPosIndex]);//selected thing.
                             pendingAttacks.Add(currentAction);
                             currentAction = new Attack();
+                            characters[activeCharSelecting].drawState = "";
                             activeCharSelecting++;
+                            if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                             arrowPosIndex = 0;
                             subMenuLevel = 0;
                             if (activeCharSelecting < characters.Count())
@@ -370,7 +396,9 @@ namespace PixelVision8.Player
                             currentAction.targets.Add(characters[arrowPosIndex]);//selected thing.
                             pendingAttacks.Add(currentAction);
                             currentAction = new Attack();
+                            characters[activeCharSelecting].drawState = "";
                             activeCharSelecting++;
+                            if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                             arrowPosIndex = 0;
                             subMenuLevel = 0;
                             if (activeCharSelecting < characters.Count())
@@ -408,7 +436,10 @@ namespace PixelVision8.Player
                                 if(activeCharSelecting > 0)
                                 {
                                     pendingAttacks.Remove(pendingAttacks.Last());
+                                    characters[activeCharSelecting].drawState = "";
                                     activeCharSelecting--;
+                                    if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
+                                    arrowPosIndex = 0;
                                     helpText = "Rewinding to " + characters[activeCharSelecting].name + "'s action";
                                 }
                                 //play BZZT/backwards sound.
