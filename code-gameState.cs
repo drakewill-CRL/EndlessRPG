@@ -41,11 +41,16 @@ namespace PixelVision8.Player
         public static bool gameActive = false; //Is there a game in progress to continue from?
         public static int bestFightsWon = 0; //high score for a whole party.
 
-        public static List<String> unlockedRoles = new List<string>();
+        public static List<String> unlockedRoles = new List<string>() {"Soldier", "Medic", "Techie", "CovertOp"};
         public static List<int> unlockedTitleScreens = new List<int>(); //pending implementation
 
         public static Character levelingUpChar = FightScene.characters[0]; //gets set before switching to improvement scene.
         
+        public static string Char1Name = "Larry";
+        public static string Char2Name = "Gary";
+        public static string Char3Name = "Cherri";
+        public static string Char4Name = "Clyde";
+
 
         //Current game values. Copy this section once per charcter.
         public static Character char1; //Or just do this instead of tracking it multiple times?
@@ -53,7 +58,6 @@ namespace PixelVision8.Player
         public static Character char3; //Or just do this instead of tracking it multiple times?
         public static Character char4; //Or just do this instead of tracking it multiple times?
 
-        public static string Char1Name  = "";
         public static int Char1Level = 0;
         public static int Char1Role =0; //index of the role in the role list.
         //Points spent leveling abilities

@@ -107,6 +107,7 @@ namespace PixelVision8.Player
             //Techie abilities
             //CovertOp abilities
             //Enemy abilities
+            //TheCheat abilities
         };
 
         public static Dictionary<string, Ability> abilitiesByName = allAbilities.ToDictionary(k => k.name, v => v);
@@ -122,6 +123,7 @@ namespace PixelVision8.Player
                 name = "Soldier", //soldiers are all-offense on abilities, rounded stats.
                 spriteSet = "infantry",
                 morphType = "bio",
+                desc = "An offensive generalist without a standout skill.",
                 startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
                 statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
                 abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
@@ -130,6 +132,7 @@ namespace PixelVision8.Player
                 name = "Medic",
                 spriteSet = "medic",
                 morphType ="bio",
+                desc = "Biomorph healer and pharaceutical expert",
                 startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
                 statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
                 abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
@@ -138,6 +141,7 @@ namespace PixelVision8.Player
                 name = "Techie",
                 spriteSet = "techie",
                 morphType = "synth",
+                desc = "Synthmorph repairs and robot combat specialist",
                 startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
                 statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
                 abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
@@ -146,6 +150,15 @@ namespace PixelVision8.Player
                 name = "CovertOp",
                 spriteSet = "covertop",
                 morphType = "pod",
+                desc = "Fast and lucky, Covert Op ego in a disposable pod morph",
+                startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
+                statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
+                abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}
+            },
+            new Role() { //for those that want to edit their save file, I salute you. Eventually, at least. This is farther-future work.
+                name = "TheCheat",
+                spriteSet = "cheat",
+                morphType = "bio",
                 startStats = new Stats() {HP = 5, maxHP = 5, AP = 5, maxAP = 5, STR = 5, DEF = 4, INS = 5, MOX = 4, SPD = 5, LUK = 5},
                 statsPerLevel = new Stats() {HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1},
                 abilities = new List<Ability>() {allAbilities[1].Clone(), allAbilities[4].Clone(), allAbilities[5].Clone(), allAbilities[6].Clone(), allAbilities[7].Clone()}

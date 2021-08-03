@@ -43,11 +43,11 @@ namespace PixelVision8.Player
             if (!hasDrawn)
                 parentRef.DrawMetaSprite("EPExpendablesTitle1", 1, 1, false, false, DrawMode.Tile, 0);
 
-            CenterText(pushStart, 27 *8);
-            RightAlignText(version, 27 *8);
-            CenterText(credits, 28 *8);
-            CenterText(license1, 29 *8);
-            CenterText(license2, 30 *8);
+            parentRef.CenterText(pushStart, 27 *8);
+            parentRef.RightAlignText(version, 27 *8);
+            parentRef.CenterText(credits, 28 *8);
+            parentRef.CenterText(license1, 29 *8);
+            parentRef.CenterText(license2, 30 *8);
             if (clear)
                 parentRef.Clear();
 
@@ -58,25 +58,16 @@ namespace PixelVision8.Player
             if (parentRef.Button(Buttons.Start, InputState.Released) || parentRef.Button(Buttons.B, InputState.Released))
             {
                 clear = true;
-                gameState.mode = gameState.FightSceneID; //fight for test purposes
+                gameState.mode = gameState.NewGameSceneID; 
+                //gameState.mode = gameState.FightSceneID //fight for test purposes
                 //TODO: go to newGame screen to pick a party if no saved game to continue,
                 //or the fight screen with an existing party if there's an active save game.
             }
         }
 
-        public static void CenterText(string text, int y)
-        {
-            //var startPoint = gameState.screenWidth - (text.Length * 8);
-            var startPoint = (344 - (text.Length * 8)) / 2;
-            parentRef.DrawText(text, startPoint, y, DrawMode.Sprite, "large", 15);
-        }
+        
 
-        public static void RightAlignText(string text, int y)
-        {
-            //var startPoint = gameState.screenWidth - (text.Length * 8);
-            var startPoint = (344 - (text.Length * 8));
-            parentRef.DrawText(text, startPoint, y, DrawMode.Sprite, "large", 15);
-        }
+        
 
     }
 

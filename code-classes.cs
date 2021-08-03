@@ -73,7 +73,8 @@ namespace PixelVision8.Player
         public Stats startStats;
         public Stats statsPerLevel;
         public List<Ability> abilities;
-        //Maybe creature type goes on Role to be assigned to the charactrer?
+        
+        public string desc = "";
     }
 
 

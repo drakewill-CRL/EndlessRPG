@@ -11,6 +11,7 @@ namespace PixelVision8.Player
         //MOST OBVIOUS TODOS:
         //make some sound effects and get the list going on which one is what. Expand on the 3 present.
         //save game stuff
+        //use WrapText extension instead of having dedicated functions for the wrapped text bits.
         //Clear out or re-init fight scene after game over.
         //Start baseline sample content (soldier done, medic/techie/covertOp pending)
         //Get newgame scene going.
@@ -29,7 +30,7 @@ namespace PixelVision8.Player
         //Game ends after 20 fights (4 bosses) - could use this as a progress checkpoint to resume from next time. Would be level 5 starting this way.
         //5 enemies present and sprited in. somewhat varied in stats and abilities.
         //10 encounters made out of X enemy combos.
-        //test stuff not present in normal loop
+        //test stuff absent from normal loop
         //better title screen image.
         
 
@@ -74,7 +75,7 @@ namespace PixelVision8.Player
 
         public static bool autoFighting = false; //set to true from Auto button on menu.
 
-        static int displayTime = 120; //# of frames to display each message for.
+        //static int displayTime = 120; //# of frames to display each message for.
         static int displayFrameCounter = 0; //the one we tick down
         static string displayResultData = "Checking...";
 
@@ -165,7 +166,6 @@ namespace PixelVision8.Player
                     {
                         //Get the next thing to display and process.
                         var process = resultsToParse[0];
-                        //TODO: swap sprite states as ordered here.
                         displayFrameCounter = process.frameCounter;
                         if (process.target != null)
                             process.target.displayStats.Add(process.changeStats);
@@ -198,7 +198,7 @@ namespace PixelVision8.Player
             // parentRef.DrawText("actable enemies:" + enemies.Count(e => e.CanAct()), 12 * 8, 20, DrawMode.Sprite, "large", 12);
 
             parentRef.BackgroundColor(0);
-            parentRef.ScrollPosition(344);
+            parentRef.ScrollPosition(344 * xScreennCoords);
             if (!hasDrawn)
                 DrawMenuChrome();
 
