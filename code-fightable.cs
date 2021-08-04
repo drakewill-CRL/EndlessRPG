@@ -19,7 +19,7 @@ namespace PixelVision8.Player
         public Stats displayStats = new Stats(); //The stats to use on-screen and process during fight results animation, so HP/AP bars show correct values during playback.
         public int posX;
         public int posY;
-        public string spriteSet; //char1, the prefix for characters. Also the file for enemy sprites.
+        public string spriteSet = ""; //char1, the prefix for characters. Also the file for enemy sprites.
         public string drawState = ""; //holds the state to display on screen.   blank is 'idle'
         public int colorShift = 0; //for cycling palettes in DisplayResults. TODO: use this in draw commands.
         public List<Ability> abilities;
@@ -77,14 +77,22 @@ namespace PixelVision8.Player
     public class Character : Fightable
     {
         public Role role;
-        public int XP; //1 XP at the end of a fight if they're alive, 4XP is a level-up        
+        public int XP = 0; //1 XP at the end of a fight if they're alive, 4XP is a level-up        
         string weaponName = ""; //Fluff, used for item rolls to name weapons.
         string armorName = ""; //fluff, used for item rolls to name defensive items.
 
-        public Character(Role role)
+        public Character(Role r)
         {
             //TODO: fill in all the default info from the supplied role.
-            return;
+            level = 1;
+            morphType = r.morphType;
+            role = r;
+            
+            startingStats = r.startStats.Clone();
+            StatsPerLevel = r.statsPerLevel.Clone();
+            currentStats = getTotalStats(true);
+            displayStats = currentStats.Clone();
+            abilities = r.abilities; //.Clone(); Might be unnecessary until abilities can be leveled up.
         }
 
         public Character Clone()

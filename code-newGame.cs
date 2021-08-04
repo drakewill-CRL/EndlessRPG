@@ -12,10 +12,7 @@ namespace PixelVision8.Player
         static int xScreenCoords = 3; // * 43 for X screens over
         static int yScreenCoords = 0; // * 31 for Y screens down.
 
-        static int char1RoleId = 0; //ID of role in gameState.unlockedroles
-        static int char2RoleId = 1; //ID of role in gameState.unlockedroles
-        static int char3RoleId = 2; //ID of role in gameState.unlockedroles
-        static int char4RoleId = 3; //ID of role in gameState.unlockedroles
+        static int[] charRoleIds = new int[] {0, 1, 2, 3}; //ID of role in gameState.unlockedroles
         static int activeCharSelecting = 0;
         static int activeSpotSelection = 0; //class, name, other things?
 
@@ -62,28 +59,28 @@ namespace PixelVision8.Player
             //}
 
             //char1
-            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[char1RoleId]].spriteSet, char1Portrait.X + (charXoffsets[0] * 8), char1Portrait.Y + (charYoffsets[0] * 8));
+            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[0]]].spriteSet, char1Portrait.X + (charXoffsets[0] * 8), char1Portrait.Y + (charYoffsets[0] * 8));
             parentRef.DrawText(gameState.Char1Name, (2 + charXoffsets[0]) * 8, (2 + charYoffsets[0]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText(gameState.unlockedRoles[char1RoleId], (2 + charXoffsets[0]) * 8, (3 + charYoffsets[0]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[char1RoleId]].desc, 15, (2 + charXoffsets[0]) * 8, (8 + charYoffsets[0]));
+            parentRef.DrawText(gameState.unlockedRoles[charRoleIds[0]], (2 + charXoffsets[0]) * 8, (3 + charYoffsets[0]) * 8, DrawMode.Sprite, "large", 15);
+            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[0]]].desc, 15, (2 + charXoffsets[0]) * 8, (8 + charYoffsets[0]));
 
             //char2
-            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[char2RoleId]].spriteSet, char1Portrait.X + (charXoffsets[1] * 8), char1Portrait.Y + (charYoffsets[1] * 8));
+            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[1]]].spriteSet, char1Portrait.X + (charXoffsets[1] * 8), char1Portrait.Y + (charYoffsets[1] * 8));
             parentRef.DrawText(gameState.Char2Name, (2 + charXoffsets[1]) * 8, (2 + charYoffsets[1]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText(gameState.unlockedRoles[char2RoleId], (2 + charXoffsets[1]) * 8, (3 + charYoffsets[1]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[char2RoleId]].desc, 15, (2 + charXoffsets[1]) * 8, (8 + charYoffsets[1]));
+            parentRef.DrawText(gameState.unlockedRoles[charRoleIds[1]], (2 + charXoffsets[1]) * 8, (3 + charYoffsets[1]) * 8, DrawMode.Sprite, "large", 15);
+            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[1]]].desc, 15, (2 + charXoffsets[1]) * 8, (8 + charYoffsets[1]));
 
             //char3
-            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[char3RoleId]].spriteSet, char1Portrait.X + (charXoffsets[2] * 8), char1Portrait.Y + (charYoffsets[2] * 8));
+            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[2]]].spriteSet, char1Portrait.X + (charXoffsets[2] * 8), char1Portrait.Y + (charYoffsets[2] * 8));
             parentRef.DrawText(gameState.Char3Name, (2 + charXoffsets[2]) * 8, (2 + charYoffsets[2]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText(gameState.unlockedRoles[char3RoleId], (2 + charXoffsets[2]) * 8, (3 + charYoffsets[2]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[char3RoleId]].desc, 15, (2 + charXoffsets[2]) * 8, (8 + charYoffsets[2]));
+            parentRef.DrawText(gameState.unlockedRoles[charRoleIds[2]], (2 + charXoffsets[2]) * 8, (3 + charYoffsets[2]) * 8, DrawMode.Sprite, "large", 15);
+            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[2]]].desc, 15, (2 + charXoffsets[2]) * 8, (8 + charYoffsets[2]));
 
             //char4
-            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[char4RoleId]].spriteSet, char1Portrait.X + (charXoffsets[3] * 8), char1Portrait.Y + (charYoffsets[3] * 8));
+            parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[3]]].spriteSet, char1Portrait.X + (charXoffsets[3] * 8), char1Portrait.Y + (charYoffsets[3] * 8));
             parentRef.DrawText(gameState.Char4Name, (2 + charXoffsets[3]) * 8, (2 + charYoffsets[3]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.DrawText(gameState.unlockedRoles[char4RoleId], (2 + charXoffsets[3]) * 8, (3 + charYoffsets[3]) * 8, DrawMode.Sprite, "large", 15);
-            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[char4RoleId]].desc, 15, (2 + charXoffsets[3]) * 8, (8 + charYoffsets[3]));
+            parentRef.DrawText(gameState.unlockedRoles[charRoleIds[3]], (2 + charXoffsets[3]) * 8, (3 + charYoffsets[3]) * 8, DrawMode.Sprite, "large", 15);
+            parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[3]]].desc, 15, (2 + charXoffsets[3]) * 8, (8 + charYoffsets[3]));
 
             //Draw arrows around appropriate spot, also with the offset.
             parentRef.DrawMetaSprite("arrow", char1Portrait.X - 16 + (charXoffsets[activeCharSelecting] * 8), char1Portrait.Y + 16 + (charYoffsets[activeCharSelecting] * 8), true, false);
@@ -96,15 +93,61 @@ namespace PixelVision8.Player
             //Left/Right: advance the active character's role ID in that direction.
             //FUTURE TODO: figure out how to rename characters. Not an MVP requirement.
 
-            if (parentRef.Button(Buttons.B, InputState.Released))
+            if (parentRef.Button(Buttons.Left, InputState.Released))
+            {
+                charRoleIds[activeCharSelecting]--;
+                if (charRoleIds[activeCharSelecting] < 0)
+                    charRoleIds[activeCharSelecting] = gameState.unlockedRoles.Count() - 1;
+            }
+
+            if (parentRef.Button(Buttons.Right, InputState.Released))
+            {
+                charRoleIds[activeCharSelecting]++;
+                if (charRoleIds[activeCharSelecting] >= gameState.unlockedRoles.Count())
+                    charRoleIds[activeCharSelecting] = 0;
+
+            }
+
+            if (parentRef.Button(Buttons.A, InputState.Released)) //left, NES B, CANCEL
+            {
+                activeCharSelecting--;
+                if (activeCharSelecting < 0)
+                    activeCharSelecting = 0;
+            }
+
+            if (parentRef.Button(Buttons.B, InputState.Released)) //right, NES A, ACCEPT
             {
                 activeCharSelecting++;
                 if (activeCharSelecting >= 4)
                 {
                     //TODO Prep the fight scene. Make characters and a new encounter and all that.
+                    //TODO: make this logic part of the fightScene code to be called, not all assigned externally
+                    Character char1 = new Character(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[0]]]);
+                    char1.name = gameState.Char1Name;
+                    char1.posX = FightScene.charPositions[0].Item1;
+                    char1.posY = FightScene.charPositions[0].Item2;
+                    //char1.
+
+                    Character char2 = new Character(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[1]]]);
+                    char2.name = gameState.Char2Name;
+                    char2.posX = FightScene.charPositions[1].Item1;
+                    char2.posY = FightScene.charPositions[1].Item2;
+
+                    Character char3 = new Character(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[2]]]);
+                    char3.name = gameState.Char3Name;
+                    char3.posX = FightScene.charPositions[2].Item1;
+                    char3.posY = FightScene.charPositions[2].Item2;
+
+                    Character char4 = new Character(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[3]]]);
+                    char4.name = gameState.Char4Name;
+                    char4.posX = FightScene.charPositions[3].Item1;
+                    char4.posY = FightScene.charPositions[3].Item2;
+                    
+                    FightScene.characters = new List<Character>() {char1, char2, char3, char4};
+                    FightScene.GetNewEncounter();
+
                     gameState.mode = gameState.FightSceneID;
                 }
-             
             }
         }
 

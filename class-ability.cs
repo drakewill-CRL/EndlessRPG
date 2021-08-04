@@ -180,7 +180,7 @@ namespace PixelVision8.Player
             double multiplier = 1.0;
             target.damageMultipliers.TryGetValue(ab.damagetype, out multiplier);
             if (multiplier == 0)
-                multiplier= 1;
+                multiplier= 1; //nothing is immune. but can have .01 multiplier.
 
             switch (ab.sourceStat)
             {
@@ -192,14 +192,15 @@ namespace PixelVision8.Player
                     break;
             }
             results = results * ab.powerMod;
+            
             //crit chance calc
+            //TODO: return an object that reports damage and if its a crit or not, maybe other info?
             var luckSpread = attacker.currentStats.LUK - target.currentStats.LUK;
-            var isCrit = (gameState.random.Next(0, 100) > Math.Abs(luckSpread));
+            var isCrit = (gameState.random.Next(0, 100) <= Math.Abs(luckSpread)); //Roll under the spread.
             if (isCrit && luckSpread > 0)
                 results *= 2;
             if (isCrit && luckSpread < 0)
                 results /= 2;
-            
 
             if (results < 0)
                 results = 0;

@@ -9,18 +9,21 @@ namespace PixelVision8.Player
     public static class FightScene
     {
         //MOST OBVIOUS TODOS:
-        //make some sound effects and get the list going on which one is what. Expand on the 3 present.
         //save game stuff
-        //use WrapText extension instead of having dedicated functions for the wrapped text bits.
         //Clear out or re-init fight scene after game over.
         //Start baseline sample content (soldier done, medic/techie/covertOp pending)
         //Get newgame scene going.
+        //Make Character constructor that takes a Role and a Level to start at.
+        //Update title screen image, ponder alternative names. Gatehold?
+
+        //non-MVP
+        //make some sound effects and get the list going on which one is what. Expand on the 3 present.
         //Assign abilities from abilitiesByName dictionary so I don't have to worry about id/order.
         //clean up some code to make things easier/faster/cleaner later?
-        //Make SELECT toggle auto-fight. Auto-fight rules will be simple AI for now, will expand on later with additional AI logic.
-        //Update title screen image, ponder alternative names. Gatehold?
-        //Make Character constructor that takes a Role and a Level to start at.
+        //Make SELECT toggle auto-fight. Auto-fight rules will be simple AI for now, will expand on later with additional AI logic.       
         //I wanted abilities to leveup up at some point. What happened to that?
+        //make functions to return a list of DisplayResults to add to the existing list to allow for more customizable/reusable animations sets
+        //--EX: enemies might palette-shift rather than swap frames, so i might want an EnemyAttack() set and an AllyAttack() set
 
 
         //V 0.01 requirements: - the MVP POC
@@ -57,8 +60,8 @@ namespace PixelVision8.Player
         {
             new Tuple<int, int>(204, 16),
             new Tuple<int, int>(204, 48),
-            new Tuple<int, int>(204, 64),
-            new Tuple<int, int>(204, 80)
+            new Tuple<int, int>(204, 80),
+            new Tuple<int, int>(204, 112)
         };
 
         static List<Attack> pendingAttacks = new List<Attack>();
@@ -91,10 +94,9 @@ namespace PixelVision8.Player
 
             //once its finalized set up a construction for Character that handles all this.
             Character char1 = new Character(ContentLists.allRoles[1]);
-            char1.spriteSet = "char1";
             char1.posX = charPositions[0].Item1;
             char1.posY = charPositions[0].Item2;
-            char1.drawState = "";
+            //char1.drawState = "";
             char1.name = "Larry";
             char1.role = ContentLists.allRoles[1];
             char1.abilities = char1.role.abilities; 
@@ -491,19 +493,21 @@ namespace PixelVision8.Player
 
         public static void DrawHelpText()
         {
+            parentRef.WrapText(helpText, 26, 16 * 8, 20);
             //The text that shows up on the right side of the bottom panel to show you what the thing does.
-            var wrapped = parentRef.WordWrap(helpText, 26);
-            var lines = parentRef.SplitLines(wrapped);
-            for (int i = 0; i < lines.Count(); i++)
-                parentRef.DrawText(lines[i], 16 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
+            //var wrapped = parentRef.WordWrap(helpText, 26);
+            //var lines = parentRef.SplitLines(wrapped);
+            //for (int i = 0; i < lines.Count(); i++)
+                //parentRef.DrawText(lines[i], 16 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
         }
 
         public static void DrawCombatLogText()
         {
-            var wrapped = parentRef.WordWrap(displayResultData, 26);
-            var lines = parentRef.SplitLines(wrapped);
-            for (int i = 0; i < lines.Count(); i++)
-                parentRef.DrawText(lines[i], 16 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
+            parentRef.WrapText(displayResultData, 26,  16 * 8, 20);
+            // var wrapped = parentRef.WordWrap(displayResultData, 26);
+            // var lines = parentRef.SplitLines(wrapped);
+            // for (int i = 0; i < lines.Count(); i++)
+            //     parentRef.DrawText(lines[i], 16 * 8, (20 + i) * 8, DrawMode.Sprite, "large", 15);
         }
 
         public static List<int> GetValidEnemyTargets()
