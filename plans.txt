@@ -108,7 +108,7 @@ DEF - counters STR
 INS - ability damage
 MOX: counters INS
 SPD - determines initiative order
-LUK - determines crit chance (Attackers LUK - targets LUK = X. Roll dX to see if its over 20. Negative X means the defense can critical block/attack can botch on rolls under 0. LUK is not a dump stat! Probably.)
+LUK - determines crit chance (Attackers LUK - targets LUK = X. Roll d100 to see if its under the spread. Negative spread means the defense can critical block/attack can botch on rolls under 0. LUK is not a dump stat! Probably.)
 
 Could have a hardcore/random start mode - roles are randomly selected but gives different bragging rights? most fights survived as random party insteaed of total best levels?
 

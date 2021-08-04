@@ -12,7 +12,6 @@ namespace PixelVision8.Player
         //save game stuff
         //Clear out or re-init fight scene after game over.
         //Start baseline sample content (soldier done, medic/techie/covertOp pending)
-        //Get newgame scene going.
         //Make Character constructor that takes a Role and a Level to start at.
         //Update title screen image, ponder alternative names. Gatehold?
 
@@ -270,6 +269,10 @@ namespace PixelVision8.Player
                             helpText = enemies[arrowPosIndex].desc;
                             break;
                         case 3://target PC
+                            arrowPosIndex--;
+                            if (arrowPosIndex < 0)
+                                arrowPosIndex = characters.Count() - 1;
+                            helpText = characters[arrowPosIndex].name;
                             break;
                     }
                     parentRef.PlaySound(0);
@@ -301,6 +304,10 @@ namespace PixelVision8.Player
                             helpText = enemies[arrowPosIndex].desc;
                             break;
                         case 3://target PC
+                        arrowPosIndex++;
+                            if (arrowPosIndex >= characters.Count())
+                                arrowPosIndex = 0;
+                            helpText = characters[arrowPosIndex].name;
                             break;
                     }
                     parentRef.PlaySound(0);
