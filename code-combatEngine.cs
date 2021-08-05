@@ -67,6 +67,7 @@ namespace PixelVision8.Player
             {
                 DisplayResults winRewards = new DisplayResults();
                 winRewards.desc = "Enemies defeated! Next wave incoming.";
+                winRewards.changedItem = "fightWon";
                 outerResults.Add(winRewards);
 
                 foreach (var c in FightScene.characters)

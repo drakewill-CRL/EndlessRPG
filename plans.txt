@@ -143,6 +143,7 @@ Async
 (fight, element A attack all, hit target weakness, heal 1 ally, good luck (self crit buf))
 Operative (SS13 reference - red hardsuit and laser sword)
 (fight with laser-sword damage type, C4 explode-all-enemies, hack a synth enemy, buff speed on ally, expensive res power on ally)
+Factor (Prototype factor-based morph for agent use. big stats, weird/bad abilties?)
 
 HEALING NOTE
 players might get different levels of healing depending on their morph type

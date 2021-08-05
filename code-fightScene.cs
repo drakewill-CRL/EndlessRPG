@@ -13,6 +13,7 @@ namespace PixelVision8.Player
         //Clear out or re-init fight scene after game over.
         //Start baseline sample content (soldier done, medic/techie/covertOp pending)
         //Make Character constructor that takes a Role and a Level to start at.
+        //BOSSES are missing, clearly required.
         //Update title screen image, ponder alternative names. Gatehold?
 
         //non-MVP
@@ -32,6 +33,7 @@ namespace PixelVision8.Player
         //Game ends after 20 fights (4 bosses) - could use this as a progress checkpoint to resume from next time. Would be level 5 starting this way.
         //5 enemies present and sprited in. somewhat varied in stats and abilities.
         //10 encounters made out of X enemy combos.
+        //1 boss encounter (will occur once, 20 fights in)
         //test stuff absent from normal loop
         //better title screen image.
         
@@ -43,6 +45,8 @@ namespace PixelVision8.Player
         public static bool hasDrawn = false;
         static int xScreennCoords = 1;
         static int yScreenCoords = 0;
+
+        public static int fightsWon = 0;
 
         public static Stats applyToAll = new Stats(); //Possibly where fight-specific gimmicks or spells go.
 
@@ -528,6 +532,7 @@ namespace PixelVision8.Player
             return validOptions;
         }
 
+        //TODO: this needs a better name since it does more than just sets sprites.
         public static void UpdateSpriteDisplay(DisplayResults dr)
         {
             displayResultData = dr.desc;
@@ -540,6 +545,9 @@ namespace PixelVision8.Player
                     break;
                 case "colorShift":
                     dr.target.colorShift = Int32.Parse(dr.changedTo);
+                    break;
+                case "fightWon":
+                    fightsWon++;
                     break;
                 default:
                     break;
@@ -563,6 +571,7 @@ namespace PixelVision8.Player
                 if (characters[i].drawState == "Dead")
                     parentRef.DrawText("Dead", charPositions[i].Item1 + 48, charPositions[i].Item2 + 24, DrawMode.Sprite, "large", 15);
             }
+            parentRef.DrawText("Wins: " + fightsWon, 200, 0, DrawMode.Sprite, "large", 15);
         }
 
         public static void GetNewEncounter()

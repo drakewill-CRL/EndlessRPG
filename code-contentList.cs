@@ -10,11 +10,15 @@ namespace PixelVision8.Player
     {
         public static Stats baseStats = new Stats() { HP = 1, maxHP = 1, AP = 1, maxAP = 1, STR = 1, DEF = 1, INS = 1, MOX = 1, SPD = 1, LUK = 1 };
 
-        //TODO: Eclipse Phase-ify the damage types. Probably Kinetic/Energy as the base 2, plus specials like EMP or radiation.
-        public static List<string> damageTypes = new List<string>() { "blunt", "pierce", "slash", "fire", "bioHeal", "synthHeal", "emp", "bioTox" };
+        //Kinetic: physical contact attack. Sword, bullets, etc.
+        //energy: lasers, fire, etc.
+        //shock: electrical (energy) attack plus a stun. Biomorphs have a chance to resist the stun. Synthmorphs are usually immune to the damage and the stun.
+        //bioHeal: heals bio for full, pod for half, synth for none
+        //synthHeal: heals synth for full, pod for half, bio for none.
+        //bioTox: biomorph-only damage type.
 
+        public static List<string> damageTypes = new List<string>() { "kinetic", "energy",  "shock", "bioHeal", "synthHeal", "bioTox", };
 
-        //TODO: update abilities with corrected damage types
         public static List<Ability> allAbilities = new List<Ability>() {
             //test/sample/planning abilities
             new Ability() {
@@ -24,7 +28,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 0, //automatic targeting
                 abilityKey = 0,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR"
             },
             new Ability() {
@@ -34,7 +38,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 2, //single enemy
                 abilityKey = 1,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR"
             },
             new Ability() {
@@ -44,9 +48,8 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 0, //auto, self
                 abilityKey = 2,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR"
-
             },
             new Ability() {
                 name = "Run", //Maybe 'Reposition'? 
@@ -55,7 +58,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 0, //auto, special case.
                 abilityKey = 3,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR"
             },
             //Infantry abilities
@@ -67,7 +70,7 @@ namespace PixelVision8.Player
                 targetType = 2, //one enemy
                 specialSpeedLevel = 5, //order by descending.
                 abilityKey = 4,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR",
                 powerMod = .8F
             },
@@ -79,7 +82,7 @@ namespace PixelVision8.Player
                 targetType = 2, //one enemy
                 specialSpeedLevel = 1,
                 abilityKey = 5,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR",
                 powerMod = 2F
             },
@@ -90,7 +93,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 4, //all enemies.
                 abilityKey = 6,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR",
                 powerMod = .5F
             },
@@ -101,7 +104,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 2, //one enemy
                 abilityKey = 7,
-                damagetype = "fire",
+                damagetype = "energy",
                 sourceStat = "STR"
             },
             //Medic abilities
@@ -156,14 +159,14 @@ namespace PixelVision8.Player
                 damagetype = "synthHeal",
                 sourceStat = "INS"
             },
-            new Ability() {
-                name = "EMP Blast",
-                description = "Targeted EMP attack, does heavy damage to synthmorphs. Ineffective on biomorphs.",
+            new Ability() { 
+                name = "Corrosive Juice",
+                description = "Metal-eating chemical attack, does heavy damage to synthmorphs. Less effective on biomorphs.",
                 apCost = 3,
                 level = 1,
                 targetType = 2, //one enemy
                 abilityKey = 13,
-                damagetype = "emp",
+                damagetype = "kinetic",
                 sourceStat = "INS"
             },
             new Ability() {
@@ -173,7 +176,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 2, //one enemy
                 abilityKey = 14,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR"
             },
             new Ability() {
@@ -196,7 +199,7 @@ namespace PixelVision8.Player
                 specialSpeedLevel = 5, //goes first
                 targetType = 2, //one enemy
                 abilityKey = 16,
-                damagetype = "blunt",
+                damagetype = "kinetic",
                 sourceStat = "STR"
             },
             new Ability() {
@@ -206,7 +209,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 4, //all enemies
                 abilityKey = 17,
-                damagetype = "fire",
+                damagetype = "energy",
                 sourceStat = "INS"
             },
             new Ability() {
@@ -230,8 +233,6 @@ namespace PixelVision8.Player
                 damagetype = "",
                 sourceStat = "INS"
             },
-            
-
             //Enemy abilities
             //TheCheat abilities
         };
@@ -265,14 +266,14 @@ namespace PixelVision8.Player
                 statsPerLevel = new Stats() {HP = 2, maxHP = 2, AP = 3, maxAP = 3, STR = 1, DEF = 2, INS = 3, MOX = 3, SPD = 2, LUK = 2},
                 abilities = new List<Ability>() {abilitiesByName["Fight"].Clone(), abilitiesByName["First Aid"].Clone(), abilitiesByName["Adrenal Mist"].Clone(), abilitiesByName["Defib"].Clone(), abilitiesByName["Neurotoxin"].Clone()}
             },
-            new Role() {  //techies do EMP damage to synthmorphs and heal synth allies
+            new Role() {  //techies do extar damage to synthmorphs and heal synth allies
                 name = "Techie",
                 spriteSet = "techie",
                 morphType = "synth",
                 desc = "Synthmorph repairs and robot combat specialist",
                 startStats = new Stats() {HP = 9, maxHP = 9, AP = 5, maxAP = 5, STR = 5, DEF = 7, INS = 5, MOX = 4, SPD = 5, LUK = 4},
                 statsPerLevel = new Stats() {HP = 3, maxHP = 3, AP = 1, maxAP = 1, STR = 2, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 1},
-                abilities = new List<Ability>() {abilitiesByName["Fight"].Clone(), abilitiesByName["Spot Weld"].Clone(), abilitiesByName["EMP Blast"].Clone(), abilitiesByName["Tank Tackle"].Clone(), abilitiesByName["Power Cycle"].Clone()}
+                abilities = new List<Ability>() {abilitiesByName["Fight"].Clone(), abilitiesByName["Spot Weld"].Clone(), abilitiesByName["Corrosive Juice"].Clone(), abilitiesByName["Tank Tackle"].Clone(), abilitiesByName["Power Cycle"].Clone()}
             },
             new Role() { //Covert Ops run on speed and luck and maybe lots of AP. Disposable pod body inside some armor
                 name = "CovertOp",
@@ -307,17 +308,19 @@ namespace PixelVision8.Player
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 2, DEF = 2, INS = 1, MOX = 2, SPD = 1, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
+            morphType = "bio",
             abilities = new List<Ability>() {allAbilities[0].Clone(), allAbilities[1].Clone()}
             },
             new Enemy() {
             name = "TITANovacrab" ,
             desc = "A novacrab overrun by TITAN nanites and weakened from its constant exposure to space.",
             level = 1,
+            morphType= "pod",
             startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
-            abilities = new List<Ability>() {allAbilities[1].Clone()}
+            abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
             },
             new Enemy() {
             name = "Lost Soldier" ,
@@ -326,8 +329,9 @@ namespace PixelVision8.Player
             startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
+            morphType="bio",
             spriteSet="crab1",
-            abilities = new List<Ability>() {allAbilities[1].Clone()}
+            abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
             },
             new Enemy() {
             name = "Swarmoid" ,
@@ -337,7 +341,8 @@ namespace PixelVision8.Player
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
-            abilities = new List<Ability>() {allAbilities[1].Clone()}
+            morphType="synth",
+            abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
             },
             new Enemy() {
             name = "Slitheroid" ,
@@ -347,17 +352,19 @@ namespace PixelVision8.Player
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
-            abilities = new List<Ability>() {allAbilities[1].Clone()}
+            morphType="synth",
+            abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
             },
             new Enemy() {
             name = "Biomonster" ,
-            desc = "Something derived from one more biomorphs. Not entirely sure what it is now.",
+            desc = "Something derived from one or more biomorphs. Not entirely sure what it is now.",
             level = 1,
             startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
-            abilities = new List<Ability>() {allAbilities[1].Clone()}
+            morphType="bio",
+            abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
             }
         };
 
@@ -368,6 +375,16 @@ namespace PixelVision8.Player
         {
             new List<Enemy>()
             {
+                (Enemy)enemies[1].Clone(),
+                (Enemy)enemies[1].Clone()
+            }
+        };
+
+        public static List<List<Enemy>> PossibleBossEncounters = new List<List<Enemy>>()
+        {
+            new List<Enemy>()
+            {
+                //TODO: pick out a boss fight, insert here.
                 (Enemy)enemies[1].Clone(),
                 (Enemy)enemies[1].Clone()
             }
