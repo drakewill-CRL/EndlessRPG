@@ -167,7 +167,7 @@ namespace PixelVision8.Player
                 level = 1,
                 targetType = 2, //one enemy
                 abilityKey = 13,
-                damagetype = "kinetic",
+                damagetype = "energy", //close enough for now
                 sourceStat = "INS"
             },
             new Ability() {

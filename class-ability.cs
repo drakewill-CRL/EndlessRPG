@@ -46,6 +46,8 @@ namespace PixelVision8.Player
             {
                 //TODO: might just make common checks flags here to make code easier to read below.
                 //EX: targetIsAlive, etc.
+                bool targetIsAlive = (t.currentStats.HP > 0)
+;
                 switch (ability.abilityKey)
                 {
                     case 0: //Do a kickflip!
@@ -139,10 +141,6 @@ namespace PixelVision8.Player
                             results.printDesc.Add(attacker.name + " patches up " + t.name + " to restore " + heals + " HP");
                             results.target.Add(t);
                             results.targetChanges.Add(new Stats() { HP = heals });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " can't heal the dead.");
                         }
                         break;
                     case 10: //Defib
