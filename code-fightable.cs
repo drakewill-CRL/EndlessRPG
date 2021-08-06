@@ -69,6 +69,7 @@ namespace PixelVision8.Player
             copy.StatsPerLevel = copy.StatsPerLevel.Clone();
             copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
             copy.displayStats = copy.currentStats.Clone();
+            //TODO: damage multipliers?
             return copy;
         }
     }
@@ -81,18 +82,43 @@ namespace PixelVision8.Player
         string weaponName = ""; //Fluff, used for item rolls to name weapons.
         string armorName = ""; //fluff, used for item rolls to name defensive items.
 
-        public Character(Role r)
+        public Character(Role r, int lvl)
         {
-            //TODO: fill in all the default info from the supplied role.
-            level = 1;
-            morphType = r.morphType;
+            level = lvl;
             role = r;
+
+            switch(r.morphType)
+            {
+                case "bio":
+                    damageMultipliers.Add("bioHeal", 1);
+                    damageMultipliers.Add("synthHeal", 0.01);
+                break;
+                case "pod":
+                    damageMultipliers.Add("bioHeal", 0.5);
+                    damageMultipliers.Add("synthHeal", 0.5);
+                break;
+                case "synth":
+                    damageMultipliers.Add("bioHeal", 0.01);
+                    damageMultipliers.Add("synthHeal", 1);
+                break;
+            }
+
+            //If I create any roles that get specific damage multipliers, they'll get processed here.
+            foreach(var dm in r.damageMultipliers)
+                damageMultipliers.Add(dm.Key, dm.Value);
             
+            //these get copied to make sure the functions from the parent class work.
+            morphType = r.morphType;
             startingStats = r.startStats.Clone();
             StatsPerLevel = r.statsPerLevel.Clone();
             currentStats = getTotalStats(true);
             displayStats = currentStats.Clone();
             abilities = r.abilities; //.Clone(); Might be unnecessary until abilities can be leveled up.
+        }
+
+        //TODO: make all calls use the main constructor above and drop this one out of code.
+        public Character(Role r) : this(r, 1) 
+        {
         }
 
         public Character Clone()

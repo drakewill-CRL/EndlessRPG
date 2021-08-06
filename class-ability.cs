@@ -55,7 +55,7 @@ namespace PixelVision8.Player
                         if (t.currentStats.HP > 0)
                         {
                             var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " attacks " + targets[0].name + " for " + damage);
+                            results.printDesc.Add(attacker.name + " attacks " + t.name + " for " + damage);
                             results.target.Add(t);
                             results.targetChanges.Add(new Stats() { HP = -damage });
                         }
@@ -74,7 +74,7 @@ namespace PixelVision8.Player
                         if (t.currentStats.HP > 0)
                         {
                             var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " hip-fires at " + targets[0].name + " for " + damage);
+                            results.printDesc.Add(attacker.name + " hip-fires at " + t.name + " for " + damage);
                             results.target.Add(t);
                             results.targetChanges.Add(new Stats() { HP = -damage });
                         }
@@ -87,7 +87,7 @@ namespace PixelVision8.Player
                         if (t.currentStats.HP > 0)
                         {
                             var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " aims and fires at " + targets[0].name + " for " + damage);
+                            results.printDesc.Add(attacker.name + " aims and fires at " + t.name + " for " + damage);
                             results.target.Add(t);
                             results.targetChanges.Add(new Stats() { HP = -damage });
                         }
@@ -100,7 +100,7 @@ namespace PixelVision8.Player
                         if (t.currentStats.HP > 0)
                         {
                             var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " sprays " + targets[0].name + " for " + damage);
+                            results.printDesc.Add(attacker.name + " sprays " + t.name + " for " + damage);
                             results.target.Add(t);
                             results.targetChanges.Add(new Stats() { HP = -damage });
                         }
@@ -110,7 +110,59 @@ namespace PixelVision8.Player
                         if (t.currentStats.HP > 0)
                         {
                             var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " fires at " + targets[0].name + " for " + damage);
+                            results.printDesc.Add(attacker.name + " fires at " + t.name + " for " + damage);
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = -damage });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " attacked a dead target.");
+                        }
+                        break;
+                    case 8: //First Aid
+                        if (t.currentStats.HP > 0)
+                        {
+                            var heals = CalcHeals(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " patches up " + t.name + " to restore " + heals + " HP");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = heals });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " can't heal the dead.");
+                        }
+                        break;
+                    case 9: //Adrenal Mist
+                        if (t.currentStats.HP > 0)
+                        {
+                            var heals = CalcHeals(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " patches up " + t.name + " to restore " + heals + " HP");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = heals });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " can't heal the dead.");
+                        }
+                        break;
+                    case 10: //Defib
+                        if (t.currentStats.HP <= 0) //TODO: should this become a biomorph only res?
+                        {
+                            //t.currentStats.Set(new Stats() {HP = 1});
+                            results.printDesc.Add(attacker.name + " revives " + t.name);
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = 1 });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " can't defib the living.");
+                        }
+                        break;
+                    case 11: //Neurotoxin
+                        if (t.currentStats.HP > 0)
+                        {
+                            var damage = CalcDamage(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " poisons " + t.name + " for " + damage + " damage");
                             results.target.Add(t);
                             results.targetChanges.Add(new Stats() { HP = -damage });
                         }
@@ -128,34 +180,26 @@ namespace PixelVision8.Player
             return results;
         }
 
-        public static int CalcHeals(Attack a, Fightable target) //TODO: there;s no resist on heals, i think thats the main difference in logic.
+        public static int CalcHeals(Ability ab, Fightable attacker, Fightable target) // there;s no resist and no crits on heals, i think thats the main difference in logic.
         {
             float attackPowerBase = 0;
-            switch (a.thingToDo.sourceStat)
+            switch (ab.sourceStat)
             {
                 case "STR":
-                    attackPowerBase = a.attacker.currentStats.STR * 2;
+                    attackPowerBase = attacker.currentStats.STR * 2;
                     break;
                 case "INS":
-                    attackPowerBase = a.attacker.currentStats.INS * 2;
+                    attackPowerBase = attacker.currentStats.INS * 2;
                     break;
             }
 
             double results = 0;
             double multiplier = 1.0;
-            target.damageMultipliers.TryGetValue(a.damageType, out multiplier);
+            target.damageMultipliers.TryGetValue(ab.damagetype, out multiplier);
             if (multiplier == 0)
                 multiplier = 1;
 
-            switch (a.thingToDo.sourceStat)
-            {
-                case "STR":
-                    results = (attackPowerBase * multiplier) - target.currentStats.DEF;
-                    break;
-                case "INS":
-                    results = (attackPowerBase * multiplier) - target.currentStats.MOX;
-                    break;
-            }
+            results = attackPowerBase * multiplier * ab.powerMod;
 
             if (results < 0)
                 results = 0;

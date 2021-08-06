@@ -122,6 +122,7 @@ namespace PixelVision8.Player
                 name = "Adrenal Mist",
                 description = "Cover the team in a mist of drugs, restoring a little HP to all.",
                 apCost = 4,
+                powerMod = .3,
                 level = 1,
                 targetType = 5, //all allies
                 abilityKey = 9,

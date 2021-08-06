@@ -33,10 +33,14 @@ namespace PixelVision8.Player
             HP += incoming.HP; //allows damage to be relayed via a stats object
             if (HP <0)
                 HP = 0;
+            if (HP > maxHP)
+                HP = maxHP;
             maxAP += incoming.maxAP;
             AP += incoming.AP; //attacker can burn AP after the attack.
             if (AP <0)
                 AP = 0;
+            if (AP > maxAP)
+                AP = maxAP;
             STR += incoming.STR;
             DEF += incoming.DEF;
             INS += incoming.INS;
@@ -73,6 +77,7 @@ namespace PixelVision8.Player
         public Stats startStats;
         public Stats statsPerLevel;
         public List<Ability> abilities;
+        public Dictionary<string, double> damageMultipliers = new Dictionary<string, double>();
         
         public string desc = "";
     }
