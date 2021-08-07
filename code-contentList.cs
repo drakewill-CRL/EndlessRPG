@@ -161,7 +161,7 @@ namespace PixelVision8.Player
                 sourceStat = "INS"
             },
             new Ability() { 
-                name = "Corrosive Juice",
+                name = "Corroder",
                 description = "Metal-eating chemical attack, does heavy damage to synthmorphs. Less effective on biomorphs.",
                 apCost = 3,
                 level = 1,
@@ -274,7 +274,7 @@ namespace PixelVision8.Player
                 desc = "Synthmorph repairs and robot combat specialist",
                 startStats = new Stats() {HP = 9, maxHP = 9, AP = 5, maxAP = 5, STR = 5, DEF = 7, INS = 5, MOX = 4, SPD = 5, LUK = 4},
                 statsPerLevel = new Stats() {HP = 3, maxHP = 3, AP = 1, maxAP = 1, STR = 2, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 1},
-                abilities = new List<Ability>() {abilitiesByName["Fight"].Clone(), abilitiesByName["Spot Weld"].Clone(), abilitiesByName["Corrosive Juice"].Clone(), abilitiesByName["Tank Tackle"].Clone(), abilitiesByName["Power Cycle"].Clone()}
+                abilities = new List<Ability>() {abilitiesByName["Fight"].Clone(), abilitiesByName["Spot Weld"].Clone(), abilitiesByName["Corroder"].Clone(), abilitiesByName["Tank Tackle"].Clone(), abilitiesByName["Power Cycle"].Clone()}
             },
             new Role() { //Covert Ops run on speed and luck and maybe lots of AP. Disposable pod body inside some armor
                 name = "CovertOp",

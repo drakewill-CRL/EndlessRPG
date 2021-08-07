@@ -161,6 +161,8 @@ namespace PixelVision8.Player
                         phase = 0;
                         subMenuLevel = 0;
                         activeCharSelecting = 0;
+                        foreach (var c in characters)
+                            c.displayStats.Set(c.currentStats);
                         if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                         arrowPosIndex = 0;
                         pendingAttacks = new List<Attack>();

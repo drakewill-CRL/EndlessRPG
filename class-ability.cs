@@ -33,8 +33,6 @@ namespace PixelVision8.Player
             //All abilities' effects will just get handled in this one giant switch function. 
             AttackResults results = new AttackResults();
             results.attacker = attacker;
-            results.target.Add(attacker);
-            results.targetChanges.Add(new Stats() { AP = -(ability.apCost) });
 
             //NOTE: special things need targets pulled in here.
             if (ability.targetType == 0)
@@ -45,7 +43,8 @@ namespace PixelVision8.Player
 
             foreach (var t in targets) //So abilities can't have 0 targets. fake that out if needed by targeting self.
             {
-                //TOOD: change this to name to avoid forgetting to set abilityKey?
+                //TODO: change this to name to avoid forgetting to set abilityKey?
+                //TODO: put the description in the ability itself.
                 switch (ability.abilityKey)
                 {
                     case 0: //Do a kickflip!
@@ -94,7 +93,7 @@ namespace PixelVision8.Player
                         results = BasicAttack(attacker, t, ability, "tackles");
                         break;
                     case 15: //Power Cycle
-                        results = BasicBuff(attacker, t, ability, "'s morph restarts with the limiters disabled.", new Stats() { maxHP = 5, STR = 3, INS = 3, DEF = 3, MOX = 1, SPD = 2, LUK = -1 });
+                        results = BasicBuff(attacker, t, ability, "restarts with their limiters disabled.", new Stats() { maxHP = 5, STR = 3, INS = 3, DEF = 3, MOX = 1, SPD = 2, LUK = -1 });
                         break;
                     case 16: //Ambush
                         results = BasicAttack(attacker, t, ability, "quickly stabs");
@@ -116,6 +115,11 @@ namespace PixelVision8.Player
                         break;
                 }
             }
+            
+            //Now that we have results, remove AP from the attacker.
+            results.target.Add(attacker);
+            results.targetChanges.Add(new Stats() { AP = -(ability.apCost) });
+            results.statSetToApply.Add("current");
 
             return results;
         }
@@ -201,6 +205,7 @@ namespace PixelVision8.Player
                 results.printDesc.Add(attacker.name + " " + description + " " + target.name + " for " + damage + " damage");
                 results.target.Add(target);
                 results.targetChanges.Add(new Stats() { HP = -damage });
+                results.statSetToApply.Add("current");
             }
             else
                 results.printDesc.Add(attacker.name + " attacked a dead target.");
@@ -218,6 +223,7 @@ namespace PixelVision8.Player
                 results.printDesc.Add(attacker.name + " " + description + " " + target.name + " for " + damage + " damage");
                 results.target.Add(target);
                 results.targetChanges.Add(new Stats() { HP = -damage });
+                results.statSetToApply.Add("current");
             }
             return results;
         }
@@ -231,6 +237,7 @@ namespace PixelVision8.Player
                 results.printDesc.Add(attacker.name + " " + description + " " + target.name + " to restore " + heals + " HP");
                 results.target.Add(target);
                 results.targetChanges.Add(new Stats() { HP = heals });
+                results.statSetToApply.Add("current");
             }
             else
                 results.printDesc.Add(attacker.name + " can't heal the dead.");
@@ -247,6 +254,7 @@ namespace PixelVision8.Player
                 results.printDesc.Add(attacker.name + " " + description + " " + target.name + " to restore " + heals + " HP");
                 results.target.Add(target);
                 results.targetChanges.Add(new Stats() { HP = heals });
+                results.statSetToApply.Add("current");
             }
             return results;
         }
@@ -256,9 +264,10 @@ namespace PixelVision8.Player
             var results = new AttackResults();
             if (target.currentStats.HP > 0)
             {
-                results.printDesc.Add(attacker.name + " " + description + " " + target.name);
+                results.printDesc.Add(attacker.name + " " + description + " " + target.name); //TODO: make target name toggleable
                 results.target.Add(target);
                 results.targetChanges.Add(statChanges);
+                results.statSetToApply.Add("temp");
             }
             else
                 results.printDesc.Add(attacker.name + " can't help the dead.");
@@ -274,6 +283,7 @@ namespace PixelVision8.Player
                 results.printDesc.Add(attacker.name + " " + description + " " + target.name);
                 results.target.Add(target);
                 results.targetChanges.Add(statChanges);
+                results.statSetToApply.Add("current");
             }
             else
                 results.printDesc.Add(attacker.name + " can't res the living.");

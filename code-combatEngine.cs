@@ -31,7 +31,6 @@ namespace PixelVision8.Player
                         outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Attack", frameCounter = 6 });
                         outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Ready", frameCounter = 6 });
 
-                        //TODO: check that target of ability is still valid. Display 'ineffective;-style message if not. Might be part of UseAbility()
                         var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo);
                         results.Add(abilOutcome);
                         for (int i = 0; i < abilOutcome.target.Count(); i++)
@@ -46,7 +45,17 @@ namespace PixelVision8.Player
                         //process target stat changes now, so dead enemies don't attack.
                         for (int i = 0; i < abilOutcome.target.Count(); i++)
                         {
-                            abilOutcome.target[i].currentStats.Add(abilOutcome.targetChanges[i]);
+                            switch (abilOutcome.statSetToApply[i])
+                            {
+                                case "current":
+                                    abilOutcome.target[i].currentStats.Add(abilOutcome.targetChanges[i]);
+                                    break;
+                                case "temp":
+                                    abilOutcome.target[i].tempChanges.Add(abilOutcome.targetChanges[i]);
+                                    abilOutcome.target[i].currentStats = abilOutcome.target[i].getTotalStats(false);
+                                    break;
+                            }
+
                             if (abilOutcome.target[i].currentStats.HP <= 0)
                                 outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "Dead" });
                         }
@@ -79,7 +88,7 @@ namespace PixelVision8.Player
                         {
                             c.XP = 0;
                             var levelUpEntry = new DisplayResults();
-                            levelUpEntry.desc =  c.name + " Gets an improvement!";
+                            levelUpEntry.desc = c.name + " Gets an improvement!";
                             outerResults.Add(levelUpEntry);
                             var levelUpSwitch = new DisplayResults();
                             levelUpSwitch.target = c;
@@ -93,15 +102,17 @@ namespace PixelVision8.Player
                         c.currentStats.HP = 1;
                         var resTo1 = new DisplayResults();
                         resTo1.target = c;
-                        resTo1.changeStats = new Stats(){ HP = 1};
+                        resTo1.changeStats = new Stats() { HP = 1 };
                         resTo1.frameCounter = 1;
                     }
+                    c.tempChanges = new Stats(); //Temp changes expire at the end of the encounter.
+                    c.currentStats = c.getTotalStats(false);
                 }
             }
 
             //Dump combat log to the console.
             Console.WriteLine("--------------------------");
-            foreach(var o in outerResults)
+            foreach (var o in outerResults)
                 Console.WriteLine(o.desc + " : " + o.frameCounter);
 
             return outerResults;

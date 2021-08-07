@@ -110,6 +110,7 @@ namespace PixelVision8.Player
         //public Stats attackerChanges; //Just put the attack in the target and targetChanges list.
         public List<Stats> targetChanges = new List<Stats>(); //Must line up index-wise with the targets.
         public List<string> printDesc = new List<string>();
+        public List<string> statSetToApply = new List<string>(); //current, temp, others?
         //targetchanges should really be done in the CombatEngine, and the printDesc should just show what happened/update the display
         //So I might also need a DIFFERENT list of stuff (display changes, animation effects to draw, etc) for the display-phase stuff, and let stats be done automatically in the combat engine.
     }
