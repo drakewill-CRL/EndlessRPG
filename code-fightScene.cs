@@ -11,9 +11,11 @@ namespace PixelVision8.Player
         //MOST OBVIOUS TODOS:
         //save game stuff
         //Clear out or re-init fight scene after game over.
-        //Start baseline sample content (soldier done, medic/techie/covertOp pending)
-        //Make Character constructor that takes a Role and a Level to start at.
-        //BOSSES are missing, clearly required.
+        //baseline sample content (char abilities in place)
+        //--PC SPRITES for 3 of 4 classes pending
+        //--5 enemies pending (abilities and sprites)
+        //BOSSES are missing, clearly required. --1 for test.
+        //balance, get to 20 fights and the boss there while being interesting and requiring some thought
         //Update title screen image, ponder alternative names. Gatehold?
 
         //non-MVP
@@ -29,8 +31,8 @@ namespace PixelVision8.Player
         //V 0.01 requirements: - the MVP POC
         //4 starter classes
         //-- abilities and sprites in place
-        //NewGame screen to pick characters and roles for each slot.
-        //Game ends after 20 fights (4 bosses) - could use this as a progress checkpoint to resume from next time. Would be level 5 starting this way.
+        //NewGame screen to pick characters and roles for each slot. --DONE
+        //Game ends after 20 fights (1 boss, PC level ~5) - could use this as a progress checkpoint to resume from next time. Would be level 5 starting this way.
         //5 enemies present and sprited in. somewhat varied in stats and abilities.
         //10 encounters made out of X enemy combos.
         //1 boss encounter (will occur once, 20 fights in)
