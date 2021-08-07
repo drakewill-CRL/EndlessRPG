@@ -27,13 +27,14 @@ namespace PixelVision8.Player
             Ability clone = (Ability)this.MemberwiseClone();
             return clone;
         }
+        //TODO: allow this to be called from the ability itself instead of being static?
         public static AttackResults UseAbility(Fightable attacker, List<Fightable> targets, Ability ability)
         {
             //All abilities' effects will just get handled in this one giant switch function. 
             AttackResults results = new AttackResults();
             results.attacker = attacker;
             results.target.Add(attacker);
-            results.targetChanges.Add(new Stats() {AP = -(ability.apCost)});
+            results.targetChanges.Add(new Stats() { AP = -(ability.apCost) });
 
             //NOTE: special things need targets pulled in here.
             if (ability.targetType == 0)
@@ -44,29 +45,14 @@ namespace PixelVision8.Player
 
             foreach (var t in targets) //So abilities can't have 0 targets. fake that out if needed by targeting self.
             {
-                //TODO: might just make common checks flags here to make code easier to read below.
-                //TODO: make a couple functions for 'standard' attack/heal setup that allow for custom descriptions.
-                //EX: targetIsAlive, etc.
-                bool targetIsAlive = (t.currentStats.HP > 0);
-                bool userIsAlive = (attacker.currentStats.HP > 0);
-;
+                //TOOD: change this to name to avoid forgetting to set abilityKey?
                 switch (ability.abilityKey)
                 {
                     case 0: //Do a kickflip!
                         results.printDesc.Add(attacker.name + " does a sweet kickflip! Nothing else happens.");
                         break;
                     case 1: //Fight
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " attacks " + t.name + " for " + damage);
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "attacks");
                         break;
                     case 2: //defend
                         results.printDesc.Add(attacker.name + " defends, defend not implemented");
@@ -75,199 +61,55 @@ namespace PixelVision8.Player
                         results.printDesc.Add(attacker.name + " runs, run not implemented");
                         break;
                     case 4: //Snapshot
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " hip-fires at " + t.name + " for " + damage);
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "hip-fires at");
                         break;
                     case 5: //Aimed Shot
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " aims and fires at " + t.name + " for " + damage);
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "aims and fires at");
                         break;
                     case 6: //Covering Fire
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " sprays " + t.name + " for " + damage);
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        //Area attacks quietly ignore dead enemies.
+                        results = BasicAreaAttack(attacker, t, ability, "sprays");
                         break;
                     case 7: //Tracer Rounds
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " fires at " + t.name + " for " + damage);
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "fires burning shots at");
                         break;
                     case 8: //First Aid
-                        if (t.currentStats.HP > 0)
-                        {
-                            var heals = CalcHeals(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " patches up " + t.name + " to restore " + heals + " HP");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = heals });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " can't heal the dead.");
-                        }
+                        results = BasicHeal(attacker, t, ability, "patches up");
                         break;
                     case 9: //Adrenal Mist
-                        if (t.currentStats.HP > 0)
-                        {
-                            var heals = CalcHeals(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " patches up " + t.name + " to restore " + heals + " HP");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = heals });
-                        }
+                        results = BasicAreaHeal(attacker, t, ability, "doses");
                         break;
-                    case 10: //Defib
-                        if (t.currentStats.HP <= 0) //TODO: should this become a biomorph only res?
-                        {
-                            //t.currentStats.Set(new Stats() {HP = 1});
-                            results.printDesc.Add(attacker.name + " revives " + t.name);
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = 1 });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " can't defib the living.");
-                        }
+                    case 10: //Defib //TODO: should this become a biomorph only res?
+                        results = BasicRes(attacker, t, ability, "'revives", new Stats() { HP = 1 });
                         break;
                     case 11: //Neurotoxin
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " poisons " + t.name + " for " + damage + " damage");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "poisons");
                         break;
                     case 12: //Spot Weld
-                        if (t.currentStats.HP > 0)
-                        {
-                            var heals = CalcHeals(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " fixes up " + t.name + " for " + heals + " HP");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = heals });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " can't repair a dead target.");
-                        }
+                        results = BasicHeal(attacker, t, ability, "fixes up");
                         break;
                     case 13: //Corrosive Juice
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " corrodes " + t.name + " for " + damage + " damage");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "corrodes");
                         break;
                     case 14: // Tank Tackle
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " tackles " + t.name + " for " + damage + " damage");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "tackles");
                         break;
                     case 15: //Power Cycle
-                        if (userIsAlive)
-                        {
-                            results.printDesc.Add(attacker.name + "'s morph restarts with the limiters disabled.");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { maxHP = 5, STR = 3, INS = 3, DEF = 3, MOX = 1, SPD = 2, LUK = -1 }); //TODO: mark these as temporary until the fight ends? How?
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " can't restart.");
-                        }
+                        results = BasicBuff(attacker, t, ability, "'s morph restarts with the limiters disabled.", new Stats() { maxHP = 5, STR = 3, INS = 3, DEF = 3, MOX = 1, SPD = 2, LUK = -1 });
                         break;
                     case 16: //Ambush
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " quickly stabs " + t.name + " for " + damage + " damage");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " attacked a dead target.");
-                        }
+                        results = BasicAttack(attacker, t, ability, "quickly stabs");
                         break;
                     case 17: //C4 Charge
-                        if (t.currentStats.HP > 0)
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " explodes  " + t.name + " for " + damage + " damage");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
+                        results = BasicAreaAttack(attacker, t, ability, "explodes");
                         break;
                     case 18: //Quickhack
-                        if (t.currentStats.HP > 0 && t.morphType == "synth")
-                        {
-                            var damage = CalcDamage(ability, attacker, t);
-                            results.printDesc.Add(attacker.name + " hacks " + t.name + " for " + damage + " damage");
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { HP = -damage });
-                        }
+                        if (t.morphType == "synth")
+                            results = BasicAttack(attacker, t, ability, "hacks");
                         else
-                        {
                             results.printDesc.Add(attacker.name + " can't hack the target.");
-                        }
                         break;
                     case 19: //combat stims
-                        if (t.currentStats.HP > 0)
-                        {
-                            results.printDesc.Add(attacker.name + " juices up " + t.name);
-                            results.target.Add(t);
-                            results.targetChanges.Add(new Stats() { SPD = 4, LUK = 1 });
-                        }
-                        else
-                        {
-                            results.printDesc.Add(attacker.name + " can't help the dead.");
-                        }
+                        results = BasicBuff(attacker, t, ability, "juices up", new Stats() {SPD = 4, LUK = 1 });
                         break;
                     default:
                         results.printDesc.Add(attacker.name + " used an unimplemented ability (" + ability.abilityKey + ": " + ability.name + ")");
@@ -322,7 +164,7 @@ namespace PixelVision8.Player
             double multiplier = 1.0;
             target.damageMultipliers.TryGetValue(ab.damagetype, out multiplier);
             if (multiplier == 0)
-                multiplier= 1; //nothing is immune. but can have .01 multiplier.
+                multiplier = 1; //nothing is immune. but can have .01 multiplier.
 
             switch (ab.sourceStat)
             {
@@ -334,7 +176,7 @@ namespace PixelVision8.Player
                     break;
             }
             results = results * ab.powerMod;
-            
+
             //crit chance calc
             //TODO: return an object that reports damage and if its a crit or not, maybe other info?
             var luckSpread = attacker.currentStats.LUK - target.currentStats.LUK;
@@ -348,6 +190,95 @@ namespace PixelVision8.Player
                 results = 0;
 
             return (int)results;
+        }
+
+        public static AttackResults BasicAttack(Fightable attacker, Fightable target, Ability ability, string description)
+        {
+            var results = new AttackResults();
+            if (target.currentStats.HP > 0)
+            {
+                var damage = CalcDamage(ability, attacker, target);
+                results.printDesc.Add(attacker.name + " " + description + " " + target.name + " for " + damage + " damage");
+                results.target.Add(target);
+                results.targetChanges.Add(new Stats() { HP = -damage });
+            }
+            else
+                results.printDesc.Add(attacker.name + " attacked a dead target.");
+
+            return results;
+        }
+
+        public static AttackResults BasicAreaAttack(Fightable attacker, Fightable target, Ability ability, string description)
+        {
+            //As above, but quietly skips dead targets.
+            var results = new AttackResults();
+            if (target.currentStats.HP > 0)
+            {
+                var damage = CalcDamage(ability, attacker, target);
+                results.printDesc.Add(attacker.name + " " + description + " " + target.name + " for " + damage + " damage");
+                results.target.Add(target);
+                results.targetChanges.Add(new Stats() { HP = -damage });
+            }
+            return results;
+        }
+
+        public static AttackResults BasicHeal(Fightable attacker, Fightable target, Ability ability, string description)
+        {
+            var results = new AttackResults();
+            if (target.currentStats.HP > 0)
+            {
+                var heals = CalcHeals(ability, attacker, target);
+                results.printDesc.Add(attacker.name + " " + description + " " + target.name + " to restore " + heals + " HP");
+                results.target.Add(target);
+                results.targetChanges.Add(new Stats() { HP = heals });
+            }
+            else
+                results.printDesc.Add(attacker.name + " can't heal the dead.");
+
+            return results;
+        }
+        public static AttackResults BasicAreaHeal(Fightable attacker, Fightable target, Ability ability, string description)
+        {
+            //As above, but quietly skip dead targets
+            var results = new AttackResults();
+            if (target.currentStats.HP > 0)
+            {
+                var heals = CalcHeals(ability, attacker, target);
+                results.printDesc.Add(attacker.name + " " + description + " " + target.name + " to restore " + heals + " HP");
+                results.target.Add(target);
+                results.targetChanges.Add(new Stats() { HP = heals });
+            }
+            return results;
+        }
+
+        public static AttackResults BasicBuff(Fightable attacker, Fightable target, Ability ability, string description, Stats statChanges)
+        {
+            var results = new AttackResults();
+            if (target.currentStats.HP > 0)
+            {
+                results.printDesc.Add(attacker.name + " " + description + " " + target.name);
+                results.target.Add(target);
+                results.targetChanges.Add(statChanges);
+            }
+            else
+                results.printDesc.Add(attacker.name + " can't help the dead.");
+
+            return results;
+        }
+
+        public static AttackResults BasicRes(Fightable attacker, Fightable target, Ability ability, string description, Stats statChanges)
+        {
+            var results = new AttackResults();
+            if (target.currentStats.HP <= 0)
+            {
+                results.printDesc.Add(attacker.name + " " + description + " " + target.name);
+                results.target.Add(target);
+                results.targetChanges.Add(statChanges);
+            }
+            else
+                results.printDesc.Add(attacker.name + " can't res the living.");
+
+            return results;
         }
     }
 }

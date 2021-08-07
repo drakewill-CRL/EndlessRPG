@@ -276,7 +276,7 @@ namespace PixelVision8.Player
                             arrowPosIndex--;
                             if (arrowPosIndex < 0)
                                 arrowPosIndex = characters.Count() - 1;
-                            helpText = characters[arrowPosIndex].name;
+                            helpText = characters[arrowPosIndex].role.name;
                             break;
                     }
                     parentRef.PlaySound(0);
@@ -311,7 +311,7 @@ namespace PixelVision8.Player
                         arrowPosIndex++;
                             if (arrowPosIndex >= characters.Count())
                                 arrowPosIndex = 0;
-                            helpText = characters[arrowPosIndex].name;
+                            helpText = characters[arrowPosIndex].role.name;
                             break;
                     }
                     parentRef.PlaySound(0);
