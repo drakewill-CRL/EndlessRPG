@@ -204,7 +204,7 @@ namespace PixelVision8.Player
                 sourceStat = "STR"
             },
             new Ability() {
-                name = "C4 Charge",
+                name = "C4 Charge", //TODO: is this a legit explosive type in EP?
                 description = "Detonate a pocketed explosive in the middle of the enemy group",
                 apCost = 5,
                 level = 1,
@@ -221,7 +221,7 @@ namespace PixelVision8.Player
                 specialSpeedLevel = 4, //faster than average
                 targetType = 2, //one enemy
                 abilityKey = 18,
-                damagetype = "emp", //placeholder, may become another special type
+                damagetype = "energy", //TODO: determine correct synth-only damage type. was EMP but thats wrong.
                 sourceStat = "INS"
             },
             new Ability() {
@@ -230,7 +230,7 @@ namespace PixelVision8.Player
                 apCost = 2,
                 level = 1,
                 targetType = 3, //all allies
-                abilityKey = 17,
+                abilityKey = 19,
                 damagetype = "",
                 sourceStat = "INS"
             },

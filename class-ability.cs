@@ -45,8 +45,10 @@ namespace PixelVision8.Player
             foreach (var t in targets) //So abilities can't have 0 targets. fake that out if needed by targeting self.
             {
                 //TODO: might just make common checks flags here to make code easier to read below.
+                //TODO: make a couple functions for 'standard' attack/heal setup that allow for custom descriptions.
                 //EX: targetIsAlive, etc.
-                bool targetIsAlive = (t.currentStats.HP > 0)
+                bool targetIsAlive = (t.currentStats.HP > 0);
+                bool userIsAlive = (attacker.currentStats.HP > 0);
 ;
                 switch (ability.abilityKey)
                 {
@@ -167,6 +169,104 @@ namespace PixelVision8.Player
                         else
                         {
                             results.printDesc.Add(attacker.name + " attacked a dead target.");
+                        }
+                        break;
+                    case 12: //Spot Weld
+                        if (t.currentStats.HP > 0)
+                        {
+                            var heals = CalcHeals(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " fixes up " + t.name + " for " + heals + " HP");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = heals });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " can't repair a dead target.");
+                        }
+                        break;
+                    case 13: //Corrosive Juice
+                        if (t.currentStats.HP > 0)
+                        {
+                            var damage = CalcDamage(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " corrodes " + t.name + " for " + damage + " damage");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = -damage });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " attacked a dead target.");
+                        }
+                        break;
+                    case 14: // Tank Tackle
+                        if (t.currentStats.HP > 0)
+                        {
+                            var damage = CalcDamage(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " tackles " + t.name + " for " + damage + " damage");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = -damage });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " attacked a dead target.");
+                        }
+                        break;
+                    case 15: //Power Cycle
+                        if (userIsAlive)
+                        {
+                            results.printDesc.Add(attacker.name + "'s morph restarts with the limiters disabled.");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { maxHP = 5, STR = 3, INS = 3, DEF = 3, MOX = 1, SPD = 2, LUK = -1 }); //TODO: mark these as temporary until the fight ends? How?
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " can't restart.");
+                        }
+                        break;
+                    case 16: //Ambush
+                        if (t.currentStats.HP > 0)
+                        {
+                            var damage = CalcDamage(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " quickly stabs " + t.name + " for " + damage + " damage");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = -damage });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " attacked a dead target.");
+                        }
+                        break;
+                    case 17: //C4 Charge
+                        if (t.currentStats.HP > 0)
+                        {
+                            var damage = CalcDamage(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " explodes  " + t.name + " for " + damage + " damage");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = -damage });
+                        }
+                        break;
+                    case 18: //Quickhack
+                        if (t.currentStats.HP > 0 && t.morphType == "synth")
+                        {
+                            var damage = CalcDamage(ability, attacker, t);
+                            results.printDesc.Add(attacker.name + " hacks " + t.name + " for " + damage + " damage");
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { HP = -damage });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " can't hack the target.");
+                        }
+                        break;
+                    case 19: //combat stims
+                        if (t.currentStats.HP > 0)
+                        {
+                            results.printDesc.Add(attacker.name + " juices up " + t.name);
+                            results.target.Add(t);
+                            results.targetChanges.Add(new Stats() { SPD = 4, LUK = 1 });
+                        }
+                        else
+                        {
+                            results.printDesc.Add(attacker.name + " can't help the dead.");
                         }
                         break;
                     default:
