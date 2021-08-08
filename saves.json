@@ -3,13 +3,14 @@
     "GameChip":
     {
         "savedData":{
-            "unlockedTheCheat": "0",
-            "unlockedSoldier": "0",
-            "unlockedtest role": "0",
-            "gameActive": "0",
-            "timePlayed": "0",
             "totalBestLevels": "0",
             "fightsWon": "0",
+            "bestTheCheatLevel": "0",
+            "bestCovertOpLevel": "0",
+            "bestTechieLevel": "0",
+            "bestMedicLevel": "0",
+            "bestSoldierLevel": "0",
+            "besttest roleLevel": "0",
             "unlockedCovertOp": "1",
             "unlockedTechie": "1",
             "unlockedMedic": "1",

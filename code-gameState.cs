@@ -32,7 +32,6 @@ namespace PixelVision8.Player
 
         */
         
-
         public const int TitleSceneID = 0;
         public const int NewGameSceneID = 1;
         public const int FightSceneID = 2;

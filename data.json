@@ -23,7 +23,7 @@
         "totalMetaSprites":256,
         "lockSpecs":false,
         "maxSize":512,
-        "saveSlots":256
+        "saveSlots":16
     },
     "MusicChip":
     {

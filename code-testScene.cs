@@ -14,6 +14,8 @@ namespace PixelVision8.Player
         //and some copyright info, plus a high score display of all classes' highest levels added up.
         static int xScreenCoords = 0; // * 43 for X screens over
         static int yScreenCoords = 0; // * 31 for Y screens down.
+
+        static int frameCounter = 0;
         
         public static void Init()
         {
@@ -22,10 +24,16 @@ namespace PixelVision8.Player
 
         public static void Update(int timeDelta)
         {
-            
+            parentRef.WriteSaveData("testEntry"+ frameCounter, frameCounter.ToString());
+            frameCounter++;
         }
 
         public static void Draw()
+        {
+            DrawColorshiftTest();
+        }
+
+        public static void DrawColorshiftTest()
         {
             //Color shift sprite test.
             //If i want shadows to come out as different colors, i have to make

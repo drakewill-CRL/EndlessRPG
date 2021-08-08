@@ -29,23 +29,41 @@ namespace PixelVision8.Player
         }
          public static void SaveGameData(this GameChip gc)
         {
+            //PV8 internally clamps save slots to 16. I'll need to use 16 or fewer total vars.
             //Call this function at the beginning of each turn, so the player always has a saved game to fall back to.
-
             //save unlocks and best levels
+            // for(int i= 0; i < 100; i++)
+            //     gc.WriteSaveData("testEntry"+ i, i.ToString());
+
+            //16 save items:
+            //1: UnlockedRoles[]
+            //2: BestRoleLevels[]
+            //3: BestFightsWon
+            //4: TotalFightsWon
+            //5: char1SaveDAta
+            //6: char2SaveDAta
+            //7: char3SaveDAta
+            //8: char4SaveDAta
+            //9: default names[]
+            //7 more
+
+            string unlockedRoles = "";
+
             foreach(var r in ContentLists.allRoles)
             {
                 if (gameState.unlockedRoles.Contains(r.name))
                     gc.WriteSaveData("unlocked" + r.name, "1");
                 else
                     gc.WriteSaveData("unlocked" + r.name, "0");
-
-                //WriteSaveData("best" + r.name + "Level", gameState.bestLevels[r.name].ToString());
+                
+                //Console.WriteLine(r.name + " Best Level:" + gameState.bestLevels[r.name].ToString());
+                gc.WriteSaveData("best" + r.name + "Level", gameState.bestLevels[r.name].ToString()); //Why isnt this showing up in the safe file?
             }
+            
             //Save high scores
-            gc.WriteSaveData("fightsWon", gameState.fightsWon.ToString());
-            //WriteSaveData("totalBestLevels", ) //unnecessary
+            gc.WriteSaveData("totalBestLevels", gameState.bestLevels.Sum(l => l.Value).ToString());
+            gc.WriteSaveData("bestFightsWon", gameState.bestFightsWon.ToString());
             gc.WriteSaveData("timePlayed", gameState.timePlayed.TotalSeconds.ToString());
-            //WriteSaveData("key", "value";)
 
             //save current run data
             gc.WriteSaveData("gameActive", gameState.mode.ToString()); //Check for 1, since that's the gameplay mode.
@@ -64,33 +82,33 @@ namespace PixelVision8.Player
 
             //load current run data
             
-           if (gc.ReadSaveData("gameActive") == gameState.FightSceneID.ToString()) //It was saved in a fight screen.
-            {
+           //if (gc.ReadSaveData("gameActive", "0") == gameState.FightSceneID.ToString()) //It was saved in a fight screen.
+           //{
                 //Load up existing game data, set title screen to Continue.
-            }
+           //}
 
             //load role-specific data
-            foreach(var role in ContentLists.allRoles)
-            {
-                if (gc.ReadSaveData("unlocked" + role.name, "0") == "1")
-                    gameState.unlockedRoles.Add(role.name);
+            //foreach(var role in ContentLists.allRoles)
+            //{
+                //if (gc.ReadSaveData("unlocked" + role.name, "0") == "1")
+                   //gameState.unlockedRoles.Add(role.name);
                 
                 //This appears to be having issues.
                 //gameState.bestLevels.Add(role.name, Int32.Parse(ReadSaveData("best" + role.name + "Level", "0")));
-            }
+            //}
 
             //debug check. Looks like this reports all roles, but the correct list shows up on screen?
             //Console.WriteLine("unlocked " + gameState.unlockedRoles.Count() + " roles");
 
-            gameState.fightsWon = Int32.Parse(gc.ReadSaveData("fightsWon", "0"));
-            gameState.totalBestLevels = gameState.bestLevels.Sum(l => l.Value);
+            //gameState.bestFightsWon = Int32.Parse(gc.ReadSaveData("bestFightsWon", "0"));
+            //gameState.totalBestLevels = gameState.bestLevels.Sum(l => l.Value);
 
-            gameState.timePlayed = TimeSpan.FromSeconds(Double.Parse(gc.ReadSaveData("timePlayed", "0")));
+            //gameState.timePlayed = TimeSpan.FromSeconds(Double.Parse(gc.ReadSaveData("timePlayed", "0")));
 
-            gameState.Char1Name = gc.ReadSaveData("Char1Name", "Larry");
-            gameState.Char2Name = gc.ReadSaveData("Char2Name", "Gary");
-            gameState.Char3Name = gc.ReadSaveData("Char3Name", "Cherri");
-            gameState.Char4Name = gc.ReadSaveData("Char4Name", "Clyde");
+             gameState.Char1Name = gc.ReadSaveData("Char1Name", "Larry");
+             gameState.Char2Name = gc.ReadSaveData("Char2Name", "Gary");
+             gameState.Char3Name = gc.ReadSaveData("Char3Name", "Cherri");
+             gameState.Char4Name = gc.ReadSaveData("Char4Name", "Clyde");
         }
 
         public static void InitializeSaveData(this GameChip gc)
@@ -120,6 +138,5 @@ namespace PixelVision8.Player
 
             gc.WriteSaveData("gameActive", "0"); //is there a suspended game to load, or are we making a new game?
         }
-
     }
 }

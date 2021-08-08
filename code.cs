@@ -27,19 +27,23 @@ namespace PixelVision8.Player
 
             FightScene.Init();
 
-            //TODO: can save 9 values in Saves.json, more get ignored. Will ahve to reconsider that impact on future plans.
             var isFirstRun = ReadSaveData("FirstRun", "1");
             if (isFirstRun == "1")
                 this.InitializeSaveData();
             else
                 this.LoadGameData();
 
+            foreach(var r in ContentLists.allRoles)
+            {
+                gameState.bestLevels.Add(r.name, 0);
+            }
+
             //Any post-startup resets of values would go here.
             gameState.mode = gameState.TitleSceneID; //normal gameplay flow
 			//gameState.mode = gameState.FightSceneID; //jump to fight screen
             //gameState.mode = gameState.ImproveSceneID; //Drawing level up screen.
             //gameState.mode = gameState.NewGameSceneID; //straight to chargen.
-            //gameState.mode = gameState.TestSceneID; //sprite and test code examples.
+            gameState.mode = gameState.TestSceneID; //sprite and test code examples.
         }
 
         public override void Draw()

@@ -10,6 +10,8 @@ namespace PixelVision8.Player
     {
         //MOST OBVIOUS TODOS:
         //save game stuff
+        //--Rewrite save and load to use 16 or fewer saved vars. Probably joined/split strings.
+        //--Load data seems to have an error of some kind, since that's what causing the game to not open sometimes.
         //Clear out or re-init fight scene after game over.
         //baseline sample content (char abilities in place)
         //--PC SPRITES for 3 of 4 classes pending
@@ -164,12 +166,20 @@ namespace PixelVision8.Player
                         subMenuLevel = 0;
                         activeCharSelecting = 0;
                         foreach (var c in characters)
+                        {
                             c.displayStats.Set(c.currentStats);
+                            if (gameState.bestLevels[c.role.name] < c.level)
+                            {
+                                gameState.bestLevels.Remove(c.role.name);
+                                gameState.bestLevels.Add(c.role.name, c.level);
+                            }
+                        }
                         if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                         arrowPosIndex = 0;
                         pendingAttacks = new List<Attack>();
                         displayResultData = "Checking...";
                         helpText = GetHelpText();
+                        parentRef.SaveGameData();
                     }
                     else
                     {
@@ -552,11 +562,12 @@ namespace PixelVision8.Player
                     break;
                 case "fightWon":
                     fightsWon++;
+                    if (fightsWon > gameState.bestFightsWon)
+                        gameState.bestFightsWon = fightsWon;
                     break;
                 default:
                     break;
             }
-            //TODO: decide how to make this fire off at the END of the frame?
             if (dr.isLevelUp)
             {
                 gameState.levelingUpChar = (Character)dr.target;
