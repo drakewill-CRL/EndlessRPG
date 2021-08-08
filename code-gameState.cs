@@ -37,6 +37,7 @@ namespace PixelVision8.Player
         public const int NewGameSceneID = 1;
         public const int FightSceneID = 2;
         public const int ImproveSceneID = 3;
+        public const int TestSceneID = 4;
 
         public static bool gameActive = false; //Is there a game in progress to continue from?
         public static int bestFightsWon = 0; //high score for a whole party.

@@ -219,7 +219,7 @@ namespace PixelVision8.Player
 
             foreach (var e in enemies)
             {
-                parentRef.DrawMetaSprite(e.spriteSet + e.drawState, e.posX, e.posY);
+                parentRef.DrawMetaSprite(e.spriteSet + e.drawState, e.posX, e.posY, false, false, DrawMode.Sprite, e.colorShift);
             }
             DrawStatusDisplays();
 
@@ -581,6 +581,7 @@ namespace PixelVision8.Player
         public static void GetNewEncounter()
         {
             //TODO: figure out rules for which encounters are valid.
+            bool isBossFight = (fightsWon % 19 == 0); //Fight 20 is a boss fight
             var encounter = ContentLists.PossibleEncounters.OrderBy(e => gameState.random.Next()).First();
             var partyLevel = characters.Select(c => c.level).Average();
             enemies = new List<Enemy>();

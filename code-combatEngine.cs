@@ -20,16 +20,17 @@ namespace PixelVision8.Player
             events = events.OrderByDescending(e => e.thingToDo.specialSpeedLevel).ThenByDescending(e => e.attacker.currentStats.SPD).ThenByDescending(e => gameState.random.Next()).ToList();
             foreach (var e in events)
             {
+                //TODO: attempt to intelligently short-cut stuff if all enemies are dead?
                 if (e.attacker.CanAct()) //This could get flipped by earlier actions in the list.
                 {
                     if (e.attacker.currentStats.AP >= e.thingToDo.apCost)
                     {
                         //attack animations!
                         //TODO: use different cycle for 'ability' versus 'fight'?
-                        outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Attack", frameCounter = 6 });
-                        outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Ready", frameCounter = 6 });
-                        outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Attack", frameCounter = 6 });
-                        outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "Ready", frameCounter = 6 });
+                        if (e.attacker.isPlayer)
+                            outerResults.AddRange(GetPcAttackAnimation(e.attacker));
+                        else
+                            outerResults.AddRange(GetEnemyAttackAnimation(e.attacker));
 
                         var abilOutcome = Ability.UseAbility(e.attacker, e.targets, e.thingToDo);
                         results.Add(abilOutcome);
@@ -117,6 +118,26 @@ namespace PixelVision8.Player
 
             return outerResults;
 
+        }
+
+        public static List<DisplayResults> GetPcAttackAnimation(Fightable f)
+        {
+            var results = new List<DisplayResults>();
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "spriteState", changedTo = "Attack", frameCounter = 6 });
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "spriteState", changedTo = "Ready", frameCounter = 6 });
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "spriteState", changedTo = "Attack", frameCounter = 6 });
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "spriteState", changedTo = "Ready", frameCounter = 6 });
+            return results;
+        }
+
+        public static List<DisplayResults> GetEnemyAttackAnimation(Fightable f)
+        {
+            var results = new List<DisplayResults>();
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "colorShift", changedTo = "1", frameCounter = 6 });
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "colorShift", changedTo = "0", frameCounter = 6 });
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "colorShift", changedTo = "1", frameCounter = 6 });
+            results.Add(new DisplayResults() { target = f, desc = "", changedItem = "colorShift", changedTo = "0", frameCounter = 6 });
+            return results;
         }
 
     }

@@ -24,6 +24,7 @@ namespace PixelVision8.Player
         public int colorShift = 0; //for cycling palettes in DisplayResults. TODO: use this in draw commands.
         public List<Ability> abilities;
         public string desc = "";
+        public bool isPlayer = false; //For being lazy on checking if this thing is a players character or not.
 
         Item weapon = new Item();
         Item armor = new Item();
@@ -114,6 +115,7 @@ namespace PixelVision8.Player
             currentStats = getTotalStats(true);
             displayStats = currentStats.Clone();
             abilities = r.abilities; //.Clone(); Might be unnecessary until abilities can be leveled up.
+            isPlayer = true;
         }
 
         //TODO: make all calls use the main constructor above and drop this one out of code.
@@ -134,13 +136,6 @@ namespace PixelVision8.Player
                 copy.abilities.Add(a.Clone());
 
             return copy;
-        }
-
-        public void LevelUp() //TODO: move to Fightable instead of Character?
-        {
-            currentStats.Add(StatsPerLevel);
-            currentStats.HP = currentStats.maxHP;
-            currentStats.AP = currentStats.maxAP;
         }
     }
 

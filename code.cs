@@ -23,6 +23,7 @@ namespace PixelVision8.Player
             TitleScene.parentRef = this;
             NewGameScene.parentRef = this;
             ImproveScene.parentRef = this;
+            TestScene.parentRef = this;
 
             FightScene.Init();
 
@@ -38,6 +39,7 @@ namespace PixelVision8.Player
 			//gameState.mode = gameState.FightSceneID; //jump to fight screen
             //gameState.mode = gameState.ImproveSceneID; //Drawing level up screen.
             //gameState.mode = gameState.NewGameSceneID; //straight to chargen.
+            //gameState.mode = gameState.TestSceneID; //sprite and test code examples.
         }
 
         public override void Draw()
@@ -56,6 +58,9 @@ namespace PixelVision8.Player
                     break;
                 case gameState.NewGameSceneID:
                     NewGameScene.Draw();
+                    break;
+                case gameState.TestSceneID:
+                    TestScene.Draw();
                     break;
             }
         }
@@ -84,6 +89,9 @@ namespace PixelVision8.Player
                     break;
                 case gameState.NewGameSceneID:
                     NewGameScene.Update(timeDelta);
+                    break;
+                case gameState.TestSceneID:
+                    TestScene.Update(timeDelta);
                     break;
             }
         }
