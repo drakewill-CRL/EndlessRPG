@@ -65,7 +65,7 @@ namespace PixelVision8.Player
 
         public Fightable Clone()
         {
-            Fightable copy = (Fightable)this.MemberwiseClone(); 
+            Fightable copy = (Fightable)this.MemberwiseClone();
             copy.startingStats = copy.startingStats.Clone();
             copy.StatsPerLevel = copy.StatsPerLevel.Clone();
             copy.currentStats = copy.getTotalStats(); //make sure currentStats is a separate object
@@ -88,26 +88,26 @@ namespace PixelVision8.Player
             level = lvl;
             role = r;
 
-            switch(r.morphType)
+            switch (r.morphType)
             {
                 case "bio":
                     damageMultipliers.Add("bioHeal", 1);
                     damageMultipliers.Add("synthHeal", 0.01);
-                break;
+                    break;
                 case "pod":
                     damageMultipliers.Add("bioHeal", 0.5);
                     damageMultipliers.Add("synthHeal", 0.5);
-                break;
+                    break;
                 case "synth":
                     damageMultipliers.Add("bioHeal", 0.01);
                     damageMultipliers.Add("synthHeal", 1);
-                break;
+                    break;
             }
 
             //If I create any roles that get specific damage multipliers, they'll get processed here.
-            foreach(var dm in r.damageMultipliers)
+            foreach (var dm in r.damageMultipliers)
                 damageMultipliers.Add(dm.Key, dm.Value);
-            
+
             //these get copied to make sure the functions from the parent class work.
             morphType = r.morphType;
             startingStats = r.startStats.Clone();
@@ -119,21 +119,20 @@ namespace PixelVision8.Player
         }
 
         //TODO: make all calls use the main constructor above and drop this one out of code.
-        public Character(Role r) : this(r, 1) 
+        public Character(Role r) : this(r, 1)
         {
         }
 
         public string GetSaveData()
         {
             string results = "";
-            results += name + "-" + 
-            role.name + "-" + 
-            level.ToString()  + "-" + 
-            statBoosts.GetAsSaveData() + "-" + 
-            currentStats.GetAsSaveData(); 
+            results += name + "-" +
+            role.name + "-" +
+            level.ToString() + "-" +
+            statBoosts.GetAsSaveData() + "-" +
+            currentStats.GetAsSaveData();
 
             return results;
-
         }
 
         public Character(string savedData)
@@ -152,26 +151,26 @@ namespace PixelVision8.Player
             currentStats.LoadFromSaveData(splitData[4]);
 
             //The rest of this is boilerplate:
-            switch(role.morphType)
+            switch (role.morphType)
             {
                 case "bio":
                     damageMultipliers.Add("bioHeal", 1);
                     damageMultipliers.Add("synthHeal", 0.01);
-                break;
+                    break;
                 case "pod":
                     damageMultipliers.Add("bioHeal", 0.5);
                     damageMultipliers.Add("synthHeal", 0.5);
-                break;
+                    break;
                 case "synth":
                     damageMultipliers.Add("bioHeal", 0.01);
                     damageMultipliers.Add("synthHeal", 1);
-                break;
+                    break;
             }
 
             //If I create any roles that get specific damage multipliers, they'll get processed here.
-            foreach(var dm in role.damageMultipliers)
+            foreach (var dm in role.damageMultipliers)
                 damageMultipliers.Add(dm.Key, dm.Value);
-            
+
             //these get copied to make sure the functions from the parent class work.
             morphType = role.morphType;
             startingStats = role.startStats.Clone();
@@ -183,14 +182,14 @@ namespace PixelVision8.Player
 
         public Character Clone()
         {
-            Character copy = (Character)this.MemberwiseClone(); 
+            Character copy = (Character)this.MemberwiseClone();
             copy.startingStats = copy.startingStats.Clone();
             copy.StatsPerLevel = copy.StatsPerLevel.Clone();
             copy.statBoosts = copy.statBoosts.Clone();
             copy.currentStats = copy.getTotalStats();
             copy.displayStats = copy.currentStats.Clone();
             copy.abilities = new List<Ability>();
-            foreach(var a in abilities)
+            foreach (var a in abilities)
                 copy.abilities.Add(a.Clone());
 
             return copy;
@@ -204,17 +203,47 @@ namespace PixelVision8.Player
 
         public Enemy Clone()
         {
-            Enemy copy = (Enemy)this.MemberwiseClone(); 
+            Enemy copy = (Enemy)this.MemberwiseClone();
             copy.startingStats = copy.startingStats.Clone();
             copy.StatsPerLevel = copy.StatsPerLevel.Clone();
             copy.statBoosts = copy.statBoosts.Clone();
             copy.currentStats = copy.getTotalStats();
             copy.displayStats = copy.currentStats.Clone();
             copy.abilities = new List<Ability>();
-            foreach(var a in abilities)
+            foreach (var a in abilities)
                 copy.abilities.Add(a.Clone());
 
             return copy;
+        }
+
+        public string GetSaveData()
+        {
+            string results = "";
+            results += name + "-" +
+            level.ToString() + "-" +
+            statBoosts.GetAsSaveData() + "-" +
+            currentStats.GetAsSaveData();
+
+            return results;
+        }
+
+
+        public void FromSaveData(string savedData)
+        {
+            //NOTE: clone the enemy first, THEN call this function to set their stats.
+            //Format:
+            //name-level-statBoosts-currentStats
+            //Gotta save currentStats or else we don't track HP/AP used.
+
+            var splitData = savedData.Split("-");
+            name = splitData[0];
+            level = Int32.Parse(splitData[1]);
+
+            //NOTE: doing all the work in the normal constructor here again to make sure I dont refill player HP every save.
+            statBoosts = new Stats();
+            statBoosts.LoadFromSaveData(splitData[2]);
+            currentStats = new Stats();
+            currentStats.LoadFromSaveData(splitData[3]);
         }
 
     }

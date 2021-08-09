@@ -3,18 +3,22 @@
     "GameChip":
     {
         "savedData":{
-            "gameActive": "2",
-            "bestFightsWon": "0",
-            "totalBestLevels": "4",
+            "unlockedRoles": "Soldier|Medic|Techie|CovertOp|",
+            "bestLevels": "test role:0|Soldier:1|Medic:1|Techie:1|CovertOp:1|TheCheat:0|",
             "charNames": "Larry|Gary|Cherri|Clyde",
             "timePlayed": "0",
-            "Char4Name": "Clyde",
-            "Char3Name": "Cherri",
-            "Char2Name": "Gary",
-            "Char1Name": "Larry",
-            "bestLevels": "test role:0|Soldier:1|Medic:1|Techie:1|CovertOp:1|TheCheat:0|",
-            "unlockedRoles": "Soldier|Medic|Techie|CovertOp|",
-            "FirstRun": "1"
+            "bestFightsWon": "1",
+            "totalBestLevels": "4",
+            "gameActive": "2",
+            "char1": "Larry-Soldier-1-0|0|0|0|0|0|0|0|0|0-3|5|5|5|5|4|5|4|5|5",
+            "char2": "Gary-Medic-1-0|0|0|0|0|0|0|0|0|0-5|5|5|5|5|4|5|4|4|6",
+            "char3": "Cherri-Techie-1-0|0|0|0|0|0|0|0|0|0-9|9|5|5|5|7|5|4|5|4",
+            "char4": "Clyde-CovertOp-1-0|0|0|0|0|0|0|0|0|0-4|4|7|7|4|4|4|3|8|7",
+            "enemy1": "TITANovacrab-1-0|0|0|0|0|0|0|0|0|0-5|5|2|2|3|3|1|1|4|1",
+            "enemy2": "TITANovacrab-1-0|0|0|0|0|0|0|0|0|0-5|5|2|2|3|3|1|1|4|1",
+            "enemy3": "",
+            "enemy4": "",
+            "currentWins": "1"
         }
     }
 }

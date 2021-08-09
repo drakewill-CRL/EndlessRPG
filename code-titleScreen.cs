@@ -58,17 +58,21 @@ namespace PixelVision8.Player
             if (parentRef.Button(Buttons.Start, InputState.Released) || parentRef.Button(Buttons.B, InputState.Released))
             {
                 clear = true;
-                gameState.mode = gameState.NewGameSceneID; 
+                if (parentRef.ReadSaveData("gameActive", "0") == gameState.FightSceneID.ToString())
+                {
+                    gameState.mode = gameState.FightSceneID;
+                    FightScene.Init();
+                    FightScene.helpText = "Welcome Back";
+                }
+                else
+                    gameState.mode = gameState.NewGameSceneID; 
+
+
                 //gameState.mode = gameState.FightSceneID //fight for test purposes
                 //TODO: go to newGame screen to pick a party if no saved game to continue,
                 //or the fight screen with an existing party if there's an active save game.
             }
         }
-
-        
-
-        
-
     }
 
 }

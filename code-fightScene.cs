@@ -9,14 +9,12 @@ namespace PixelVision8.Player
     public static class FightScene
     {
         //MOST OBVIOUS TODOS:
-        //save game stuff
-        //--Rewrite save and load to use 16 or fewer saved vars. Probably joined/split strings.
-        //--Load data seems to have an error of some kind, since that's what causing the game to not open sometimes.
         //Clear out or re-init fight scene after game over.
         //baseline sample content (char abilities in place)
         //--PC SPRITES for 3 of 4 classes pending
         //--5 enemies pending (abilities and sprites)
-        //BOSSES are missing, clearly required. --1 for test.
+        //BOSSES are missing, clearly required. 
+        //--1 for test.
         //balance, get to 20 fights and the boss there while being interesting and requiring some thought
         //Update title screen image, ponder alternative names. Gatehold?
 
@@ -97,27 +95,46 @@ namespace PixelVision8.Player
             //Test values for layout purposes.
             helpText = GetHelpText(); // menuHelpTexts[0];
 
-            //once its finalized set up a construction for Character that handles all this.
-            Character char1 = new Character(ContentLists.allRoles[1]);
-            char1.posX = charPositions[0].Item1;
-            char1.posY = charPositions[0].Item2;
-            //char1.drawState = "";
-            char1.name = "Larry";
-            char1.role = ContentLists.allRoles[1];
-            char1.abilities = char1.role.abilities; 
-            char1.startingStats = char1.role.startStats;
-            char1.StatsPerLevel = char1.role.statsPerLevel;
-            char1.currentStats = char1.getTotalStats(true);
-            char1.displayStats = char1.currentStats.Clone();
-            characters.Add(char1);
-            var char2 = char1.Clone();
-            char2.name = "Gary";
-            char2.posX = charPositions[1].Item1;
-            char2.posY = charPositions[1].Item2;
-            characters.Add(char2);
+            //set up draw positions for characters
+            characters[0].posX = charPositions[0].Item1;
+            characters[0].posY = charPositions[0].Item2;
+            characters[1].posX = charPositions[1].Item1;
+            characters[1].posY = charPositions[1].Item2;
+            characters[2].posX = charPositions[2].Item1;
+            characters[2].posY = charPositions[2].Item2;
+            characters[3].posX = charPositions[3].Item1;
+            characters[3].posY = charPositions[3].Item2;
+
+            for (int i = 0; i < enemies.Count(); i++)
+            {
+                enemies[i].posX = 8 + ((i / 2) * 64);
+                enemies[i].posY = 16 + ((i % 2) * 64);
+                if (enemies[i].currentStats.HP <= 0)
+                    enemies[i].spriteSet = "Dead";
+            }
+
+            //old test code.
+            // //once its finalized set up a construction for Character that handles all this.
+            // Character char1 = new Character(ContentLists.allRoles[1]);
+            // char1.posX = charPositions[0].Item1;
+            // char1.posY = charPositions[0].Item2;
+            // //char1.drawState = "";
+            // char1.name = "Larry";
+            // char1.role = ContentLists.allRoles[1];
+            // char1.abilities = char1.role.abilities; 
+            // char1.startingStats = char1.role.startStats;
+            // char1.StatsPerLevel = char1.role.statsPerLevel;
+            // char1.currentStats = char1.getTotalStats(true);
+            // char1.displayStats = char1.currentStats.Clone();
+            // characters.Add(char1);
+            // var char2 = char1.Clone();
+            // char2.name = "Gary";
+            // char2.posX = charPositions[1].Item1;
+            // char2.posY = charPositions[1].Item2;
+            // characters.Add(char2);
             if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
 
-            GetNewEncounter();
+            //GetNewEncounter();
 
         }
 
@@ -149,6 +166,8 @@ namespace PixelVision8.Player
                             displayFrameCounter = 600;
                             //play sad song.
                             //update save game data
+                            parentRef.SaveGameData();
+                            parentRef.WriteSaveData("gameActive", "0"); //explicitly set the save file not to use these characters
                             phase = 2;
                             return;
                         }

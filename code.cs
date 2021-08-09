@@ -29,7 +29,7 @@ namespace PixelVision8.Player
             foreach(var r in ContentLists.allRoles)
                 gameState.bestLevels.Add(r.name, 0);
             
-            LoadGameData();
+            this.LoadGameData();
 
 
             //Any post-startup resets of values would go here.
@@ -108,31 +108,6 @@ namespace PixelVision8.Player
                 var real = Extensions.GetRealError(ex);
                 throw new Exception(real);
             }
-        }
-
-        public void LoadGameData()
-        {
-            string rolesUnlocked = this.ReadSaveData("unlockedRoles", "Soldier|Medic|Techie|CovertOp");
-            var splitRoles = rolesUnlocked.Split("|");
-            gameState.unlockedRoles = splitRoles.ToList();
-
-            string bestLevels = this.ReadSaveData("bestLevels", "0");
-            string[] splitLevels = bestLevels.Split("|");
-            if (bestLevels == "0")
-                splitLevels = gameState.bestLevels.Select(l => l.Key + ":" + l.Value.ToString()).ToArray(); //They should all be 0 here
-
-            foreach (var l in splitLevels)
-            {
-                string[] kvp = l.Split(":");
-                gameState.bestLevels.Remove(kvp[0]);
-                gameState.bestLevels.Add(kvp[0], Int32.Parse(kvp[1]));
-            }
-
-            var charNames = this.ReadSaveData("charNames", "Larry|Gary|Cherri|Clyde").Split("|");
-            gameState.Char1Name = charNames[0];
-            gameState.Char2Name = charNames[1];
-            gameState.Char3Name = charNames[2];
-            gameState.Char4Name = charNames[3];
         }
     }
 }
