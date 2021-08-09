@@ -3,23 +3,23 @@
     "GameChip":
     {
         "savedData":{
-            "totalBestLevels": "0",
-            "fightsWon": "0",
-            "bestTheCheatLevel": "0",
-            "bestCovertOpLevel": "0",
-            "bestTechieLevel": "0",
-            "bestMedicLevel": "0",
-            "bestSoldierLevel": "0",
-            "besttest roleLevel": "0",
-            "unlockedCovertOp": "1",
-            "unlockedTechie": "1",
-            "unlockedMedic": "1",
-            "unlockedInfantry": "1",
-            "Char4Name": "Clyde",
-            "Char3Name": "Cherri",
-            "Char2Name": "Gary",
+            "FirstRun": "0",
             "Char1Name": "Larry",
-            "FirstRun": "0"
+            "Char2Name": "Gary",
+            "Char3Name": "Cherri",
+            "Char4Name": "Clyde",
+            "unlockedInfantry": "1",
+            "unlockedMedic": "1",
+            "unlockedTechie": "1",
+            "unlockedCovertOp": "1",
+            "besttest roleLevel": "0",
+            "bestSoldierLevel": "0",
+            "bestMedicLevel": "0",
+            "bestTechieLevel": "0",
+            "bestCovertOpLevel": "0",
+            "bestTheCheatLevel": "0",
+            "fightsWon": "0",
+            "totalBestLevels": "0"
         }
     }
 }

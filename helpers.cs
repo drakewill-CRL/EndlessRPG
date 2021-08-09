@@ -45,20 +45,25 @@ namespace PixelVision8.Player
             //7: char3SaveDAta
             //8: char4SaveDAta
             //9: default names[]
-            //7 more
+            //10: enemies
+            //6 more
 
             string unlockedRoles = "";
+            string bestLevels = "";
+            string charNames = "";
 
             foreach(var r in ContentLists.allRoles)
             {
                 if (gameState.unlockedRoles.Contains(r.name))
-                    gc.WriteSaveData("unlocked" + r.name, "1");
-                else
-                    gc.WriteSaveData("unlocked" + r.name, "0");
+                    unlockedRoles += r.name + "|";
                 
-                //Console.WriteLine(r.name + " Best Level:" + gameState.bestLevels[r.name].ToString());
-                gc.WriteSaveData("best" + r.name + "Level", gameState.bestLevels[r.name].ToString()); //Why isnt this showing up in the safe file?
+                bestLevels += gameState.bestLevels[r.name] + "|";
             }
+
+            //Save array data
+            gc.WriteSaveData("unlockedRoles", unlockedRoles);
+            gc.WriteSaveData("bestLevels", bestLevels);
+            gc.WriteSaveData("charNames", gameState.Char1Name + "|" + gameState.Char2Name + "|" + gameState.Char3Name + "|" + gameState.Char4Name);
             
             //Save high scores
             gc.WriteSaveData("totalBestLevels", gameState.bestLevels.Sum(l => l.Value).ToString());
@@ -68,10 +73,8 @@ namespace PixelVision8.Player
             //save current run data
             gc.WriteSaveData("gameActive", gameState.mode.ToString()); //Check for 1, since that's the gameplay mode.
 
-            gc.WriteSaveData("Char1Name", gameState.Char1Name);
-            gc.WriteSaveData("Char2Name", gameState.Char2Name);
-            gc.WriteSaveData("Char3Name", gameState.Char3Name);
-            gc.WriteSaveData("Char4Name", gameState.Char4Name);
+            //TODO: if active, save characters and enemies list.
+
         }
 
         public static void LoadGameData(this GameChip gc)

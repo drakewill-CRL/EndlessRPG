@@ -43,7 +43,7 @@ namespace PixelVision8.Player
 			//gameState.mode = gameState.FightSceneID; //jump to fight screen
             //gameState.mode = gameState.ImproveSceneID; //Drawing level up screen.
             //gameState.mode = gameState.NewGameSceneID; //straight to chargen.
-            gameState.mode = gameState.TestSceneID; //sprite and test code examples.
+            //gameState.mode = gameState.TestSceneID; //sprite and test code examples.
         }
 
         public override void Draw()
