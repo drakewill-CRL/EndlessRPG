@@ -123,6 +123,64 @@ namespace PixelVision8.Player
         {
         }
 
+        public string GetSaveData()
+        {
+            string results = "";
+            results += name + "-" + 
+            role.name + "-" + 
+            level.ToString()  + "-" + 
+            statBoosts.GetAsSaveData() + "-" + 
+            currentStats.GetAsSaveData(); 
+
+            return results;
+
+        }
+
+        public Character(string savedData)
+        {
+            //Format:
+            //name-roleName-level-statBoosts-currentStats
+            //Gotta save currentStats or else we don't track HP/AP used.
+            var splitData = savedData.Split("-");
+            name = splitData[0];
+            role = ContentLists.rolesByName[splitData[1]];
+            level = Int32.Parse(splitData[2]);
+            //NOTE: doing all the work in the normal constructor here again to make sure I dont refill player HP every save.
+            statBoosts = new Stats();
+            statBoosts.LoadFromSaveData(splitData[3]);
+            currentStats = new Stats();
+            currentStats.LoadFromSaveData(splitData[4]);
+
+            //The rest of this is boilerplate:
+            switch(role.morphType)
+            {
+                case "bio":
+                    damageMultipliers.Add("bioHeal", 1);
+                    damageMultipliers.Add("synthHeal", 0.01);
+                break;
+                case "pod":
+                    damageMultipliers.Add("bioHeal", 0.5);
+                    damageMultipliers.Add("synthHeal", 0.5);
+                break;
+                case "synth":
+                    damageMultipliers.Add("bioHeal", 0.01);
+                    damageMultipliers.Add("synthHeal", 1);
+                break;
+            }
+
+            //If I create any roles that get specific damage multipliers, they'll get processed here.
+            foreach(var dm in role.damageMultipliers)
+                damageMultipliers.Add(dm.Key, dm.Value);
+            
+            //these get copied to make sure the functions from the parent class work.
+            morphType = role.morphType;
+            startingStats = role.startStats.Clone();
+            StatsPerLevel = role.statsPerLevel.Clone();
+            displayStats = currentStats.Clone();
+            abilities = role.abilities; //.Clone(); Might be unnecessary until abilities can be leveled up.
+            isPlayer = true;
+        }
+
         public Character Clone()
         {
             Character copy = (Character)this.MemberwiseClone(); 

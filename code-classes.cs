@@ -62,6 +62,35 @@ namespace PixelVision8.Player
             LUK = incoming.LUK;
         }
 
+        public string GetAsSaveData()
+        {
+            return HP.ToString() + "|" +
+            maxHP.ToString() + "|" +
+            AP.ToString() + "|" +
+            maxAP.ToString() + "|" +
+            STR.ToString() + "|" +
+            DEF.ToString() + "|" +
+            INS.ToString() + "|" +
+            MOX.ToString() + "|" +
+            SPD.ToString() + "|" +
+            LUK.ToString();
+        }
+
+        public void LoadFromSaveData(string data)
+        {
+            var splitData = data.Split("|");
+            HP = Int32.Parse(splitData[0]);
+            maxHP = Int32.Parse(splitData[1]);
+            AP = Int32.Parse(splitData[2]);
+            maxAP = Int32.Parse(splitData[3]);
+            STR = Int32.Parse(splitData[4]);
+            DEF = Int32.Parse(splitData[5]);
+            INS = Int32.Parse(splitData[6]);
+            MOX = Int32.Parse(splitData[7]);
+            SPD = Int32.Parse(splitData[8]);
+            LUK = Int32.Parse(splitData[9]);
+        }
+
         public Stats Clone()
         {
             Stats clone = (Stats)this.MemberwiseClone();

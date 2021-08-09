@@ -90,8 +90,6 @@ namespace PixelVision8.Player
         static string displayResultData = "Checking...";
 
         public static string helpText = "";
-        //TODO: work out a setup for transition animations (EX: characters walking forward or back to their spot)
-        //TODO: chrome for frames and all that. Those might be big metasprites
 
         public static void Init()
         {
@@ -157,9 +155,6 @@ namespace PixelVision8.Player
                         //get a new encounter if needed
                         if (enemies.All(e => e.currentStats.HP <= 0))
                         {
-                            //Grant rewards
-                            //queue up level-up screen if needed
-                            //reset the loop
                             GetNewEncounter();
                         }
                         phase = 0;
