@@ -17,11 +17,12 @@ namespace PixelVision8.Player
         public static int fightsWon = 0;
         public static int totalBestLevels = 0;
         public static Dictionary<string, int> bestLevels = new Dictionary<string, int>();
-        public static int mode = TitleSceneID; // which scene we're in right now. Numbered by order they were developed in.
-        //0 = title screen
-        //1 = fight screen
-        //2 = improve screen
-        //3 = newGame screen
+        public static int mode = TitleSceneID; // which scene we're in right now.        
+        public const int TitleSceneID = 0;
+        public const int NewGameSceneID = 1;
+        public const int FightSceneID = 2;
+        public const int ImproveSceneID = 3;
+        public const int TestSceneID = 4;
 
         /* 
         sound IDs
@@ -31,12 +32,6 @@ namespace PixelVision8.Player
         3: PC is hit (1 is the PC attacking.)
 
         */
-        
-        public const int TitleSceneID = 0;
-        public const int NewGameSceneID = 1;
-        public const int FightSceneID = 2;
-        public const int ImproveSceneID = 3;
-        public const int TestSceneID = 4;
 
         public static bool gameActive = false; //Is there a game in progress to continue from?
         public static int bestFightsWon = 0; //high score for a whole party.
@@ -51,14 +46,7 @@ namespace PixelVision8.Player
         public static string Char3Name = "Cherri";
         public static string Char4Name = "Clyde";
 
-
-        //Current game values. Copy this section once per charcter.
-        public static Character char1; //Or just do this instead of tracking it multiple times?
-        public static Character char2; //Or just do this instead of tracking it multiple times?
-        public static Character char3; //Or just do this instead of tracking it multiple times?
-        public static Character char4; //Or just do this instead of tracking it multiple times?
-
-        public static int Char1Level = 0;
-        public static int Char1Role =0; //index of the role in the role list.
+        //TODO: make an Options screen that allows you to change this speed. Possibly also animation display speed.
+        public static int displayDefaultTimer = 60; //120?
     }
 }

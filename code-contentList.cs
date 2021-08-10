@@ -305,8 +305,8 @@ namespace PixelVision8.Player
             name = "TestCrab" ,
             desc = "Sample enemy for testing stuff.",
             level = 1,
-            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 2, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
-            StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 2, DEF = 2, INS = 1, MOX = 2, SPD = 1, LUK = 2},
+            startingStats = new Stats() { HP = 12, maxHP = 12, AP = 2, maxAP = 2, STR = 2, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            StatsPerLevel = new Stats() { HP = 6, maxHP = 6, AP = 1, maxAP = 1, STR = 2, DEF = 2, INS = 1, MOX = 2, SPD = 1, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
             morphType = "bio",
@@ -317,8 +317,8 @@ namespace PixelVision8.Player
             desc = "A novacrab overrun by TITAN nanites and weakened from its constant exposure to space.",
             level = 1,
             morphType= "pod",
-            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
-            StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
+            startingStats = new Stats() { HP = 20, maxHP = 20, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            StatsPerLevel = new Stats() { HP = 6, maxHP = 6, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
             abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
@@ -327,7 +327,7 @@ namespace PixelVision8.Player
             name = "Lost Soldier" ,
             desc = "Combat trained personnel lost to TITAN influence and corruption.",
             level = 1,
-            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            startingStats = new Stats() { HP = 9, maxHP = 9, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             morphType="bio",
@@ -338,7 +338,7 @@ namespace PixelVision8.Player
             name = "Swarmoid" ,
             desc = "A large collection of tiny drones operating in unison.",
             level = 1,
-            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            startingStats = new Stats() { HP = 7, maxHP = 7, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
@@ -349,7 +349,7 @@ namespace PixelVision8.Player
             name = "Slitheroid" ,
             desc = "A synthmorph built for all-terrain traversal and durability.",
             level = 1,
-            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            startingStats = new Stats() { HP = 12, maxHP = 12, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
@@ -360,11 +360,23 @@ namespace PixelVision8.Player
             name = "Biomonster" ,
             desc = "Something derived from one or more biomorphs. Not entirely sure what it is now.",
             level = 1,
-            startingStats = new Stats() { HP = 5, maxHP = 5, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
+            startingStats = new Stats() { HP = 11, maxHP = 11, AP = 2, maxAP = 2, STR = 3, DEF = 3, INS = 1, MOX = 1, SPD = 4, LUK = 1},
             StatsPerLevel = new Stats() { HP = 4, maxHP = 4, AP = 1, maxAP = 1, STR = 3, DEF = 3, INS = 1, MOX = 2, SPD = 2, LUK = 2},
             statBoosts = new Stats(),
             spriteSet="crab1",
             morphType="bio",
+            abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
+            },
+            //bosses. Standard enemy code applies, but they have way better stats. Possibly unique/better AI later in development.
+            new Enemy() {
+            name = "Reaper" ,
+            desc = "A notoriously dangerous model of military synthmorph, under TITAN influence.",
+            level = 1,
+            startingStats = new Stats() { HP = 50, maxHP = 50, AP = 8, maxAP = 8, STR = 9, DEF = 9, INS = 4, MOX = 5, SPD = 8, LUK = 9},
+            StatsPerLevel = new Stats() { HP = 9, maxHP = 9, AP = 2, maxAP = 2, STR = 2, DEF = 2, INS = 2, MOX = 2, SPD = 3, LUK = 2},
+            statBoosts = new Stats(),
+            spriteSet="crab1",
+            morphType="synth",
             abilities = new List<Ability>() {abilitiesByName["Fight"].Clone()}
             }
         };
@@ -385,9 +397,7 @@ namespace PixelVision8.Player
         {
             new List<Enemy>()
             {
-                //TODO: pick out a boss fight, insert here.
-                (Enemy)enemies[1].Clone(),
-                (Enemy)enemies[1].Clone()
+                (Enemy)enemiesByName["Reaper"].Clone()
             }
         };
     }

@@ -16,6 +16,9 @@ namespace PixelVision8.Player
     public class JrpgRoslynChip : GameChip
     {
 
+        //NOTE: getting an unexpected error? Decent chance it's because something being assigned by name
+        //is missing or misspelled. Make sure any abilities or enemies you added are being called by the correct name.
+
         int msCounter = 0;
         public override void Init()
         {
@@ -30,6 +33,7 @@ namespace PixelVision8.Player
                 gameState.bestLevels.Add(r.name, 0);
             
             this.LoadGameData();
+            Console.WriteLine("Done loading data");
 
 
             //Any post-startup resets of values would go here.

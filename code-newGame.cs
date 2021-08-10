@@ -44,19 +44,10 @@ namespace PixelVision8.Player
             //4 sprites to display selected role sprite
             //small descriptions of the selected role next to each portrait
             //possibly some text for highest level per role/all roles total.
-            //Switch sprite to Ready once a character is filled in.
+            //Switch sprite to Ready once a character is filled in?
             parentRef.BackgroundColor(0);
             parentRef.ScrollPosition(344 * xScreenCoords);
             parentRef.CenterText("Select Your Strike Team", 0);
-
-            //Looping test, layout looks ok.
-            //for (int i = 0; i < 4; i++)
-            //{
-                // parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[char1RoleId]].spriteSet, char1Portrait.X + (charXoffsets[i] * 8), char1Portrait.Y + (charYoffsets[i] * 8));
-                // parentRef.DrawText(gameState.Char1Name, (2 + charXoffsets[i]) * 8, (2 + charYoffsets[i]) * 8, DrawMode.Sprite, "large", 15);
-                // parentRef.DrawText(gameState.unlockedRoles[char1RoleId], (2 + charXoffsets[i]) * 8, (3 + charYoffsets[i]) * 8, DrawMode.Sprite, "large", 15);
-                // parentRef.WrapText(ContentLists.rolesByName[gameState.unlockedRoles[char1RoleId]].desc, 15, (2 + charXoffsets[i]) * 8, (8 + charYoffsets[i]));
-            //}
 
             //char1
             parentRef.DrawMetaSprite(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[0]]].spriteSet, char1Portrait.X + (charXoffsets[0] * 8), char1Portrait.Y + (charYoffsets[0] * 8));
@@ -120,13 +111,15 @@ namespace PixelVision8.Player
                 activeCharSelecting++;
                 if (activeCharSelecting >= 4)
                 {
-                    //TODO Prep the fight scene. Make characters and a new encounter and all that.
+                    activeCharSelecting = 0; //for next time the scene loads.
+                    FightScene.ClearScene();
+                    FightScene.helpText = "Hold them off!";
+
                     //TODO: make this logic part of the fightScene code to be called, not all assigned externally
                     Character char1 = new Character(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[0]]]);
                     char1.name = gameState.Char1Name;
                     char1.posX = FightScene.charPositions[0].Item1;
                     char1.posY = FightScene.charPositions[0].Item2;
-                    //char1.
 
                     Character char2 = new Character(ContentLists.rolesByName[gameState.unlockedRoles[charRoleIds[1]]]);
                     char2.name = gameState.Char2Name;
@@ -150,7 +143,5 @@ namespace PixelVision8.Player
                 }
             }
         }
-
     }
-
 }

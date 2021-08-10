@@ -9,7 +9,7 @@ namespace PixelVision8.Player
     public static class FightScene
     {
         //MOST OBVIOUS TODOS:
-        //Clear out or re-init fight scene after game over.
+        //correctly loop gameplay after death 
         //baseline sample content (char abilities in place)
         //--PC SPRITES for 3 of 4 classes pending
         //--5 enemies pending (abilities and sprites)
@@ -18,6 +18,10 @@ namespace PixelVision8.Player
         //balance, get to 20 fights and the boss there while being interesting and requiring some thought
         //Update title screen image, ponder alternative names. Gatehold?
 
+        //fixes: 
+        //make dead characters stay dead, dont change their display state.
+        //Larry could fight at 0 HP (skip dead chars on turn start when setting menu data.)
+
         //non-MVP
         //make some sound effects and get the list going on which one is what. Expand on the 3 present.
         //Assign abilities from abilitiesByName dictionary so I don't have to worry about id/order.
@@ -25,7 +29,6 @@ namespace PixelVision8.Player
         //Make SELECT toggle auto-fight. Auto-fight rules will be simple AI for now, will expand on later with additional AI logic.       
         //I wanted abilities to leveup up at some point. What happened to that?
         //make functions to return a list of DisplayResults to add to the existing list to allow for more customizable/reusable animations sets
-        //--EX: enemies might palette-shift rather than swap frames, so i might want an EnemyAttack() set and an AllyAttack() set
 
 
         //V 0.01 requirements: - the MVP POC
@@ -36,7 +39,7 @@ namespace PixelVision8.Player
         //5 enemies present and sprited in. somewhat varied in stats and abilities.
         //10 encounters made out of X enemy combos.
         //1 boss encounter (will occur once, 20 fights in)
-        //test stuff absent from normal loop
+        //test stuff absent from normal loop - DONE
         //better title screen image.
         
 
@@ -148,10 +151,10 @@ namespace PixelVision8.Player
             //might want this to be 2 separate functions, 1 for phase0Update and 1 for Phase1Update?
             //Check if all enemies are dead, if so award 1 xp to all living PCs and roll a new encounter.
 
-            if (phase == 0)
+            if (phase == 0) //User input to select their attacks
                 //TODO: maybe listen for CANCEL button to disable auto-fight
                 return; //let other functions do their thing
-            if (phase == 1)
+            if (phase == 1) //Report out the resutls of the fight and animate things.
             {
                 displayFrameCounter--;
                 //We have to figure out where we are in the display process
@@ -207,7 +210,7 @@ namespace PixelVision8.Player
                     }
                 }
             }
-            if (phase == 2)
+            if (phase == 2) //game over displayed, return to title screen.
             {
                 DrawCombatLogText();
                 displayFrameCounter--;
@@ -605,9 +608,21 @@ namespace PixelVision8.Player
 
         public static void GetNewEncounter()
         {
-            //TODO: figure out rules for which encounters are valid.
-            bool isBossFight = (fightsWon % 19 == 0); //Fight 20 is a boss fight
-            var encounter = ContentLists.PossibleEncounters.OrderBy(e => gameState.random.Next()).First();
+            bool isBossFight = (fightsWon > 0 && fightsWon % 19 == 0) ; //Fight 20 is a boss fight
+
+            List<Enemy> encounter;
+            if (!isBossFight) 
+            {
+                encounter = ContentLists.PossibleEncounters.OrderBy(e => gameState.random.Next()).First();
+                helpText = "Another wave of enemies approached!";
+            }
+            else
+            {
+                encounter = ContentLists.PossibleBossEncounters.OrderBy(e => gameState.random.Next()).First();
+                helpText = "A very dangerous enemy appears!";
+                //TODO: play danger sound effect/boss music?
+            }
+            
             var partyLevel = characters.Select(c => c.level).Average();
             enemies = new List<Enemy>();
             foreach (var e in encounter)
@@ -624,7 +639,7 @@ namespace PixelVision8.Player
 
                 enemies[i].currentStats.HP = enemies[i].currentStats.maxHP;
             }
-            helpText = "Another wave of enemies approached!";
+            
             displayFrameCounter = 60;
         }
 
@@ -691,7 +706,16 @@ namespace PixelVision8.Player
 
             for(int i =16; i < 42; i++)
                 parentRef.DrawMetaSprite("pipeHors", i + tileOffsetX, 19 + tileOffsetY, false, false, DrawMode.Tile, 0);
-            
+        }
+
+        //To be called when restarting the scene.
+        public static void ClearScene()
+        {
+            characters = new List<Character>();
+            enemies= new List<Enemy>();
+            fightsWon = 0;
+            arrowPosIndex = 0;
+            phase = 0;
             
         }
     }

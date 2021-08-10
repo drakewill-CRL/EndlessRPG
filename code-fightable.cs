@@ -130,15 +130,15 @@ namespace PixelVision8.Player
             role.name + "-" +
             level.ToString() + "-" +
             statBoosts.GetAsSaveData() + "-" +
-            currentStats.GetAsSaveData();
-
+            currentStats.GetAsSaveData() + "-" +
+            XP;
             return results;
         }
 
         public Character(string savedData)
         {
             //Format:
-            //name-roleName-level-statBoosts-currentStats
+            //name-roleName-level-statBoosts-currentStats-XP
             //Gotta save currentStats or else we don't track HP/AP used.
             var splitData = savedData.Split("-");
             name = splitData[0];
@@ -149,6 +149,7 @@ namespace PixelVision8.Player
             statBoosts.LoadFromSaveData(splitData[3]);
             currentStats = new Stats();
             currentStats.LoadFromSaveData(splitData[4]);
+            XP = Int32.Parse(splitData[5]);
 
             //The rest of this is boilerplate:
             switch (role.morphType)

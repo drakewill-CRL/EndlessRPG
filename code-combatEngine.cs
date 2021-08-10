@@ -13,11 +13,12 @@ namespace PixelVision8.Player
 
         public static List<DisplayResults> ProcessRound(List<Attack> events)
         {
-
+            //Recent Changes:
+            //Initiative has a d10 added to your SPD stat so combat order isn't as guaranteed.
             List<DisplayResults> outerResults = new List<DisplayResults>();
             List<AttackResults> results = new List<AttackResults>();
             outerResults.Add(new DisplayResults() { frameCounter = 60, desc = "Combat Started" }); //empty for testing
-            events = events.OrderByDescending(e => e.thingToDo.specialSpeedLevel).ThenByDescending(e => e.attacker.currentStats.SPD).ThenByDescending(e => gameState.random.Next()).ToList();
+            events = events.OrderByDescending(e => e.thingToDo.specialSpeedLevel).ThenByDescending(e => e.attacker.currentStats.SPD + gameState.random.Next(1, 10)).ThenByDescending(e => gameState.random.Next()).ToList();
             foreach (var e in events)
             {
                 //TODO: attempt to intelligently short-cut stuff if all enemies are dead?
@@ -41,7 +42,7 @@ namespace PixelVision8.Player
 
                         foreach (var adesc in abilOutcome.printDesc)
                         {
-                            outerResults.Add(new DisplayResults() { desc = adesc, frameCounter = 120 });
+                            outerResults.Add(new DisplayResults() { desc = adesc, frameCounter = gameState.displayDefaultTimer });
                         }
                         //process target stat changes now, so dead enemies don't attack.
                         for (int i = 0; i < abilOutcome.target.Count(); i++)
@@ -58,7 +59,7 @@ namespace PixelVision8.Player
                             }
 
                             if (abilOutcome.target[i].currentStats.HP <= 0)
-                                outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " died.", changedItem = "spriteState", changedTo = "Dead" });
+                                outerResults.Add(new DisplayResults() { target = abilOutcome.target[i], desc = abilOutcome.target[i].name + " was downed.", changedItem = "spriteState", changedTo = "Dead" });
                         }
 
                         outerResults.Add(new DisplayResults() { target = e.attacker, desc = "", changedItem = "spriteState", changedTo = "", frameCounter = 1 });
