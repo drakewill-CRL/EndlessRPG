@@ -182,7 +182,7 @@ namespace PixelVision8.Player
                         phase = 0;
                         subMenuLevel = 0;
                         activeCharSelecting = 0;
-                        foreach (var c in characters)
+                        foreach (var c in characters) //Update progress data
                         {
                             c.displayStats.Set(c.currentStats);
                             if (gameState.bestLevels[c.role.name] < c.level)
@@ -368,7 +368,7 @@ namespace PixelVision8.Player
                                     pendingAttacks.Add(currentAction);
                                     currentAction = new Attack();
                                     characters[activeCharSelecting].drawState = "";
-                                    activeCharSelecting++;
+                                    activeCharSelecting = SetNextActivePC();
                                     if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                                     arrowPosIndex = 0;
                                     subMenuLevel = 0;
@@ -399,7 +399,7 @@ namespace PixelVision8.Player
                                     pendingAttacks.Add(currentAction);
                                     currentAction = new Attack();
                                     characters[activeCharSelecting].drawState = "";
-                                    activeCharSelecting++;
+                                    activeCharSelecting = SetNextActivePC();
                                     if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                                     arrowPosIndex = 0;
                                     subMenuLevel = 0;
@@ -412,7 +412,7 @@ namespace PixelVision8.Player
                                     pendingAttacks.Add(currentAction);
                                     currentAction = new Attack();
                                     characters[activeCharSelecting].drawState = "";
-                                    activeCharSelecting++;
+                                    activeCharSelecting = SetNextActivePC();
                                     if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                                     arrowPosIndex = 0;
                                     subMenuLevel = 0;
@@ -429,7 +429,7 @@ namespace PixelVision8.Player
                             pendingAttacks.Add(currentAction);
                             currentAction = new Attack();
                             characters[activeCharSelecting].drawState = "";
-                            activeCharSelecting++;
+                            activeCharSelecting = SetNextActivePC();
                             if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                             arrowPosIndex = 0;
                             subMenuLevel = 0;
@@ -441,7 +441,7 @@ namespace PixelVision8.Player
                             pendingAttacks.Add(currentAction);
                             currentAction = new Attack();
                             characters[activeCharSelecting].drawState = "";
-                            activeCharSelecting++;
+                            activeCharSelecting = SetNextActivePC();
                             if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                             arrowPosIndex = 0;
                             subMenuLevel = 0;
@@ -481,7 +481,7 @@ namespace PixelVision8.Player
                                 {
                                     pendingAttacks.Remove(pendingAttacks.Last());
                                     characters[activeCharSelecting].drawState = "";
-                                    activeCharSelecting--;
+                                    activeCharSelecting = SetPrevActivePC();
                                     if (activeCharSelecting < characters.Count())  characters[activeCharSelecting].drawState = "Ready";
                                     arrowPosIndex = 0;
                                     helpText = "Rewinding to " + characters[activeCharSelecting].name + "'s action";
@@ -558,6 +558,17 @@ namespace PixelVision8.Player
             for (int i = 0; i < enemies.Count(); i++)
             {
                 if (enemies[i].currentStats.HP > 0)
+                    validOptions.Add(i);
+            }
+            return validOptions;
+        }
+
+        public static List<int> GetLivingPCs()
+        {
+            List<int> validOptions = new List<int>();
+            for (int i = 0; i < characters.Count(); i++)
+            {
+                if (characters[i].currentStats.HP > 0)
                     validOptions.Add(i);
             }
             return validOptions;
@@ -717,6 +728,26 @@ namespace PixelVision8.Player
             arrowPosIndex = 0;
             phase = 0;
             
+        }
+
+        public static int SetNextActivePC()
+        {
+            var choices = GetLivingPCs();
+            var next = choices.FirstOrDefault(c => c > activeCharSelecting);
+            if (next == 0) //nothing was larger than current entry
+                next = choices.FirstOrDefault(); //next == 0 here means the first PC is the correct next entry
+
+            return next;
+        }
+        public static int SetPrevActivePC()
+        {
+            int startingPoint = activeCharSelecting;
+            var choices = GetLivingPCs();
+            var next = choices.LastOrDefault(c => c < activeCharSelecting);
+            if (next == 0 && startingPoint == choices.FirstOrDefault()) 
+                next = choices.LastOrDefault(); //next == 0 here means the first PC is the correct next entry
+
+            return next;
         }
     }
 }
